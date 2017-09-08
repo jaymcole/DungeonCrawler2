@@ -24,23 +24,20 @@ public abstract class GameObject {
    
     public abstract void dispose();
     
+    //TODO: This should be cleaned up.
     protected Texture loadTexture(String filePath) {
-        try {
-            texture = new Texture(filePath);      
-        } catch (GdxRuntimeException e) {
-            System.err.println("Unable to load texture \""+ filePath +"\"");
-            try {
-                texture = new Texture(Globals.DEFAULT_TEXTURE);
-            } catch (GdxRuntimeException e2){
-                System.err.println("Failed to load default texture " + filePath + " - killing game object.");
-                this.kill();
-            }
+        this.texture = Utilities.loadTexture(filePath);
+        if(texture == null) {
+            this.kill();
+            return null;
         }
         return texture;
     }
     
     protected void kill() {
-        objectManager.remove(this);
+        this.alive = false;
+        if(objectManager != null) 
+            objectManager.remove(this);
         dispose();
     }
 }

@@ -17,4 +17,13 @@ public class Globals {
     public static final int CAMERA_SCROLL_SPEED_Y_AXIS = 5;
     
     
+    
+    // Map Gen Settings (probably as a percent)
+    public static final int TURN_CHANCE = 5;
+    public static final int SPLIT_CHANCE = 30;
+    public static final int CONTINUE_CHANCE = 95;
+    public static final int CONTINUE_AFTER_OVERLAP_CHANCE = 45;
+    
+    public static final float MIN_PATH_DENSITY = 0.3f;
+    
 }
