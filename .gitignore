@@ -33,71 +33,7 @@ com_crashlytics_export_strings.xml
 
 ## Eclipse
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 =======
-
-.settings/
->>>>>>> d1699d05db7f9824eced9a05615dae15539ea6f4
-=======
-.classpath
-.project
-.metadata/
-/android/bin/
-/core/bin/
-/desktop/bin/
-/html/bin/
-/ios/bin/
-/ios-moe/bin/
-*.tmp
-*.bak
-*.swp
-*~.nib
-.settings/
-.loadpath
-.externalToolBuilders/
-*.launch
->>>>>>> parent of d1699d0... classpath and project filed
-=======
-.classpath
-.project
-.metadata/
-/android/bin/
-/core/bin/
-/desktop/bin/
-/html/bin/
-/ios/bin/
-/ios-moe/bin/
-*.tmp
-*.bak
-*.swp
-*~.nib
-.settings/
-.loadpath
-.externalToolBuilders/
-*.launch
->>>>>>> parent of d1699d0... classpath and project filed
-=======
-.classpath
-.project
-.metadata/
-/android/bin/
-/core/bin/
-/desktop/bin/
-/html/bin/
-/ios/bin/
-/ios-moe/bin/
-*.tmp
-*.bak
-*.swp
-*~.nib
-.settings/
-.loadpath
-.externalToolBuilders/
-*.launch
->>>>>>> parent of d1699d0... classpath and project filed
 
 ## NetBeans
 
