@@ -32,7 +32,20 @@ www-test/
 com_crashlytics_export_strings.xml
 
 ## Eclipse
-
+.classpath
+.project
+.metadata
+**/bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.externalToolBuilders/
+*.launch
 =======
 
 ## NetBeans
