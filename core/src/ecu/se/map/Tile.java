@@ -12,7 +12,6 @@ import ecu.se.Utilities;
 
 public class Tile {
     private int x, y, width, height;
-    
     private Texture texture;
     private TextureRegion textureRegion;
     
@@ -31,18 +30,15 @@ public class Tile {
         
         objects = new ArrayList<GameObject>();
         bounds = Utilities.getRectangleBounds(x, y, width, height);
-        
-        
-        
     }
     
     public void update(double d) {
-        
+        // TODO: finish tile update method
     }
 
     public void render(SpriteBatch batch) {
-        //batch.draw(texture, x, y);        
-        batch.draw(texture, x, y, width, height, textureRegion.getRegionX(), textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flipX, flipY);
+        if(texture != null)
+            batch.draw(texture, x, y, width, height, textureRegion.getRegionX(), textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flipX, flipY);
     }
 
     public void dispose() {
