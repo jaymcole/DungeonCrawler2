@@ -52,7 +52,6 @@ public class Game extends ApplicationAdapter {
 		font = generator.generateFont(parameter);
 		generator.dispose();
 		
-		//font = new Font("jay_messy.ttl", Font.PLAIN, 23);
 	}
 
 	
@@ -91,8 +90,9 @@ public class Game extends ApplicationAdapter {
 		input();
 		
 	}
-	
+	int floor = 0;
 	public void input() {
+	    // Pan Camera
 	    if(Gdx.input.isKeyPressed(Input.Keys.W)){
 	        camera.translate(0, Globals.CAMERA_SCROLL_SPEED_Y_AXIS * camera.zoom);
 	    } if(Gdx.input.isKeyPressed(Input.Keys.A)){
@@ -103,10 +103,23 @@ public class Game extends ApplicationAdapter {
             camera.translate(Globals.CAMERA_SCROLL_SPEED_X_AXIS * camera.zoom, 0);
         }
         
+        // Zoom camera
         if(Gdx.input.isKeyPressed(Input.Keys.E)){
             camera.zoom += 1;
         }if(Gdx.input.isKeyPressed(Input.Keys.Q)){
             camera.zoom -= 1;
+        }
+        
+        
+        // Generate new floor
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){
+            floor++;
+            map.setFloor(floor);
+        }if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
+            floor--;
+            if(floor < 0)
+                floor = 0;
+            map.setFloor(floor);
         }
            
 	}

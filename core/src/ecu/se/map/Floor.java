@@ -23,6 +23,8 @@ public class Floor {
     
     // TODO: Create variable floor sizes?
     
+    // TODO: Add dispose function
+    
     public Floor () {
         random = new Random();
         seed = random.nextLong();
@@ -130,20 +132,20 @@ public class Floor {
 
         if(random.nextInt(100) <= Globals.CONTINUE_CHANCE) { 
             if(random.nextInt(100) <= Globals.TURN_CHANCE) {
-                System.out.println("TURN\t" + x + ", " + y);
+                //System.out.println("TURN\t" + x + ", " + y);
                 dir = Direction.turn(random, dir);
                 x += dir.x;
                 y += dir.y;
                 generatePath(x, y, dir);
             } else if (random.nextInt(100) <= Globals.SPLIT_CHANCE) {
-                System.out.println("SPLIT\t" + x + ", " + y);
+                //System.out.println("SPLIT\t" + x + ", " + y);
                 generatePath(x, y, dir);
                 dir = Direction.turn(random, dir);
                 x += dir.x;
                 y += dir.y;
                 generatePath(x, y, dir);
             } else {
-                System.out.println("Straight " + x + ", " + y);
+                //System.out.println("Straight " + x + ", " + y);
                 x += dir.x;
                 y += dir.y;
                 generatePath(x, y, dir);
@@ -172,5 +174,9 @@ public class Floor {
         else if (y < 0 || y >= mapHeight )
             return false;
         return true;
+    }
+    
+    public boolean getGenerated() {
+        return generated;
     }
 }

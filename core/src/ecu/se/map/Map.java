@@ -1,12 +1,8 @@
 package ecu.se.map;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import ecu.se.Globals;
-import ecu.se.Utilities;
 
 // TODO: Add all used (tiles that actually need to be rendered) to a list for rendering.
 //      - To avoid having to check a render flag on a bunch of unused tiles.
@@ -21,22 +17,37 @@ import ecu.se.Utilities;
 // TODO: Generate Monsters / Loot / Treasure
 
 // IMPORTANT
-// TODO: Decide whether to save generated maps. Obviously we'll be able to generate the maps again using a seed, 
+// TODO: Dispose floors
 
 public class Map {
     
-    
-    
     private ArrayList<Floor> floors;
     private Floor currentFloor;
+    
     public Map() {
-        floors = new ArrayList<Floor>();
-        floors.add(new Floor(150, 150));
-        currentFloor = floors.get(0);
-        currentFloor.generate();
+        floors = new ArrayList<Floor>(200);
+        setFloor(0);
+    }
+    
+    public void setFloor(int floor) {
+        if(floor < 0) 
+            floor = 0;
+        if(floors.size() <= floor) { 
+            for(int i = floors.size(); i <= floor; i++) {
+                floors.add(null);
+            }
+        }
+        if ( floors.get(floor) == null) {
+            floors.add(floor, new Floor());            
+        }
+        currentFloor = floors.get(floor);
+        if (!currentFloor.getGenerated()) {
+            currentFloor.generate();
+        }     
     }
     
     public void render(SpriteBatch batch) {
         currentFloor.render(batch);
     }
+    
 }
