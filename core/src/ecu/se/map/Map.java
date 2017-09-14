@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import ecu.se.Globals;
+
 // TODO: Add all used (tiles that actually need to be rendered) to a list for rendering.
 //      - To avoid having to check a render flag on a bunch of unused tiles.
 
@@ -20,7 +22,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 // TODO: Dispose floors
 
 public class Map {
+    private int tilesVertical = 5;
+    private int tilesHorizontal = 5;
     
+    private Tile[][] visibleTiles;
     private ArrayList<Floor> floors;
     private Floor currentFloor;
     
@@ -46,8 +51,27 @@ public class Map {
         }     
     }
     
-    public void render(SpriteBatch batch) {
-        currentFloor.render(batch);
+    public void render(SpriteBatch batch, int cameraX, int cameraY) { 
+        if(Globals.RENDER_ALL_TILES) {
+            currentFloor.renderAll(batch);
+            return;
+        }
+
+        visibleTiles = currentFloor.getAdjacent(cameraX, cameraY, tilesHorizontal, tilesVertical);
+        for(int i = 0; i < tilesHorizontal; i++) {
+            for(int j = 0; j < tilesVertical; j++) {
+                if(visibleTiles[i][j] != null) {
+                    visibleTiles[i][j].render(batch);
+                }
+            }
+        }
+    }
+    
+    public void dispose() {
+        for(Floor f : floors) {
+            if(f != null)
+                f.dispose();
+        }
     }
     
 }

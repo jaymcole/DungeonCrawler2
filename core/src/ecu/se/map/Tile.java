@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polygon;
 
 import ecu.se.GameObject;
@@ -19,15 +20,15 @@ public class Tile {
     
     private ArrayList<GameObject> objects;
     private Polygon bounds;
-    
+    private ShapeRenderer shaper;
     private boolean flipX, flipY;
         
     public Tile(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
+        this.x = x - (int)(width*0.5f);
+        this.y = y - (int)(height*0.5f);
         this.width = width;
         this.height = height;
-        
+        shaper = new ShapeRenderer();
         objects = new ArrayList<GameObject>();
         bounds = Utilities.getRectangleBounds(x, y, width, height);
     }
@@ -37,15 +38,24 @@ public class Tile {
     }
 
     public void render(SpriteBatch batch) {
-        if(texture != null)
+        
+        if(texture != null) {
             batch.draw(texture, x, y, width, height, textureRegion.getRegionX(), textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flipX, flipY);
+        }
+        
+        
     }
 
     public void dispose() {
-        texture.dispose();
+        if(texture!= null)
+            texture.dispose();
+        
+        shaper.dispose();
         for(int i = 0; i < objects.size(); i++) {
             objects.get(i).dispose();
         }
+        
+        
         
     }
     

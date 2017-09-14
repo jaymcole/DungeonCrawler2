@@ -12,19 +12,17 @@ public class Floor {
     private Random random;
     private boolean generated = false;
     
-    private int mapWidth = 100;
-    private int mapHeight = 100;
+    private int mapWidth = Globals.MAP_TILE_WIDTH;
+    private int mapHeight = Globals.MAP_TILE_HEIGHT;
     private int tileWidth = 128;
     private int tileHeight = 128;
     
     Tile[][] tiles;
     
-    // TODO: Set tileWidth/Height based on texture??
+    // TODO: Set tile Width/Height based on texture??
     
     // TODO: Create variable floor sizes?
-    
-    // TODO: Add dispose function
-    
+        
     public Floor () {
         random = new Random();
         seed = random.nextLong();
@@ -33,8 +31,8 @@ public class Floor {
     }
     
     public Floor (long seed) {
+        this.seed = seed;
         random = new Random(seed);
-        seed = random.nextLong();
         init();
     }
     
@@ -49,12 +47,9 @@ public class Floor {
     
     private void init() {
         tiles = new Tile[mapWidth][mapHeight];
-        
     }
     
-    
-    // TODO: Render only the tiles that are visible on screen.
-    public void render(SpriteBatch batch) {
+    public void renderAll(SpriteBatch batch) {        
         for(int i = 0; i < mapWidth; i++) {
             for(int j = 0; j < mapHeight; j++) {
                 tiles[i][j].render(batch);
@@ -69,7 +64,6 @@ public class Floor {
             for(int j = 0; j < mapHeight; j++) {
                 tiles[i][j] = new Tile(i*tileWidth, j*tileHeight, tileWidth, tileHeight);
                 tiles[i][j].setWall(true);
-                //tiles[i][j].setTexture(Utilities.loadTexture("texture/wall/corner.png"));
             }
         }
         
@@ -78,6 +72,7 @@ public class Floor {
             generatePath(random.nextInt(mapWidth), random.nextInt(mapHeight), null);
         }
         
+        /*
         // Set wall textures.
         for(int i = 0; i < mapWidth; i++) {
             for(int j = 0; j < mapHeight; j++) {
@@ -86,8 +81,10 @@ public class Floor {
                 }
             }
         }
+        */
     }
     
+    @SuppressWarnings("unused")
     private int countAdjacentWalkable(int x, int y) {
         int counter = 0;
         for(int i = x-1; i < x+2; i++) {
@@ -102,10 +99,31 @@ public class Floor {
     
     
     
-    // TODO: bruh
-    private Tile[][] getAdjacent(int x, int y, int width, int height) {
-        return null;
+    public Tile[][] getAdjacent(int x, int y, int width, int height) {
+        x /= tileWidth;
+        y /= tileHeight;
+        //System.out.println("Around: "+ x + " " + y);
+
+        x -= (int)(width*0.5);
+        y -= (int)(height*0.5);
+        
+        Tile[][] tilesToRender = new Tile[width][height];
+        for(int i = 0; i < width; i++) {
+            //System.out.print("\t");
+            for(int j = 0; j < height; j++) {
+                //System.out.print( "("+ (i+x) + ", " + (j+y) + ")  ");
+                if(inBounds(i+x, j+y)) {
+                    tilesToRender[i][j] = tiles[i+x][j+y];
+                } else {
+                    tilesToRender[i][j] = null;
+                }
+            }
+            //System.out.println("");
+        }
+        
+        return tilesToRender;
     }
+    
     
     private int totalPaths = 0;
     // generatePath(startX, startY, direction);
@@ -120,38 +138,37 @@ public class Floor {
         
         totalPaths++;
         tiles[x][y].setWall(false);
-        tiles[x][y].setTexture(Utilities.loadTexture("texture/floor/grass.png"));
+        tiles[x][y].setTexture(Utilities.loadTexture("texture/floor/castle_tile.jpg"));
+        
+        if(inBounds(x, y+1) && tiles[x][y+1].getWall())
+            tiles[x][y+1].setTexture(Utilities.loadTexture("texture/wall/stonewall_short.png"));
         
         if(dir == null) {
-            tiles[x][y].setTexture(Utilities.loadTexture("texture/test/test_face_red.png"));
+            tiles[x][y].setTexture(Utilities.loadTexture("texture/floor/castle_tile.jpg"));
             dir = Direction.randomDirection(random);
             generatePath(x, y, dir);
             x += dir.x;
             y += dir.y;
         }
-
+        
         if(random.nextInt(100) <= Globals.CONTINUE_CHANCE) { 
             if(random.nextInt(100) <= Globals.TURN_CHANCE) {
-                //System.out.println("TURN\t" + x + ", " + y);
                 dir = Direction.turn(random, dir);
                 x += dir.x;
                 y += dir.y;
                 generatePath(x, y, dir);
             } else if (random.nextInt(100) <= Globals.SPLIT_CHANCE) {
-                //System.out.println("SPLIT\t" + x + ", " + y);
                 generatePath(x, y, dir);
                 dir = Direction.turn(random, dir);
                 x += dir.x;
                 y += dir.y;
                 generatePath(x, y, dir);
             } else {
-                //System.out.println("Straight " + x + ", " + y);
                 x += dir.x;
                 y += dir.y;
                 generatePath(x, y, dir);
             }
         } else {
-            System.out.println("END\t" + x + ", " + y);
             return;
         }
     }
@@ -178,5 +195,13 @@ public class Floor {
     
     public boolean getGenerated() {
         return generated;
+    }
+    
+    public void dispose() {
+        for(int i = 0; i < mapWidth; i++) {
+            for(int j = 0; j < mapHeight; j++) {
+                tiles[i][j].dispose();
+            }
+        }
     }
 }

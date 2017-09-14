@@ -26,4 +26,16 @@ public class Globals {
     
     public static final float MIN_PATH_DENSITY = 0.3f;
     
+    public static final int MAP_TILE_WIDTH = 25;
+    public static final int MAP_TILE_HEIGHT = 25;
+    
+    
+    // DEBUG Settings
+    // All of these will probably have to be cleaned up (removed along with whatever functions use them) later.
+    public static boolean RENDER_ALL_TILES = false;
+    
+    
+    
+    
+    
 }
