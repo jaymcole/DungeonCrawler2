@@ -26,8 +26,8 @@ public class Globals {
     
     public static final float MIN_PATH_DENSITY = 0.3f;
     
-    public static final int MAP_TILE_WIDTH = 50;
-    public static final int MAP_TILE_HEIGHT = 50;
+    public static final int MAP_TILE_WIDTH = 10;
+    public static final int MAP_TILE_HEIGHT = 10;
     
     
     // DEBUG Settings

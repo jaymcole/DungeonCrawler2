@@ -4,13 +4,13 @@ import java.util.Random;
 
 public enum Direction {
     NORTH("NORTH",0, 1),
-    EAST("EAST", -1, 0),
+    EAST("EAST", 1, 0),
     SOUTH("SOUTH", 0, -1),
-    WEST("WEST",1, 0);
+    WEST("WEST",-1, 0);
     
 
     String name;
-    int x, y;
+    public int x, y;
     Direction(String name, int x, int y) {
         this.name = name;
         this.x = x;

@@ -63,4 +63,17 @@ public class Utilities {
         return texture;
     }
     
+    public static float clamp(float min, float max, float val)
+    {
+        if(val < min)
+        {
+            return min;
+        }
+        if(val > max)
+        {
+            return max;
+        }
+        return val;
+    }
+    
 }

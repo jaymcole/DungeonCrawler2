@@ -1,6 +1,13 @@
 package actors;
 
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
+
 import ecu.se.GameObject;
+import ecu.se.Utilities;
+import ecu.se.map.Direction;
+import ecu.se.map.Map;
 
 public abstract class Actor extends GameObject{
 
@@ -10,11 +17,18 @@ public abstract class Actor extends GameObject{
     protected int HP;
     protected int attack;
     protected int defense;
+    protected Vector2 currentSpeed;
+    protected float topSpeed;
+    protected float acceleration;
+    protected float drag;
+    protected Texture texture;
+    protected Map map;
     
-    
-    public Actor(float x, float y, float z) {
+    public Actor(float x, float y, float z, Map map) {
         super(x, y, z);    
+        this.map = map;
     }
+    
     public String getName() {
         return name;
     }
@@ -49,4 +63,19 @@ public abstract class Actor extends GameObject{
     public void setdefense(int defense) {
         this.defense = defense;
     }
+    public void move(float deltaTime, Direction direction)
+    {
+        currentSpeed.x += (acceleration * deltaTime) * direction.x;
+        //currentSpeed.x -= drag * deltaTime;
+        currentSpeed.x = Utilities.clamp(-topSpeed, topSpeed, currentSpeed.x);
+        
+        
+        
+        
+        currentSpeed.y += (acceleration * deltaTime) * direction.y;
+        //currentSpeed.y -= drag * deltaTime;
+        currentSpeed.y = Utilities.clamp(-topSpeed, topSpeed, currentSpeed.y);
+    }
+    
+    
 }

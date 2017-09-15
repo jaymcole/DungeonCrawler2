@@ -3,6 +3,7 @@ package ecu.se.map;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.Globals;
 
@@ -22,8 +23,8 @@ import ecu.se.Globals;
 // TODO: Dispose floors
 
 public class Map {
-    private int tilesVertical = 5;
-    private int tilesHorizontal = 5;
+    private int tilesVertical = 11;
+    private int tilesHorizontal = 21;
     
     private Tile[][] visibleTiles;
     private ArrayList<Floor> floors;
@@ -74,4 +75,11 @@ public class Map {
         }
     }
     
+    public Tile currentTile(int x, int y) {
+        return currentFloor.getTile(x, y);
+    }
+    
+    public Vector2 floorHelper(int x, int y) {
+        return currentFloor.getSpawn(x,y);
+    }
 }

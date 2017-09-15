@@ -19,7 +19,7 @@ public class TestObject extends GameObject {
     }
 
     @Override
-    public void update(double deltaTime) {
+    public void update(float deltaTime) {
         degree = (float) (degree + (speed * deltaTime));
         while(degree > 360f) {degree-=360.0f;}
         rads = (float) Math.toRadians(degree);
@@ -28,7 +28,7 @@ public class TestObject extends GameObject {
     }
 
     @Override
-    public void render(double deltaTime, SpriteBatch batch) {       
+    public void render(float deltaTime, SpriteBatch batch) {       
         batch.draw(texture, x, y);
     }
 

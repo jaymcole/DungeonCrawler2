@@ -3,6 +3,7 @@ package ecu.se.map;
 import java.util.Random;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.Globals;
 import ecu.se.Utilities;
@@ -203,5 +204,34 @@ public class Floor {
                 tiles[i][j].dispose();
             }
         }
+    }
+    
+    public Tile getTile(int x, int y) {
+        int getWidth = x/tileWidth;
+        int getHeight = y/tileHeight;
+        if(inBounds(getWidth, getHeight) && tiles[getWidth][getHeight] != null) {
+            return tiles[getWidth][getHeight];
+        }
+        else {
+            return null;
+        }
+
+    }
+    
+    public Vector2 getSpawn(int x, int y)
+    {
+        for(int i = 0; i < Globals.MAP_TILE_WIDTH; i++)
+        {
+            for(int n = 0; n < Globals.MAP_TILE_HEIGHT; n++)
+                
+            {
+                if(!tiles[i][n].getWall())
+                {
+                    return new Vector2((i * tileWidth)+(tileWidth*0.5f),(n * tileHeight)+(tileHeight*0.5f));
+                    
+                }
+            }
+        }
+        return null;
     }
 }

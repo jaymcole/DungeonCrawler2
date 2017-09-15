@@ -18,9 +18,9 @@ public abstract class GameObject {
         alive = true;
     }
    
-    public abstract void update(double d);
+    public abstract void update(float deltaTime);
     
-    public abstract void render(double d, SpriteBatch batch);
+    public abstract void render(float deltaTime, SpriteBatch batch);
    
     public abstract void dispose();
     

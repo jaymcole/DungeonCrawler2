@@ -16,7 +16,7 @@ public class ObjectManager {
         waitList = new ArrayList<GameObject>();
     }
     
-    public void update(double d) {
+    public void update(float deltaTime) {
         updater = objects.iterator();
         GameObject object;
         
@@ -24,7 +24,7 @@ public class ObjectManager {
         {
             object = updater.next();
             if (object.alive) {
-                object.update(d);
+                object.update(deltaTime);
             } else {
                 this.remove(object);
             }
@@ -32,7 +32,7 @@ public class ObjectManager {
         updateList();
     }
     
-    public void render(double deltaTime, SpriteBatch batch) {
+    public void render(float deltaTime, SpriteBatch batch) {
         updater = objects.iterator();
         GameObject object;
         
