@@ -40,6 +40,8 @@ public class Game extends ApplicationAdapter {
 		objectManager = new ObjectManager();
 		map = new Map();
 
+	
+		
 		screenHeight = Gdx.graphics.getHeight();
 		screenWidth = Gdx.graphics.getWidth();
 		camera = new OrthographicCamera(screenWidth, screenHeight);
@@ -47,7 +49,7 @@ public class Game extends ApplicationAdapter {
 		camera.position.set(camX, camY, 0);
 		
 		batch = new SpriteBatch();
-		objectManager.add(new TestObject(0f,0f,0f, "texture/test/test_face_red.png"));
+		//objectManager.add(new TestObject(0f,0f,0f, "texture/test/test_face_red.png"));
 		
 		
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/jay_font.ttf"));
@@ -67,7 +69,7 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void render () {
 	    
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(0f, 0f, 0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		deltaTime = Gdx.graphics.getDeltaTime();
