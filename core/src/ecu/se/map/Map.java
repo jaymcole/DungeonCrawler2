@@ -23,8 +23,8 @@ import ecu.se.Globals;
 // TODO: Dispose floors
 
 public class Map {
-    private int tilesVertical = 11;
-    private int tilesHorizontal = 21;
+    private int tilesVertical = 5;
+    private int tilesHorizontal = 5;
     
     private Tile[][] visibleTiles;
     private ArrayList<Floor> floors;
@@ -32,6 +32,8 @@ public class Map {
     
     public Map() {
         floors = new ArrayList<Floor>(200);
+        
+        
         setFloor(0);
     }
     
@@ -81,5 +83,10 @@ public class Map {
     
     public Vector2 floorHelper(int x, int y) {
         return currentFloor.getSpawn(x,y);
+    }
+    
+    public void setScreenResolution(int screenWidth, int screenHeight) {
+        tilesHorizontal = (screenWidth/Globals.TILE_PIXEL_WIDTH) + 2;
+        tilesVertical = (screenHeight/Globals.TILE_PIXEL_HEIGHT) + 2;
     }
 }

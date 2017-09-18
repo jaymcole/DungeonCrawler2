@@ -24,13 +24,15 @@ public class Tile {
     private boolean flipX, flipY;
         
     public Tile(int x, int y, int width, int height) {
-        this.x = x - (int)(width*0.5f);
-        this.y = y - (int)(height*0.5f);
+        this.x = x;// - (int)(width*0.5f);
+        this.y = y;// - (int)(height*0.5f);
         this.width = width;
         this.height = height;
         shaper = new ShapeRenderer();
         objects = new ArrayList<GameObject>();
         bounds = Utilities.getRectangleBounds(x, y, width, height);
+        
+        
     }
     
     public void update(double d) {
@@ -40,7 +42,8 @@ public class Tile {
     public void render(SpriteBatch batch) {
         
         if(texture != null) {
-            batch.draw(texture, x, y, width, height, textureRegion.getRegionX(), textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flipX, flipY);
+            batch.draw(texture, x, y, width, height);
+            //batch.draw(texture, x, y, width, height, textureRegion.getRegionX(), textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flipX, flipY);
         }
         
         

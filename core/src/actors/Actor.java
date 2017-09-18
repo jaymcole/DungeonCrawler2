@@ -24,6 +24,7 @@ public abstract class Actor extends GameObject{
     protected Texture texture;
     protected Map map;
     
+    
     public Actor(float x, float y, float z, Map map) {
         super(x, y, z);    
         this.map = map;
@@ -66,14 +67,8 @@ public abstract class Actor extends GameObject{
     public void move(float deltaTime, Direction direction)
     {
         currentSpeed.x += (acceleration * deltaTime) * direction.x;
-        //currentSpeed.x -= drag * deltaTime;
-        currentSpeed.x = Utilities.clamp(-topSpeed, topSpeed, currentSpeed.x);
-        
-        
-        
-        
+        currentSpeed.x = Utilities.clamp(-topSpeed, topSpeed, currentSpeed.x);        
         currentSpeed.y += (acceleration * deltaTime) * direction.y;
-        //currentSpeed.y -= drag * deltaTime;
         currentSpeed.y = Utilities.clamp(-topSpeed, topSpeed, currentSpeed.y);
     }
     

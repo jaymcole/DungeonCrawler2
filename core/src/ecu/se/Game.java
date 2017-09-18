@@ -30,29 +30,30 @@ public class Game extends ApplicationAdapter {
 	private Map map;
 	private int camX, camY;
 	private BitmapFont font;
-	OrthographicCamera camera;
-	Player player;
+	private OrthographicCamera camera;
+	private Player player;
 	
 	// DEBUG THINGS - Needs to be deleted later
     private ShapeRenderer shaperRenderer;
 	
 	@Override
 	public void create () {
-		deltaTime = TimeUtils.millis();
+	    screenHeight = Gdx.graphics.getHeight();
+	    screenWidth = Gdx.graphics.getWidth();
+
+	    deltaTime = TimeUtils.millis();
 		objectManager = new ObjectManager();
 		map = new Map();
-
+		map.setScreenResolution(screenWidth, screenHeight);
 	
 		
-		screenHeight = Gdx.graphics.getHeight();
-		screenWidth = Gdx.graphics.getWidth();
 		camera = new OrthographicCamera(screenWidth, screenHeight);
 		camX = 0; camY =0;
 		camera.position.set(camX, camY, 0);
 		
 		batch = new SpriteBatch();
 		//objectManager.add(new TestObject(0f,0f,0f, "texture/test/test_face_red.png"));
-		player = new Player(map.floorHelper(0,0).x, map.floorHelper(0,0).y, 0, map);
+		player = new Player(map.floorHelper(0,0).x, map.floorHelper(0,0).y, 0, map, camera);
 		
 		
 		
@@ -79,10 +80,11 @@ public class Game extends ApplicationAdapter {
 		objectManager.update(deltaTime);
 		player.update(deltaTime);
 		camera.update();
+		
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
 		
-		map.render(batch, camX, camY);
+		map.render(batch, (int)player.x, (int)player.y);
 		objectManager.render(deltaTime, batch);
 		player.render(deltaTime, batch);
 		
@@ -112,27 +114,16 @@ public class Game extends ApplicationAdapter {
 	}
 	int floor = 0;
 	public void input() {
-	    // Pan Camera\
-	    /*
-	    if(Gdx.input.isKeyPressed(Input.Keys.W)){
-	        camY += Globals.CAMERA_SCROLL_SPEED_Y_AXIS * camera.zoom;
-	    } if(Gdx.input.isKeyPressed(Input.Keys.A)){
-	        camX -= Globals.CAMERA_SCROLL_SPEED_X_AXIS * camera.zoom;
-        } if(Gdx.input.isKeyPressed(Input.Keys.S)){
-            camY -= Globals.CAMERA_SCROLL_SPEED_Y_AXIS * camera.zoom;
-        } if(Gdx.input.isKeyPressed(Input.Keys.D)){
-            camX += Globals.CAMERA_SCROLL_SPEED_X_AXIS * camera.zoom;
-        }
-        */
+	    player.input(deltaTime);
         camera.position.set(player.x, player.y, 0);
-         player.input(deltaTime);
         // Zoom camera
         if(Gdx.input.isKeyPressed(Input.Keys.E)){
             camera.zoom += 1;
-        }if(Gdx.input.isKeyPressed(Input.Keys.Q)){
+        } else if(Gdx.input.isKeyPressed(Input.Keys.Q)){
             camera.zoom -= 1;
+        }else if(Gdx.input.isKeyPressed(Input.Keys.R)){
+            camera.zoom = 1;
         }
-        
         
         // Generate new floor
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){

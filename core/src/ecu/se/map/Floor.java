@@ -15,8 +15,8 @@ public class Floor {
     
     private int mapWidth = Globals.MAP_TILE_WIDTH;
     private int mapHeight = Globals.MAP_TILE_HEIGHT;
-    private int tileWidth = 128;
-    private int tileHeight = 128;
+    private int tileWidth = Globals.TILE_PIXEL_WIDTH;
+    private int tileHeight = Globals.TILE_PIXEL_HEIGHT;
     
     Tile[][] tiles;
     
@@ -207,10 +207,10 @@ public class Floor {
     }
     
     public Tile getTile(int x, int y) {
-        int getWidth = x/tileWidth;
-        int getHeight = y/tileHeight;
-        if(inBounds(getWidth, getHeight) && tiles[getWidth][getHeight] != null) {
-            return tiles[getWidth][getHeight];
+        int xCoord = x/tileWidth;
+        int yCoord = y/tileHeight;
+        if(inBounds(xCoord, yCoord) && tiles[xCoord][yCoord] != null) {
+            return tiles[xCoord][yCoord];
         }
         else {
             return null;

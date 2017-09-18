@@ -26,14 +26,16 @@ public class Globals {
     
     public static final float MIN_PATH_DENSITY = 0.3f;
     
-    public static final int MAP_TILE_WIDTH = 10;
-    public static final int MAP_TILE_HEIGHT = 10;
+    public static final int MAP_TILE_WIDTH = 125;
+    public static final int MAP_TILE_HEIGHT = 125;
+    public static final int TILE_PIXEL_WIDTH = 128;
+    public static final int TILE_PIXEL_HEIGHT= 128;
     
     
     // DEBUG Settings
     // All of these will probably have to be cleaned up (removed along with whatever functions use them) later.
     public static boolean RENDER_ALL_TILES = false;
-    
+    public static boolean USE_TEXTURE_MANAGER = true;
     
     
     

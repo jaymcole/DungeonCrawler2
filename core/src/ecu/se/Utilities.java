@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
+import assetManager.AssetManager;
+
 public class Utilities {
     
     private static ShapeRenderer debugRenderer = new ShapeRenderer();
@@ -48,6 +50,11 @@ public class Utilities {
     }
     
     public static Texture loadTexture(String filePath) {
+        
+        if (Globals.USE_TEXTURE_MANAGER)
+            return AssetManager.getTexture(filePath);
+        
+
         Texture texture;
         try {
             texture = new Texture(filePath);      
