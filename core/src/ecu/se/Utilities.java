@@ -52,7 +52,7 @@ public class Utilities {
     public static Texture loadTexture(String filePath) {
         
         if (Globals.USE_TEXTURE_MANAGER)
-            return AssetManager.getTexture(filePath);
+            return AssetManager.getTexture(filePath).getTexture();
         
 
         Texture texture;

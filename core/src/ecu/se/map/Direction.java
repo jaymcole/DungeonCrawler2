@@ -2,6 +2,8 @@ package ecu.se.map;
 
 import java.util.Random;
 
+import com.badlogic.gdx.math.Vector2;
+
 public enum Direction {
     NORTH("NORTH",0, 1),
     EAST("EAST", 1, 0),
@@ -56,6 +58,25 @@ public enum Direction {
             return nextDirectionCCW(dir);
         } else {
             return nextDirectionCW(dir);
+        }
+    }
+    
+    public static Vector2 getCoordinate(Vector2 start, Direction dir, int distance) {
+        return new Vector2(start.x + (dir.x * distance), start.y + (dir.y * distance));
+    }
+    
+    public Direction getDirectionTo(int x1, int y1, int x2, int y2) {
+        int deltaX = x1 - x2;
+        int deltaY = y1 - y2;
+        
+        if (Math.abs(deltaX) < Math.abs(deltaY)) {
+            if (deltaX > 0)
+                return Direction.EAST;
+            return Direction.WEST;
+        } else {
+            if(deltaY > 0)
+                return Direction.NORTH;
+            return Direction.SOUTH;
         }
     }
 }

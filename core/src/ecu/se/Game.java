@@ -16,10 +16,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import actors.Player;
+import assetManager.AssetManager;
+import ecu.se.gui.HUD;
 import ecu.se.map.Map;
-import ecu.se.objects.TestObject;
-
-
 
 public class Game extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -28,58 +27,47 @@ public class Game extends ApplicationAdapter {
 	private ObjectManager objectManager;
 	private int screenHeight, screenWidth;
 	private Map map;
-	private int camX, camY;
-	private BitmapFont font;
 	private OrthographicCamera camera;
 	private Player player;
+	private HUD hud;
+	
+	private int zoom = Globals.DEFAULT_CAMERA_ZOOM;
 	
 	// DEBUG THINGS - Needs to be deleted later
     private ShapeRenderer shaperRenderer;
 	
 	@Override
 	public void create () {
+	    deltaTime = TimeUtils.millis();
 	    screenHeight = Gdx.graphics.getHeight();
 	    screenWidth = Gdx.graphics.getWidth();
-
-	    deltaTime = TimeUtils.millis();
-		objectManager = new ObjectManager();
-		map = new Map();
-		map.setScreenResolution(screenWidth, screenHeight);
-	
-		
-		camera = new OrthographicCamera(screenWidth, screenHeight);
-		camX = 0; camY =0;
-		camera.position.set(camX, camY, 0);
-		
+	    objectManager = new ObjectManager();
+	    map = new Map();
+	    map.setScreenResolution(screenWidth, screenHeight);
+	    player = new Player(map.floorHelper(0,0).x, map.floorHelper(0,0).y, 0, map, camera);
+	    hud = new HUD(player, screenWidth, screenHeight);
+	    camera = new OrthographicCamera(screenWidth, screenHeight);
 		batch = new SpriteBatch();
-		//objectManager.add(new TestObject(0f,0f,0f, "texture/test/test_face_red.png"));
-		player = new Player(map.floorHelper(0,0).x, map.floorHelper(0,0).y, 0, map, camera);
-		
-		
-		
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/jay_font.ttf"));
-		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.size = 48;
-		parameter.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?";
-		//e.g. abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?: 
-		// These characters should not repeat! 
-
-		font = generator.generateFont(parameter);
-		generator.dispose();
-		
 		shaperRenderer = new ShapeRenderer();
 		
 	}
 	
+	// Update all game objects
+	public void update() {
+	    deltaTime = Gdx.graphics.getDeltaTime();
+        objectManager.update(deltaTime);
+        player.update(deltaTime);
+        camera.update();
+        camera.zoom = zoom;
+	}
+	
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(0f, 0f, 0f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	    update();
 		
-		deltaTime = Gdx.graphics.getDeltaTime();
-		objectManager.update(deltaTime);
-		player.update(deltaTime);
-		camera.update();
+		
+	    Gdx.gl.glClearColor(0f, 0f, 0f, 1);
+	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
@@ -87,27 +75,23 @@ public class Game extends ApplicationAdapter {
 		map.render(batch, (int)player.x, (int)player.y);
 		objectManager.render(deltaTime, batch);
 		player.render(deltaTime, batch);
+		hud.render(batch);
+		
+		batch.end();
 		
 		if(Globals.DEBUG) {
-		    font.setColor(Color.WHITE);
-		    font.draw(batch, "DEV Build", (int)(camera.position.x-screenWidth*0.5+15), (int)(-15+camera.position.y+screenHeight*0.5));
-		    
 		    shaperRenderer.begin(ShapeType.Line);
-		    
 		    int radius = 25;
 		    shaperRenderer.ellipse((int)(camera.viewportWidth*0.5-radius*0.5), (int)(camera.viewportHeight*0.5-radius*0.5), 25, 25);
 		    shaperRenderer.end();
-		    
-		    font.draw(batch, "Map Center", 10, -5);
-            
 		}
-		
-		batch.end();
 		
 		if(Globals.DEBUG) {
             Utilities.DrawDebugLine(new Vector2(0,-50), new Vector2(0,50), camera.combined);
             Utilities.DrawDebugLine(new Vector2(-50,0), new Vector2(50,0), camera.combined);
         }
+		/*
+        */
 		
 		input();
 		
@@ -118,11 +102,11 @@ public class Game extends ApplicationAdapter {
         camera.position.set(player.x, player.y, 0);
         // Zoom camera
         if(Gdx.input.isKeyPressed(Input.Keys.E)){
-            camera.zoom += 1;
+            zoom += 1;
         } else if(Gdx.input.isKeyPressed(Input.Keys.Q)){
-            camera.zoom -= 1;
+            zoom -= 1;
         }else if(Gdx.input.isKeyPressed(Input.Keys.R)){
-            camera.zoom = 1;
+            zoom = 1;
         }
         
         // Generate new floor

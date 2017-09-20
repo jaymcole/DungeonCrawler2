@@ -1,5 +1,6 @@
 package ecu.se.map;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,10 +21,8 @@ public class Floor {
     
     Tile[][] tiles;
     
-    // TODO: Set tile Width/Height based on texture??
+    // TODO: Floor/Map uses an absurd amount of memory. This needs to be cleaned up.
     
-    // TODO: Create variable floor sizes?
-        
     public Floor () {
         random = new Random();
         seed = random.nextLong();
@@ -69,20 +68,71 @@ public class Floor {
         }
         
         // Populate the map with walkable tiles.
+        generatePath(random.nextInt(mapWidth), random.nextInt(mapHeight), null);
         while(totalPaths < (mapWidth*mapHeight) * Globals.MIN_PATH_DENSITY) {
-            generatePath(random.nextInt(mapWidth), random.nextInt(mapHeight), null);
+            int x = random.nextInt(mapWidth);
+            int y = random.nextInt(mapHeight);
+            generatePath(x,y, null);
         }
-        
-        /*
-        // Set wall textures.
+
+        ArrayList<ArrayList<Vector2>> islands = new ArrayList<ArrayList<Vector2>>();
         for(int i = 0; i < mapWidth; i++) {
             for(int j = 0; j < mapHeight; j++) {
-                if(countAdjacentWalkable(i, j) > 0 && tiles[i][j].getWall()) {
-                    tiles[i][j].setTexture(Utilities.loadTexture("texture/wall/corner.png"));
+//                System.out.print("Checking " + i + ", " + j );
+                if(!checkLists(new Vector2(i, j), islands) && !tiles[i][j].getWall()) {
+//                    System.out.print("\t IF \n");
+                    ArrayList<Vector2> path = new  ArrayList<Vector2>();
+                    islands.add(path);
+                    searchPath(new Vector2(i, j), path);                    
+                } else {
+//                    System.out.print("\t else \n");
                 }
             }
         }
-        */
+        
+        System.out.println("Total Islands=" + islands.size());
+        islands=null;
+        
+    }
+    
+    private boolean checkLists(Vector2 coordinates, ArrayList<ArrayList<Vector2>> islands) {
+        for(ArrayList<Vector2> lists : islands) {
+            for(Vector2 v : lists) {
+                if(v.equals(coordinates)) {
+                    return true;
+                    
+                }
+            }
+        }
+        return false;
+    }
+    
+    
+    // TODO: get the shortest path for each island and build a new
+    // TODO: Find largest ISLAND
+    
+    private void searchPath(Vector2 coord, ArrayList<Vector2> path) { 
+        if (path.contains(coord))
+            return;
+        
+        if (inBounds((int)coord.x, (int)coord.y) && tiles[(int) coord.x][(int) coord.y] != null && !tiles[(int) coord.x][(int) coord.y].getWall()) {
+            path.add(new Vector2(coord.x, coord.y));
+            searchPath(Direction.getCoordinate(coord, Direction.NORTH, 1), path);
+            searchPath(Direction.getCoordinate(coord, Direction.EAST, 1), path);
+            searchPath(Direction.getCoordinate(coord, Direction.WEST, 1), path);
+            searchPath(Direction.getCoordinate(coord, Direction.SOUTH, 1), path);
+        } else {
+            return;
+        }
+    }
+    
+    private void makeTileWalkable(int x, int y) {
+        totalPaths++;
+        tiles[x][y].setWall(false);
+        tiles[x][y].setTexture(Utilities.loadTexture("texture/floor/castle_tile.jpg"));
+        
+        if(inBounds(x, y+1) && tiles[x][y+1].getWall())
+            tiles[x][y+1].setTexture(Utilities.loadTexture("texture/wall/stonewall_short.png"));
     }
     
     @SuppressWarnings("unused")
@@ -137,12 +187,11 @@ public class Floor {
         if(!tiles[x][y].getWall() && random.nextInt(100) > Globals.CONTINUE_AFTER_OVERLAP_CHANCE)
             return;
         
-        totalPaths++;
-        tiles[x][y].setWall(false);
-        tiles[x][y].setTexture(Utilities.loadTexture("texture/floor/castle_tile.jpg"));
+        makeTileWalkable(x, y);
         
-        if(inBounds(x, y+1) && tiles[x][y+1].getWall())
-            tiles[x][y+1].setTexture(Utilities.loadTexture("texture/wall/stonewall_short.png"));
+        
+//        if(inBounds(x, y+1) && tiles[x][y+1].getWall())
+//            tiles[x][y+1].setTexture(Utilities.loadTexture("texture/wall/stonewall_short.png"));
         
         if(dir == null) {
             tiles[x][y].setTexture(Utilities.loadTexture("texture/floor/castle_tile.jpg"));
@@ -182,7 +231,20 @@ public class Floor {
             y += dir.y;            
         }
         
-        return inBounds(x, y);     
+        return inBounds(x, y, 1, 1);     
+    }
+    
+ // inBounds(x, y) returns true if x and y are within the map bounds.
+    // bx and by = the number of tiles to leave as buffer.
+    // Example: given a grid 10x10 and bx=1, by=2
+    //  x=0 or x=9 would return false.
+    //  y=0 or y=1 or y=9 or y=8 would return false.
+    private boolean inBounds(int x, int y, int bx, int by) {
+        if(x < bx || x >= mapWidth - bx )
+            return false;
+        else if (y < by || y >= mapHeight - by )
+            return false;
+        return true;
     }
     
  // inBounds(x, y) returns true if x and y are within the map bounds.

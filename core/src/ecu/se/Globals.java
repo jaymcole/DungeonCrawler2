@@ -15,7 +15,7 @@ public class Globals {
     
     public static final int CAMERA_SCROLL_SPEED_X_AXIS = 5;
     public static final int CAMERA_SCROLL_SPEED_Y_AXIS = 5;
-    
+    public static final int DEFAULT_CAMERA_ZOOM = 1;
     
     
     // Map Gen Settings (probably as a percent)
@@ -26,8 +26,8 @@ public class Globals {
     
     public static final float MIN_PATH_DENSITY = 0.3f;
     
-    public static final int MAP_TILE_WIDTH = 125;
-    public static final int MAP_TILE_HEIGHT = 125;
+    public static final int MAP_TILE_WIDTH = 100;
+    public static final int MAP_TILE_HEIGHT = 100;
     public static final int TILE_PIXEL_WIDTH = 128;
     public static final int TILE_PIXEL_HEIGHT= 128;
     

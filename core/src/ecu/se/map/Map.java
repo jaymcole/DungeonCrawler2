@@ -31,9 +31,7 @@ public class Map {
     private Floor currentFloor;
     
     public Map() {
-        floors = new ArrayList<Floor>(200);
-        
-        
+        floors = new ArrayList<Floor>();
         setFloor(0);
     }
     
