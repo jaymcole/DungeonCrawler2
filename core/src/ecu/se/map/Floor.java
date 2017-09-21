@@ -121,10 +121,10 @@ public class Floor {
         
         if (inBounds((int)coord.x, (int)coord.y) && tiles[(int) coord.x][(int) coord.y] != null && !tiles[(int) coord.x][(int) coord.y].getWall()) {
             path.add(new Vector2(coord.x, coord.y));
-            searchPath(Direction.getCoordinate(coord, Direction.NORTH, 1), path);
-            searchPath(Direction.getCoordinate(coord, Direction.EAST, 1), path);
-            searchPath(Direction.getCoordinate(coord, Direction.WEST, 1), path);
-            searchPath(Direction.getCoordinate(coord, Direction.SOUTH, 1), path);
+            searchPath(Direction.translate(coord, Direction.NORTH, 1), path);
+            searchPath(Direction.translate(coord, Direction.EAST, 1), path);
+            searchPath(Direction.translate(coord, Direction.WEST, 1), path);
+            searchPath(Direction.translate(coord, Direction.SOUTH, 1), path);
         } else {
             return;
         }

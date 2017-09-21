@@ -43,10 +43,7 @@ public class Tile {
         
         if(texture != null) {
             batch.draw(texture, x, y, width, height);
-            //batch.draw(texture, x, y, width, height, textureRegion.getRegionX(), textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flipX, flipY);
         }
-        
-        
     }
 
     public void dispose() {
