@@ -91,9 +91,13 @@ public class Floor {
         }
         
         System.out.println("Total Islands=" + islands.size());
-        islands=null;
-        
+
     }
+    
+    private int findDistance(Vector2 point1, Vector2 point2) {
+   		return (int) (Math.abs(point2.x-point1.x) + Math.abs(point2.y-point1.y));
+    }
+        	
     
     private boolean checkLists(Vector2 coordinates, ArrayList<ArrayList<Vector2>> islands) {
         for(ArrayList<Vector2> lists : islands) {
