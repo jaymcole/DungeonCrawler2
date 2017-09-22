@@ -29,6 +29,7 @@ public class Game extends ApplicationAdapter {
 	private Map map;
 	private OrthographicCamera camera;
 	private Player player;
+
 	private HUD hud;
 	
 	private int zoom = Globals.DEFAULT_CAMERA_ZOOM;
@@ -45,6 +46,7 @@ public class Game extends ApplicationAdapter {
 	    map = new Map();
 	    map.setScreenResolution(screenWidth, screenHeight);
 	    player = new Player(map.floorHelper(0,0).x, map.floorHelper(0,0).y, 0, map, camera);
+	    objectManager.add(new Player(map.floorHelper(0,0).x, map.floorHelper(0,0).y, 0, map, camera));
 	    hud = new HUD(player, screenWidth, screenHeight);
 	    camera = new OrthographicCamera(screenWidth, screenHeight);
 		batch = new SpriteBatch();

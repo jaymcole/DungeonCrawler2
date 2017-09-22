@@ -2,6 +2,7 @@ package actors;
 
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.GameObject;
@@ -23,7 +24,8 @@ public abstract class Actor extends GameObject{
     protected float drag;
     protected Texture texture;
     protected Map map;
-    
+    protected float oldx = 0;
+    protected float oldy = 0;
     
     public Actor(float x, float y, float z, Map map) {
         super(x, y, z);    
@@ -70,6 +72,11 @@ public abstract class Actor extends GameObject{
         currentSpeed.x = Utilities.clamp(-topSpeed, topSpeed, currentSpeed.x);        
         currentSpeed.y += (acceleration * deltaTime) * direction.y;
         currentSpeed.y = Utilities.clamp(-topSpeed, topSpeed, currentSpeed.y);
+    }
+    public void revert()
+    {
+    	x = oldx;
+    	y = oldy;
     }
     
     

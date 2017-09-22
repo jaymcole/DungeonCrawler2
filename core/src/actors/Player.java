@@ -33,8 +33,7 @@ public class Player extends Actor{
         acceleration = 900;
         this.camera = camera;
     }
-    float oldx = 0;
-    float oldy = 0;
+   
 
     @Override
     public void update(float deltaTime) {

@@ -2,6 +2,7 @@ package ecu.se;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Polygon;
 
 public abstract class GameObject {
     
@@ -9,12 +10,14 @@ public abstract class GameObject {
     protected Texture texture;
     protected boolean alive;
     protected ObjectManager objectManager;
+    protected Polygon bounds;
         
     public GameObject(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
         alive = true;
+        bounds = Utilities.getRectangleBounds(x, y, 10, 10);
     }
    
     public abstract void update(float deltaTime);
@@ -23,20 +26,18 @@ public abstract class GameObject {
    
     public abstract void dispose();
     
-    //TODO: This should be cleaned up.
-    protected Texture loadTexture(String filePath) {
-        this.texture = Utilities.loadTexture(filePath);
-        if(texture == null) {
-            this.kill();
-            return null;
-        }
-        return texture;
-    }
+   
+ 
     
     protected void kill() {
         this.alive = false;
         if(objectManager != null) 
             objectManager.remove(this);
         dispose();
+    }
+    
+    public Polygon getBounds()
+    {
+    	return bounds;
     }
 }
