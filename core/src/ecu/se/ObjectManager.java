@@ -6,6 +6,7 @@ import java.util.Iterator;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import actors.Actor;
+import actors.Player;
 
 public class ObjectManager {
 
@@ -13,6 +14,7 @@ public class ObjectManager {
     private Iterator<GameObject> updater;
     private ArrayList<GameObject> waitList;
     private ArrayList<GameObject> actors;
+    private Player player;
 
     
     public ObjectManager() {
@@ -40,7 +42,12 @@ public class ObjectManager {
         {
         	object = updater.next();
             if (object.alive) {
-                object.update(deltaTime);
+                object.update(deltaTime);            
+            if(isColliding(player, object))
+            {
+                System.out.println("Player is Colliding with object");
+                player.revert();
+            }
             } else {
                 this.remove(object);
             }
@@ -57,18 +64,25 @@ public class ObjectManager {
         		}
         	}
         }
-        	
+        
         updateList();
     }
     
     public void render(float deltaTime, SpriteBatch batch) {
         updater = objects.iterator();
         GameObject object;
-        
+        Actor actor;
         while(updater.hasNext()) {
             object = updater.next();
             if (object.alive) {
                 object.render(deltaTime, batch);
+            }
+        }
+        updater = actors.iterator();
+        while(updater.hasNext()) {
+            actor = (Actor) updater.next();
+            if (actor.alive) {
+                actor.render(deltaTime, batch);
             }
         }
     }
@@ -120,5 +134,10 @@ public class ObjectManager {
     public boolean isColliding(GameObject object, GameObject otherObject)
     {
     	return object.getBounds().getBoundingRectangle().overlaps(otherObject.getBounds().getBoundingRectangle());
+    }
+    
+    public Player setPlayer(Player player)
+    {
+        return this.player = player;
     }
 }

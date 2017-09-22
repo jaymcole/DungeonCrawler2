@@ -46,7 +46,8 @@ public class Game extends ApplicationAdapter {
 	    map = new Map();
 	    map.setScreenResolution(screenWidth, screenHeight);
 	    player = new Player(map.floorHelper(0,0).x, map.floorHelper(0,0).y, 0, map, camera);
-	    objectManager.add(new Player(map.floorHelper(0,0).x, map.floorHelper(0,0).y, 0, map, camera));
+	    objectManager.setPlayer(player);
+	    objectManager.add(new Player(player.x + 15, player.y + 15, 0 , map, camera));
 	    hud = new HUD(player, screenWidth, screenHeight);
 	    camera = new OrthographicCamera(screenWidth, screenHeight);
 		batch = new SpriteBatch();

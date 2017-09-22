@@ -50,6 +50,7 @@ public class Player extends Actor{
             x = oldx;
             y = oldy;
         }
+        bounds.setPosition(x,y);
         
     }
 
