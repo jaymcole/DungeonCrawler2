@@ -31,6 +31,7 @@ public class Globals {
     public static final int TILE_PIXEL_WIDTH = 128;
     public static final int TILE_PIXEL_HEIGHT= 128;
     
+    public static final String SPRITE_PATH = "spriteInfo";
     
     // DEBUG Settings
     // All of these will probably have to be cleaned up (removed along with whatever functions use them) later.

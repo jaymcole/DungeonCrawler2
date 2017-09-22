@@ -49,7 +49,7 @@ public class Game extends ApplicationAdapter {
 	    camera = new OrthographicCamera(screenWidth, screenHeight);
 		batch = new SpriteBatch();
 		shaperRenderer = new ShapeRenderer();
-		
+		AssetManager.getSpriteSheet("texture/spritesheet/adventuretime_sprites.png");
 	}
 	
 	// Update all game objects
