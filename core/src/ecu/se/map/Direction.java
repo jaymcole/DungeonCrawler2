@@ -113,8 +113,8 @@ public enum Direction {
     	
     	int dir = 0;
     	do {
-    		random.nextInt(directionValues);
-    	} while (dir % 2 == 0);
+    		dir = random.nextInt(directionValues);
+    	} while (dir % 2 != 0);
         return Direction.values()[dir];
     }
     

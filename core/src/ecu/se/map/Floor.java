@@ -58,23 +58,29 @@ public class Floor {
     }
     
     public void generate() {
+    	System.out.println("Generate");
         generated = true;
         // Fill tiles array with walls.
         for(int i = 0; i < mapWidth; i++) {
             for(int j = 0; j < mapHeight; j++) {
+            	System.out.println("Initializing tile (" + i + ", " + j + ")");
                 tiles[i][j] = new Tile(i*tileWidth, j*tileHeight, tileWidth, tileHeight);
                 tiles[i][j].setWall(true);
             }
         }
-        
+        System.out.println("Done initializing tiles");
         // Populate the map with walkable tiles.
+        System.out.println("Starting new path");
         generatePath(random.nextInt(mapWidth), random.nextInt(mapHeight), null);
         while(totalPaths < (mapWidth*mapHeight) * Globals.MIN_PATH_DENSITY) {
             int x = random.nextInt(mapWidth);
             int y = random.nextInt(mapHeight);
+            System.out.println("Starting new path (" + x + ", " + y + ")");
+
             generatePath(x,y, null);
         }
-
+        System.out.println("Done making tiles.");
+        
         ArrayList<ArrayList<Vector2>> islands = new ArrayList<ArrayList<Vector2>>();
         for(int i = 0; i < mapWidth; i++) {
             for(int j = 0; j < mapHeight; j++) {
@@ -89,7 +95,7 @@ public class Floor {
                 }
             }
         }
-        
+        System.out.println("Done counting islands.");
         System.out.println("Total Islands=" + islands.size());
 
     }
@@ -131,12 +137,16 @@ public class Floor {
     }
     
     private void makeTileWalkable(int x, int y) {
+        System.out.println("\tMaking walkable (" + x + ", " + y + ")");
+
         totalPaths++;
         tiles[x][y].setWall(false);
         tiles[x][y].setTexture(Utilities.loadTexture("texture/floor/castle_tile.jpg"));
         
         if(inBounds(x, y+1) && tiles[x][y+1].getWall())
             tiles[x][y+1].setTexture(Utilities.loadTexture("texture/wall/stonewall_short.png"));
+        System.out.println("\tDone making walkable");
+
     }
     
     @SuppressWarnings("unused")
@@ -186,43 +196,59 @@ public class Floor {
     //  direction is the current direction of the path 
     //      tiles[0][0] represents the top left most tile.
     private void generatePath(int x, int y, Direction dir) {
+    	System.out.println("Initializing path at (" + x + ", " + y + ")");
+
         if(!checkDirection(x, y, dir))
             return;
+        System.out.println("\tPassed checkDirection");
         if(!tiles[x][y].getWall() && random.nextInt(100) > Globals.CONTINUE_AFTER_OVERLAP_CHANCE)
             return;
-        
+        System.out.println("\tPassed tile check");
+
         makeTileWalkable(x, y);
-        
+
         
 //        if(inBounds(x, y+1) && tiles[x][y+1].getWall())
 //            tiles[x][y+1].setTexture(Utilities.loadTexture("texture/wall/stonewall_short.png"));
         
         if(dir == null) {
+        	System.out.println("\tDirection == null");
             tiles[x][y].setTexture(Utilities.loadTexture("texture/floor/castle_tile.jpg"));
+            System.out.println("\tSetting texture");
             dir = Direction.randomDirection(random);
+            System.out.println("\tDone getting random direction.");
             generatePath(x, y, dir);
             x += dir.x;
             y += dir.y;
+        } else {
+            System.out.println("\tDirection != null");
         }
-        
+
         if(random.nextInt(100) <= Globals.CONTINUE_CHANCE) { 
             if(random.nextInt(100) <= Globals.TURN_CHANCE) {
+                System.out.println("\tTURN");
+
                 dir = Direction.turn(random, dir);
                 x += dir.x;
                 y += dir.y;
                 generatePath(x, y, dir);
             } else if (random.nextInt(100) <= Globals.SPLIT_CHANCE) {
-                generatePath(x, y, dir);
+                System.out.println("\tSPLIT");
+            	generatePath(x, y, dir);
                 dir = Direction.turn(random, dir);
                 x += dir.x;
                 y += dir.y;
                 generatePath(x, y, dir);
             } else {
+                System.out.println("\tFORWARD");
+
                 x += dir.x;
                 y += dir.y;
                 generatePath(x, y, dir);
             }
         } else {
+            System.out.println("\tEND");
+
             return;
         }
     }
