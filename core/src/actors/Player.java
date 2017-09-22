@@ -7,15 +7,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import assetManager.Animation;
 import assetManager.AssetManager;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
+
 
 public class Player extends Actor{
     
     private  OrthographicCamera camera;
     private TextureRegion textureRegion;
     
+    private Animation animation;
     private int spriteWidth = 40;
     private int spriteHeight = 48;
     private int spriteSequences = 5;
@@ -24,6 +27,7 @@ public class Player extends Actor{
     public Player(float x, float y, float z, Map map, OrthographicCamera camera) {
         super(x, y, z, map);
         //texture = Utilities.loadTexture("texture/spritesheet/adventuretime_sprites.png");
+        animation = AssetManager.getSpriteSheet("texture/spritesheet/adventuretime_sprites.png").getAnimation();
         texture = AssetManager.getTexture("texture/spritesheet/adventuretime_sprites.png").getTexture();
         textureRegion = AssetManager.getTexture("texture/spritesheet/adventuretime_sprites.png").getTextureRegion();
         
@@ -52,6 +56,8 @@ public class Player extends Actor{
         }
         bounds.setPosition(x,y);
         
+        animation.update(deltaTime);
+        animation.setXY((int) x,(int) y);
     }
 
     @Override
@@ -59,7 +65,8 @@ public class Player extends Actor{
         // TODO Auto-generated method stub
         if(texture != null) {
             //batch.draw(texture, x, y);
-            batch.draw(textureRegion, (int)(oldx-(spriteWidth*0.5)), oldy);
+         //   batch.draw(textureRegion, (int)(oldx-(spriteWidth*0.5)), oldy);
+            animation.render(deltaTime, batch);
         }
         //Utilities.DrawDebugLine(new Vector2(x, y),  new Vector2(oldx, oldy), camera.combined);
     }

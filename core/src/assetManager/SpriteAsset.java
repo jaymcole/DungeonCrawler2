@@ -17,6 +17,7 @@ public class SpriteAsset {
 	public int numCol;
 	public int spriteW;
 	public int spriteH;
+	public Animation animation;
 
 	//Load text file with sprite sheet 
 	
@@ -42,6 +43,8 @@ public class SpriteAsset {
         spriteW = spriteFile.nextInt();
         spriteH = spriteFile.nextInt();
         System.out.println(numRows + " " + numCol + " " + spriteW + " " + spriteH);
+        
+        animation = new Animation(0, 0, 0, this);
     }
 	
     public boolean loadedSuccessfully() {
@@ -76,4 +79,7 @@ public class SpriteAsset {
     	return sprite;
     }
     
+    public Animation getAnimation() {
+    	return animation;
+    }
 }
