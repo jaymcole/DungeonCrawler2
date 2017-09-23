@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.particles.ParticleChannels.TextureRegionInitializer;
 import com.badlogic.gdx.math.Vector2;
 
 import assetManager.Animation;
@@ -14,29 +15,23 @@ import ecu.se.map.Direction;
 import ecu.se.map.Map;
 
 
-public class Player extends Actor{
+public class Player extends Actor {
     
-    private  OrthographicCamera camera;
-    private TextureRegion textureRegion;
+//    private  OrthographicCamera camera;
+//    private TextureRegion textureRegion;
     
-    private Animation animation;
-    private int spriteWidth = 40;
-    private int spriteHeight = 48;
-    private int spriteSequences = 5;
-    private Direction direction;
+//    private Animation animation;
+//    private int spriteWidth = 40;
+//    private int spriteHeight = 48;
+//    private int spriteSequences = 5;
     
-    public Player(float x, float y, float z, Map map, OrthographicCamera camera) {
-        super(x, y, z, map);
-        //texture = Utilities.loadTexture("texture/spritesheet/adventuretime_sprites.png");
-        animation = AssetManager.getSpriteSheet("texture/spritesheet/adventuretime_sprites.png").getAnimation();
-        texture = AssetManager.getTexture("texture/spritesheet/adventuretime_sprites.png").getTexture();
-        textureRegion = AssetManager.getTexture("texture/spritesheet/adventuretime_sprites.png").getTextureRegion();
-        bounds = Utils.getRectangleBounds(x, y, 50, 50);
+    public Player(float x, float y, float z, Map map, OrthographicCamera camera, String spriteSheet) {
+        super(x, y, z, map, spriteSheet);
         currentSpeed = new Vector2(0, 0);
         drag = 0.3f;
         topSpeed = 900;
         acceleration = 900;
-        this.camera = camera;
+//        this.camera = camera;
     }
    
 
@@ -64,8 +59,8 @@ public class Player extends Actor{
     }
 
     @Override
-    public void render(float deltaTime, SpriteBatch batch) {
-        animation.render(deltaTime, batch);
+    public void render(SpriteBatch batch) {
+        animation.render(batch);
 //        if(texture != null) {
             //batch.draw(texture, x, y);
          //   batch.draw(textureRegion, (int)(oldx-(spriteWidth*0.5)), oldy);

@@ -2,10 +2,15 @@ package ecu.se.map;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.Globals;
+import ecu.se.Utils;
 
 // TODO: Add all used (tiles that actually need to be rendered) to a list for rendering.
 //      - To avoid having to check a render flag on a bunch of unused tiles.
@@ -66,6 +71,25 @@ public class Map {
                 }
             }
         }
+    }
+    
+    private ShapeRenderer debugRenderer = new ShapeRenderer();
+    public void debugRender(Matrix4 projection, int cameraX, int cameraY) { 
+        debugRenderer.begin(ShapeType.Line);
+        debugRenderer.setProjectionMatrix(projection);
+        debugRenderer.setColor(Color.RED);
+
+
+        visibleTiles = currentFloor.getAdjacent(cameraX, cameraY, tilesHorizontal, tilesVertical);
+        for(int i = 0; i < tilesHorizontal; i++) {
+            for(int j = 0; j < tilesVertical; j++) {
+                if(visibleTiles[i][j] != null) {
+                    debugRenderer.polygon(visibleTiles[i][j].getBounds().getTransformedVertices());
+                }
+            }
+        }
+        
+        debugRenderer.end();
     }
     
     public void dispose() {

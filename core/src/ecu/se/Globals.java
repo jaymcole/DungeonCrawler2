@@ -6,10 +6,10 @@ public class Globals {
     public static final boolean DEBUG = true;
     
     // Render Levels.
-    public static final float FLOOR =    0.0f;
-    public static final float WALLS =    1.0f;
-    public static final float PLAYER =   2.0f;
-    public static final float NPC =      2.0f;
+    public static final float Z_LEVEL_FLOOR =    0.0f;
+    public static final float Z_LEVEL_WALLS =    1.0f;
+    public static final float Z_LEVEL_PLAYER =   2.0f;
+    public static final float Z_LEVEL_NPC =      2.0f;
     
     public static final String DEFAULT_TEXTURE = "default.png";
     

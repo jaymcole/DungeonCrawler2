@@ -39,12 +39,39 @@ public class Utils {
         Gdx.gl.glLineWidth(1);
     }
     
-    public static Polygon getRectangleBounds(float cx, float cy, float width, float height) {
-        height *= 0.5f;
-        width *= 0.5f;
+    
+    public static final int ALIGN_CENTERED = 0;
+    public static final int ALIGN_BOTTOM_LEFT = 1;
+    public static final int ALIGN_BOTTOM_RIGHT = 2;
+    public static final int ALIGN_TOP_RIGHT = 3;
+    public static final int ALIGN_TOP_LEFT = 4;
+    
+    public static Polygon getRectangleBounds(float x, float y, float width, float height, int ALIGN) {
+//        height *= 0.5f;
+//        width *= 0.5f;
+//        Polygon poly = new Polygon(new float[]{-width, -height, width, -height, width, height, -width, height});
+
+        Polygon poly = new Polygon();
         
-        Polygon poly = new Polygon(new float[]{-width, -height, width, -height, width, height, -width, height});
-        poly.setOrigin(cx, cy);
+        switch (ALIGN) {
+            case ALIGN_CENTERED:
+                poly.setOrigin(width *0.5f, height*0.5f);
+                break;
+            case ALIGN_BOTTOM_LEFT:
+                poly.setOrigin(0, 0);
+                break;
+            case ALIGN_BOTTOM_RIGHT:
+                poly.setOrigin(width, 0);
+                break;
+            case ALIGN_TOP_RIGHT:
+                poly.setOrigin(width, height);
+                break;
+            case ALIGN_TOP_LEFT:
+                poly.setOrigin(0, height);
+                break;                
+        }
+        poly.setVertices(new float[]{0, 0, width, 0, width, height, 0, height});
+        poly.setPosition(x, y);
         poly.setScale(1, 1);
         
         return poly;

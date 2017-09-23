@@ -3,7 +3,6 @@ package ecu.se;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.rmi.CORBA.Util;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,9 +10,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.physics.box2d.Box2D;
 
 import actors.Actor;
 import actors.Player;
@@ -97,7 +93,7 @@ public class ObjectManager {
         while(updater.hasNext()) {
             object = updater.next();
             if (object.alive) {
-                object.render(deltaTime, batch);
+                object.render(batch);
             }
         }
         
@@ -105,13 +101,13 @@ public class ObjectManager {
         while(updater.hasNext()) {
             actor1 = (Actor) updater.next();
             if (actor1.alive) {
-                actor1.render(deltaTime, batch);
+                actor1.render(batch);
             } else {
                 Utils.println(this, "Actor is not rendering.");
             }
         }
         
-        player.render(deltaTime, batch);
+        player.render(batch);
         
     }
     
@@ -121,13 +117,14 @@ public class ObjectManager {
         debugRenderer.begin(ShapeType.Line);
         debugRenderer.setProjectionMatrix(projection);
         debugRenderer.setColor(Color.BLUE);
-        debugRenderer.polygon(player.getBounds().getVertices());
+        debugRenderer.polygon(player.getBounds().getTransformedVertices());
         
         updater = actors.iterator();
+        debugRenderer.setColor(Color.GREEN);
         while(updater.hasNext()) 
         {
             object = updater.next();
-            debugRenderer.polygon(object.getBounds().getVertices());
+            debugRenderer.polygon(object.getBounds().getTransformedVertices());
         }
         
         
@@ -136,7 +133,7 @@ public class ObjectManager {
         while(updater.hasNext()) 
         {
             object = updater.next();
-            debugRenderer.polygon(object.getBounds().getVertices());
+            debugRenderer.polygon(object.getBounds().getTransformedVertices());
         }
 
         debugRenderer.end();

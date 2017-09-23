@@ -14,6 +14,12 @@ public class Animation extends GameObject{
 	private Texture texture;
 	private TextureRegion textureRegion;
 	
+	private int offsetX;
+	private int offsetY;
+	
+	private float speed = 0.1f;
+	private float time = 0;
+	
 	// Requirements:
 	//	- Add parent, position updates based on parent position
 	// 	- Load sprite sheet
@@ -31,19 +37,25 @@ public class Animation extends GameObject{
 		texture = spriteAsset.getTexture().getTexture();
 		textureRegion = spriteAsset.getTexture().getTextureRegion();
 		frame = 0;
+		
+		offsetX = (int) (width * -0.5f);
+		offsetY = 0;
 	}
 
 	@Override
 	public void update(float deltaTime) {
-		spriteX = frame * width;
-		
+	    time+=deltaTime;
+	    if(time >= speed) {
+	        frame++;
+	        frame %= tRow-1;
+	        time -= speed;
+	        spriteX = frame * width;
+	    }		
 		textureRegion.setRegion(spriteX, spriteY, width, height);
-		frame++;
-		frame %= tRow;
 	}
 
 	@Override
-	public void render(float deltaTime, SpriteBatch batch) {
+	public void render(SpriteBatch batch) {
 		batch.draw(textureRegion, x, y);
 	}
 
@@ -57,7 +69,7 @@ public class Animation extends GameObject{
 	}
 
 	public void setXY(int x, int y) {
-		this.x = x;
-		this.y = y;
+		this.x = x + offsetX;
+		this.y = y + offsetY;
 	}
 }

@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import actors.Player;
+import actors.TestActor;
 import assetManager.AssetManager;
 import ecu.se.gui.HUD;
 import ecu.se.map.Map;
@@ -42,18 +43,18 @@ public class Game extends ApplicationAdapter {
 	    objectManager = new ObjectManager();
 	    map = new Map();
 	    map.setScreenResolution(screenWidth, screenHeight);
-	    player = new Player(map.floorHelper(0,0).x, map.floorHelper(0,0).y, 0, map, camera);
+	    player = new Player(map.floorHelper(0,0).x, map.floorHelper(0,0).y, 0, map, camera, "texture/spritesheet/adventuretime_sprites.png");
 	    objectManager.setPlayer(player);
 	    
 	    Random random  = new Random();
 	    for(int  i = 0; i < 50; i++) {
-	        objectManager.add(new Player(random.nextInt(Globals.MAP_TILE_WIDTH * 128), random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0 , map, camera));	        
+	        objectManager.add(new TestActor(random.nextInt(Globals.MAP_TILE_WIDTH * 128), random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0, map, "texture/spritesheet/adventuretime_sprites.png"));	        
 	    }
 	    hud = new HUD(player, screenWidth, screenHeight);
 	    camera = new OrthographicCamera(screenWidth, screenHeight);
 		batch = new SpriteBatch();
 		shaperRenderer = new ShapeRenderer();
-		AssetManager.getSpriteSheet("texture/spritesheet/adventuretime_sprites.png");
+		//AssetManager.getSpriteSheet("texture/spritesheet/adventuretime_sprites.png");
 	}
 	
 	// Update all game objects
@@ -91,7 +92,8 @@ public class Game extends ApplicationAdapter {
 		    shaperRenderer.end();
 		    
 		}
-		objectManager.debugRender(camera.projection);
+		map.debugRender(camera.combined, (int)player.x, (int)player.y);
+		objectManager.debugRender(camera.combined);
 		
 		if(Globals.DEBUG) {
             Utils.DrawDebugLine(new Vector2(0,-50), new Vector2(0,50), camera.combined);

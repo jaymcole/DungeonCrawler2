@@ -20,7 +20,7 @@ public class WorldObject extends GameObject{
 	}
 
 	@Override
-	public void render(float deltaTime, SpriteBatch batch) {
+	public void render(SpriteBatch batch) {
 		batch.draw(texture, x, y);
 		
 	}

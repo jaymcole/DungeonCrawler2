@@ -10,7 +10,6 @@ public abstract class GameObject {
     protected Texture texture;
     protected boolean alive;
     protected ObjectManager objectManager;
-//    protected BoundingBox bounds;
     protected Polygon bounds;
         
     public GameObject(float x, float y, float z) {
@@ -18,13 +17,22 @@ public abstract class GameObject {
         this.y = y;
         this.z = z;
         alive = true;
-        bounds = Utils.getRectangleBounds(x, y, 20, 20);
+        bounds = Utils.getRectangleBounds(x, y, 20, 20, Utils.ALIGN_CENTERED);
+        
+    }
+    
+    public GameObject(float x, float y) {
+        this.x = x;
+        this.y = y;
+        this.z = Globals.Z_LEVEL_FLOOR;
+        alive = true;
+        bounds = Utils.getRectangleBounds(x, y, 5, 5, Utils.ALIGN_CENTERED);
         
     }
    
     public abstract void update(float deltaTime);
     
-    public abstract void render(float deltaTime, SpriteBatch batch);
+    public abstract void render(SpriteBatch batch);
    
     public abstract void dispose();
     
