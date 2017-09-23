@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.Globals;
-import ecu.se.Utilities;
+import ecu.se.Utils;
 
 public class Floor {
     private long seed;
@@ -58,44 +58,33 @@ public class Floor {
     }
     
     public void generate() {
-    	System.out.println("Generate");
         generated = true;
         // Fill tiles array with walls.
         for(int i = 0; i < mapWidth; i++) {
             for(int j = 0; j < mapHeight; j++) {
-            	System.out.println("Initializing tile (" + i + ", " + j + ")");
                 tiles[i][j] = new Tile(i*tileWidth, j*tileHeight, tileWidth, tileHeight);
                 tiles[i][j].setWall(true);
             }
         }
-        System.out.println("Done initializing tiles");
         // Populate the map with walkable tiles.
-        System.out.println("Starting new path");
         generatePath(random.nextInt(mapWidth), random.nextInt(mapHeight), null);
         while(totalPaths < (mapWidth*mapHeight) * Globals.MIN_PATH_DENSITY) {
             int x = random.nextInt(mapWidth);
             int y = random.nextInt(mapHeight);
-            System.out.println("Starting new path (" + x + ", " + y + ")");
 
             generatePath(x,y, null);
         }
-        System.out.println("Done making tiles.");
         
         ArrayList<ArrayList<Vector2>> islands = new ArrayList<ArrayList<Vector2>>();
         for(int i = 0; i < mapWidth; i++) {
             for(int j = 0; j < mapHeight; j++) {
-//                System.out.print("Checking " + i + ", " + j );
                 if(!checkLists(new Vector2(i, j), islands) && !tiles[i][j].getWall()) {
-//                    System.out.print("\t IF \n");
                     ArrayList<Vector2> path = new  ArrayList<Vector2>();
                     islands.add(path);
                     searchPath(new Vector2(i, j), path);                    
-                } else {
-//                    System.out.print("\t else \n");
                 }
             }
         }
-        System.out.println("Done counting islands.");
         System.out.println("Total Islands=" + islands.size());
 
     }
@@ -137,15 +126,13 @@ public class Floor {
     }
     
     private void makeTileWalkable(int x, int y) {
-        System.out.println("\tMaking walkable (" + x + ", " + y + ")");
 
         totalPaths++;
         tiles[x][y].setWall(false);
-        tiles[x][y].setTexture(Utilities.loadTexture("texture/floor/castle_tile.jpg"));
+        tiles[x][y].setTexture(Utils.loadTexture("texture/floor/castle_tile.jpg"));
         
         if(inBounds(x, y+1) && tiles[x][y+1].getWall())
-            tiles[x][y+1].setTexture(Utilities.loadTexture("texture/wall/stonewall_short.png"));
-        System.out.println("\tDone making walkable");
+            tiles[x][y+1].setTexture(Utils.loadTexture("texture/wall/stonewall_short.png"));
 
     }
     
@@ -167,23 +154,19 @@ public class Floor {
     public Tile[][] getAdjacent(int x, int y, int width, int height) {
         x /= tileWidth;
         y /= tileHeight;
-        //System.out.println("Around: "+ x + " " + y);
 
         x -= (int)(width*0.5);
         y -= (int)(height*0.5);
         
         Tile[][] tilesToRender = new Tile[width][height];
         for(int i = 0; i < width; i++) {
-            //System.out.print("\t");
             for(int j = 0; j < height; j++) {
-                //System.out.print( "("+ (i+x) + ", " + (j+y) + ")  ");
                 if(inBounds(i+x, j+y)) {
                     tilesToRender[i][j] = tiles[i+x][j+y];
                 } else {
                     tilesToRender[i][j] = null;
                 }
             }
-            //System.out.println("");
         }
         
         return tilesToRender;
@@ -196,14 +179,11 @@ public class Floor {
     //  direction is the current direction of the path 
     //      tiles[0][0] represents the top left most tile.
     private void generatePath(int x, int y, Direction dir) {
-    	System.out.println("Initializing path at (" + x + ", " + y + ")");
 
         if(!checkDirection(x, y, dir))
             return;
-        System.out.println("\tPassed checkDirection");
         if(!tiles[x][y].getWall() && random.nextInt(100) > Globals.CONTINUE_AFTER_OVERLAP_CHANCE)
             return;
-        System.out.println("\tPassed tile check");
 
         makeTileWalkable(x, y);
 
@@ -212,42 +192,34 @@ public class Floor {
 //            tiles[x][y+1].setTexture(Utilities.loadTexture("texture/wall/stonewall_short.png"));
         
         if(dir == null) {
-        	System.out.println("\tDirection == null");
-            tiles[x][y].setTexture(Utilities.loadTexture("texture/floor/castle_tile.jpg"));
-            System.out.println("\tSetting texture");
+            tiles[x][y].setTexture(Utils.loadTexture("texture/floor/castle_tile.jpg"));
             dir = Direction.randomDirection(random);
-            System.out.println("\tDone getting random direction.");
             generatePath(x, y, dir);
             x += dir.x;
             y += dir.y;
         } else {
-            System.out.println("\tDirection != null");
         }
 
         if(random.nextInt(100) <= Globals.CONTINUE_CHANCE) { 
             if(random.nextInt(100) <= Globals.TURN_CHANCE) {
-                System.out.println("\tTURN");
 
                 dir = Direction.turn(random, dir);
                 x += dir.x;
                 y += dir.y;
                 generatePath(x, y, dir);
             } else if (random.nextInt(100) <= Globals.SPLIT_CHANCE) {
-                System.out.println("\tSPLIT");
             	generatePath(x, y, dir);
                 dir = Direction.turn(random, dir);
                 x += dir.x;
                 y += dir.y;
                 generatePath(x, y, dir);
             } else {
-                System.out.println("\tFORWARD");
 
                 x += dir.x;
                 y += dir.y;
                 generatePath(x, y, dir);
             }
         } else {
-            System.out.println("\tEND");
 
             return;
         }

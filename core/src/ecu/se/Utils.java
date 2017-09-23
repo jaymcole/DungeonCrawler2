@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import assetManager.AssetManager;
 
-public class Utilities {
+public class Utils {
     
     private static ShapeRenderer debugRenderer = new ShapeRenderer();
     
@@ -68,6 +68,14 @@ public class Utilities {
             }
         }
         return texture;
+    }
+    
+    public static void println(Object caller, String string) {
+        System.out.println("[" + caller.getClass().getName() + "] " + string + "\n");
+    }
+    
+    public static void print(Object caller, String string ) {
+        System.out.println("[" + caller.getClass().getName() + "] " + string);
     }
     
     public static float clamp(float min, float max, float val)

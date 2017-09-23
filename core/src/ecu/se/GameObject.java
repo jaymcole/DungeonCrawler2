@@ -17,7 +17,7 @@ public abstract class GameObject {
         this.y = y;
         this.z = z;
         alive = true;
-        bounds = Utilities.getRectangleBounds(x, y, 20, 20);
+        bounds = Utils.getRectangleBounds(x, y, 20, 20);
     }
    
     public abstract void update(float deltaTime);

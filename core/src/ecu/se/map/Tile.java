@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polygon;
 
 import ecu.se.GameObject;
-import ecu.se.Utilities;
+import ecu.se.Utils;
 
 public class Tile {
     private int x, y, width, height;
@@ -30,7 +30,7 @@ public class Tile {
         this.height = height;
         shaper = new ShapeRenderer();
         objects = new ArrayList<GameObject>();
-        bounds = Utilities.getRectangleBounds(x, y, width, height);
+        bounds = Utils.getRectangleBounds(x, y, width, height);
         
         
     }

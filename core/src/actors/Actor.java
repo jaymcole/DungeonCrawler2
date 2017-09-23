@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.GameObject;
-import ecu.se.Utilities;
+import ecu.se.Utils;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
 
@@ -69,9 +69,9 @@ public abstract class Actor extends GameObject{
     public void move(float deltaTime, Direction direction)
     {
         currentSpeed.x += (acceleration * deltaTime) * direction.x;
-        currentSpeed.x = Utilities.clamp(-topSpeed, topSpeed, currentSpeed.x);        
+        currentSpeed.x = Utils.clamp(-topSpeed, topSpeed, currentSpeed.x);        
         currentSpeed.y += (acceleration * deltaTime) * direction.y;
-        currentSpeed.y = Utilities.clamp(-topSpeed, topSpeed, currentSpeed.y);
+        currentSpeed.y = Utils.clamp(-topSpeed, topSpeed, currentSpeed.y);
     }
     public void revert()
     {

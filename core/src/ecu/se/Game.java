@@ -3,13 +3,9 @@ package ecu.se;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
@@ -29,7 +25,6 @@ public class Game extends ApplicationAdapter {
 	private Map map;
 	private OrthographicCamera camera;
 	private Player player;
-
 	private HUD hud;
 	
 	private int zoom = Globals.DEFAULT_CAMERA_ZOOM;
@@ -68,7 +63,6 @@ public class Game extends ApplicationAdapter {
 	public void render () {
 	    update();
 		
-		
 	    Gdx.gl.glClearColor(0f, 0f, 0f, 1);
 	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
@@ -80,7 +74,10 @@ public class Game extends ApplicationAdapter {
 		player.render(deltaTime, batch);
 		hud.render(batch);
 		
+		
 		batch.end();
+		
+		
 		
 		if(Globals.DEBUG) {
 		    shaperRenderer.begin(ShapeType.Line);
@@ -90,8 +87,8 @@ public class Game extends ApplicationAdapter {
 		}
 		
 		if(Globals.DEBUG) {
-            Utilities.DrawDebugLine(new Vector2(0,-50), new Vector2(0,50), camera.combined);
-            Utilities.DrawDebugLine(new Vector2(-50,0), new Vector2(50,0), camera.combined);
+            Utils.DrawDebugLine(new Vector2(0,-50), new Vector2(0,50), camera.combined);
+            Utils.DrawDebugLine(new Vector2(-50,0), new Vector2(50,0), camera.combined);
         }
 		/*
         */
