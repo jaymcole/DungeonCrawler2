@@ -60,10 +60,6 @@ public class HUD {
         // RENDER CODE HERE
         
         
-//        font.draw(batch, "(0 , 0)", getProportionalX(0), getProportionalY(0));
-//        font.draw(batch, "(1920 , 0)", getProportionalX(1920), getProportionalY(0));
-//        font.draw(batch, "(0 , 1080)", getProportionalX(0), getProportionalY(1080));
-//        font.draw(batch, "(1920 , 1080)", getProportionalX(1920), getProportionalY(1080));
         batch.draw(texture, getProportionalX(0), getProportionalY(0), convertX(1920), convertY(1080));
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), getProportionalX(20), getProportionalY(1080-40));
         

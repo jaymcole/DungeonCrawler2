@@ -1,8 +1,10 @@
 package ecu.se;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.collision.BoundingBox;
 
 public abstract class GameObject {
     
@@ -10,6 +12,7 @@ public abstract class GameObject {
     protected Texture texture;
     protected boolean alive;
     protected ObjectManager objectManager;
+//    protected BoundingBox bounds;
     protected Polygon bounds;
         
     public GameObject(float x, float y, float z) {
@@ -18,6 +21,7 @@ public abstract class GameObject {
         this.z = z;
         alive = true;
         bounds = Utils.getRectangleBounds(x, y, 20, 20);
+        
     }
    
     public abstract void update(float deltaTime);

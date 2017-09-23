@@ -24,8 +24,8 @@ public abstract class Actor extends GameObject{
     protected float drag;
     protected Texture texture;
     protected Map map;
-    protected float oldx = 0;
-    protected float oldy = 0;
+    public float oldx = 0;
+    public float oldy = 0;
     
     public Actor(float x, float y, float z, Map map) {
         super(x, y, z);    

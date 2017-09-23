@@ -24,8 +24,8 @@ public class Tile {
     private boolean flipX, flipY;
         
     public Tile(int x, int y, int width, int height) {
-        this.x = x;// - (int)(width*0.5f);
-        this.y = y;// - (int)(height*0.5f);
+        this.x = x;
+        this.y = y;
         this.width = width;
         this.height = height;
         shaper = new ShapeRenderer();

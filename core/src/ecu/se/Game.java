@@ -120,9 +120,7 @@ public class Game extends ApplicationAdapter {
                 floor = 0;
             map.setFloor(floor);
         }
-        
-        
-        
+
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)){
             Globals.RENDER_ALL_TILES ^= true; 
         }

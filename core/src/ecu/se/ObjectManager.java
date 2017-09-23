@@ -3,7 +3,13 @@ package ecu.se;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.rmi.CORBA.Util;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.physics.box2d.Box2D;
 
 import actors.Actor;
 import actors.Player;
@@ -11,11 +17,19 @@ import actors.Player;
 public class ObjectManager {
 
     private ArrayList<GameObject> objects;
-    private Iterator<GameObject> updater;
     private ArrayList<GameObject> waitList;
     private ArrayList<GameObject> actors;
+    private Iterator<GameObject> updater;
+    private Iterator<GameObject> collisionChecker;
     private Player player;
 
+    private GameObject object;
+    private Actor actor1;
+    private Actor actor2;
+    private Boolean doneChecking;
+    
+    private int sizeOfActors = 0;
+    private int counter;
     
     public ObjectManager() {
         objects = new ArrayList<GameObject>();
@@ -24,9 +38,8 @@ public class ObjectManager {
     }
     
     public void update(float deltaTime) {
+        // UPDATE OBJECTS
         updater = objects.iterator();
-        GameObject object;
-        
         while(updater.hasNext()) 
         {
             object = updater.next();
@@ -37,6 +50,8 @@ public class ObjectManager {
             }
         }
         
+        
+        // CHECK PLAYER COLLISION
         updater = actors.iterator();
         while(updater.hasNext())
         {
@@ -45,7 +60,7 @@ public class ObjectManager {
                 object.update(deltaTime);            
             if(isColliding(player, object))
             {
-                System.out.println("Player is Colliding with object");
+                Utils.println(this, "Player is colliding with Object");
                 player.revert();
             }
             } else {
@@ -53,38 +68,45 @@ public class ObjectManager {
             }
         }
         
-        for(int i = 0; i < actors.size(); i++)
-        {
-        	for(int j = i + 1; j < actors.size(); j++)
-        	{
-        		if(isColliding(actors.get(i), actors.get(j)))
-        		{
-        			((Actor) actors.get(i)).revert();
-        			((Actor) actors.get(j)).revert();
-        		}
-        	}
+        // CHECK ACTOR COLLISION
+        updater = actors.iterator();
+        while(updater.hasNext()) {
+            
+            actor1 = (Actor) updater.next();
+            collisionChecker = actors.iterator();
+            doneChecking = false;
+            while(collisionChecker.hasNext() || doneChecking) {
+                actor2 = (Actor) collisionChecker.next();
+                
+                if(isColliding(actor1, actor2))
+                {
+                    actor1.revert();
+                    actor2.revert();
+                }
+
+            }
         }
-        
         updateList();
     }
     
+    
     public void render(float deltaTime, SpriteBatch batch) {
-        updater = objects.iterator();
-        GameObject object;
-        Actor actor;
+        updater = objects.iterator();        
         while(updater.hasNext()) {
             object = updater.next();
             if (object.alive) {
                 object.render(deltaTime, batch);
             }
         }
+        
         updater = actors.iterator();
         while(updater.hasNext()) {
-            actor = (Actor) updater.next();
-            if (actor.alive) {
-                actor.render(deltaTime, batch);
+            actor1 = (Actor) updater.next();
+            if (actor1.alive) {
+                actor1.render(deltaTime, batch);
             }
         }
+        
     }
     
     public void updateList() {
@@ -94,17 +116,20 @@ public class ObjectManager {
         while(updater.hasNext()) {
             object = updater.next();
             if(object.alive) {
-            	if(object instanceof Actor)
+            	if(object instanceof Actor) {
             		actors.add(object);
-            	else
+            		sizeOfActors++;
+            	} else
             		objects.add(object);
             } else {
-            	if(object instanceof Actor)
+            	if(object instanceof Actor) {
             		actors.remove(object);
-            	else
+            		sizeOfActors--;
+            	} else
             		objects.remove(object);
             }
         }
+        waitList.clear();
     }
     
     public void add(GameObject object) {
@@ -131,9 +156,9 @@ public class ObjectManager {
         }
     }
     
-    public boolean isColliding(GameObject object, GameObject otherObject)
+    public boolean isColliding(GameObject object, GameObject object2)
     {
-    	return object.getBounds().getBoundingRectangle().overlaps(otherObject.getBounds().getBoundingRectangle());
+        return Intersector.overlapConvexPolygons(object.getBounds(), object2.getBounds());
     }
     
     public Player setPlayer(Player player)

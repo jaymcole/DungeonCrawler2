@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import assetManager.AssetManager;
@@ -71,11 +72,11 @@ public class Utils {
     }
     
     public static void println(Object caller, String string) {
-        System.out.println("[" + caller.getClass().getName() + "] " + string + "\n");
+        System.out.println("[" + caller.getClass().getName() + "] " + string);
     }
     
     public static void print(Object caller, String string ) {
-        System.out.println("[" + caller.getClass().getName() + "] " + string);
+        System.out.print("[" + caller.getClass().getName() + "] " + string);
     }
     
     public static float clamp(float min, float max, float val)

@@ -50,10 +50,12 @@ public class Player extends Actor{
         y += currentSpeed.y;
         currentSpeed.x *= drag *deltaTime;
         currentSpeed.y *= drag *deltaTime;
+        /*
         if(map.currentTile((int) x, (int) y) == null || map.currentTile((int) x, (int) y).getWall()) {
             x = oldx;
             y = oldy;
         }
+        */
         bounds.setPosition(x,y);
         
         animation.update(deltaTime);
