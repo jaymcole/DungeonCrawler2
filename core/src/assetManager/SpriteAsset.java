@@ -44,7 +44,7 @@ public class SpriteAsset {
         spriteH = spriteFile.nextInt();
         System.out.println(numRows + " " + numCol + " " + spriteW + " " + spriteH);
         
-        animation = new Animation(0, 0, 0, this);
+        //animation = new Animation(0, 0, 0, this);
     }
 	
     public boolean loadedSuccessfully() {
@@ -80,6 +80,6 @@ public class SpriteAsset {
     }
     
     public Animation getAnimation() {
-    	return animation;
+    	return new Animation(0, 0, 0, this);
     }
 }

@@ -1,5 +1,7 @@
 package ecu.se;
 
+import java.util.Random;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -42,7 +44,11 @@ public class Game extends ApplicationAdapter {
 	    map.setScreenResolution(screenWidth, screenHeight);
 	    player = new Player(map.floorHelper(0,0).x, map.floorHelper(0,0).y, 0, map, camera);
 	    objectManager.setPlayer(player);
-	    objectManager.add(new Player(player.x + 15, player.y + 15, 0 , map, camera));
+	    
+	    Random random  = new Random();
+	    for(int  i = 0; i < 50; i++) {
+	        objectManager.add(new Player(random.nextInt(Globals.MAP_TILE_WIDTH * 128), random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0 , map, camera));	        
+	    }
 	    hud = new HUD(player, screenWidth, screenHeight);
 	    camera = new OrthographicCamera(screenWidth, screenHeight);
 		batch = new SpriteBatch();
@@ -71,8 +77,7 @@ public class Game extends ApplicationAdapter {
 		
 		map.render(batch, (int)player.x, (int)player.y);
 		objectManager.render(deltaTime, batch);
-		player.render(deltaTime, batch);
-		hud.render(batch);
+		//hud.render(batch);
 		
 		
 		batch.end();
@@ -84,14 +89,14 @@ public class Game extends ApplicationAdapter {
 		    int radius = 25;
 		    shaperRenderer.ellipse((int)(camera.viewportWidth*0.5-radius*0.5), (int)(camera.viewportHeight*0.5-radius*0.5), 25, 25);
 		    shaperRenderer.end();
+		    
 		}
+		objectManager.debugRender(camera.projection);
 		
 		if(Globals.DEBUG) {
             Utils.DrawDebugLine(new Vector2(0,-50), new Vector2(0,50), camera.combined);
             Utils.DrawDebugLine(new Vector2(-50,0), new Vector2(50,0), camera.combined);
         }
-		/*
-        */
 		
 		input();
 		

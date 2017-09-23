@@ -1,10 +1,8 @@
 package ecu.se;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.collision.BoundingBox;
 
 public abstract class GameObject {
     
@@ -43,5 +41,9 @@ public abstract class GameObject {
     public Polygon getBounds()
     {
     	return bounds;
+    }
+    
+    public boolean isAlive() {
+        return alive;
     }
 }

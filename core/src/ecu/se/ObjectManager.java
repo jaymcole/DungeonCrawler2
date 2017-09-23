@@ -5,8 +5,12 @@ import java.util.Iterator;
 
 import javax.rmi.CORBA.Util;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.box2d.Box2D;
@@ -28,8 +32,6 @@ public class ObjectManager {
     private Actor actor2;
     private Boolean doneChecking;
     
-    private int sizeOfActors = 0;
-    private int counter;
     
     public ObjectManager() {
         objects = new ArrayList<GameObject>();
@@ -104,8 +106,41 @@ public class ObjectManager {
             actor1 = (Actor) updater.next();
             if (actor1.alive) {
                 actor1.render(deltaTime, batch);
+            } else {
+                Utils.println(this, "Actor is not rendering.");
             }
         }
+        
+        player.render(deltaTime, batch);
+        
+    }
+    
+    ShapeRenderer debugRenderer = new ShapeRenderer();
+    public void debugRender(Matrix4 projection) {
+        
+        debugRenderer.begin(ShapeType.Line);
+        debugRenderer.setProjectionMatrix(projection);
+        debugRenderer.setColor(Color.BLUE);
+        debugRenderer.polygon(player.getBounds().getVertices());
+        
+        updater = actors.iterator();
+        while(updater.hasNext()) 
+        {
+            object = updater.next();
+            debugRenderer.polygon(object.getBounds().getVertices());
+        }
+        
+        
+        updater = objects.iterator();
+        debugRenderer.setColor(Color.RED);
+        while(updater.hasNext()) 
+        {
+            object = updater.next();
+            debugRenderer.polygon(object.getBounds().getVertices());
+        }
+
+        debugRenderer.end();
+        
         
     }
     
@@ -118,13 +153,11 @@ public class ObjectManager {
             if(object.alive) {
             	if(object instanceof Actor) {
             		actors.add(object);
-            		sizeOfActors++;
             	} else
             		objects.add(object);
             } else {
             	if(object instanceof Actor) {
             		actors.remove(object);
-            		sizeOfActors--;
             	} else
             		objects.remove(object);
             }

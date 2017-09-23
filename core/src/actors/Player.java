@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import assetManager.Animation;
 import assetManager.AssetManager;
+import ecu.se.Utils;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
 
@@ -30,7 +31,7 @@ public class Player extends Actor{
         animation = AssetManager.getSpriteSheet("texture/spritesheet/adventuretime_sprites.png").getAnimation();
         texture = AssetManager.getTexture("texture/spritesheet/adventuretime_sprites.png").getTexture();
         textureRegion = AssetManager.getTexture("texture/spritesheet/adventuretime_sprites.png").getTextureRegion();
-        
+        bounds = Utils.getRectangleBounds(x, y, 50, 50);
         currentSpeed = new Vector2(0, 0);
         drag = 0.3f;
         topSpeed = 900;
@@ -64,20 +65,18 @@ public class Player extends Actor{
 
     @Override
     public void render(float deltaTime, SpriteBatch batch) {
-        // TODO Auto-generated method stub
-        if(texture != null) {
+        animation.render(deltaTime, batch);
+//        if(texture != null) {
             //batch.draw(texture, x, y);
          //   batch.draw(textureRegion, (int)(oldx-(spriteWidth*0.5)), oldy);
-            animation.render(deltaTime, batch);
-        }
-        //Utilities.DrawDebugLine(new Vector2(x, y),  new Vector2(oldx, oldy), camera.combined);
+//        }
     }
 
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
         
     }
+    
     public void input(float deltaTime) {
         // Pan Camera
         if(Gdx.input.isKeyPressed(Input.Keys.W)){

@@ -4,7 +4,6 @@ public class Globals {
     public static final String VERSION = " MISSING";
     
     public static final boolean DEBUG = true;
-    public static final int DEBUG_TRACE_LEVEL = 0;
     
     // Render Levels.
     public static final float FLOOR =    0.0f;
