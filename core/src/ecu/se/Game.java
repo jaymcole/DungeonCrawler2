@@ -168,6 +168,7 @@ public class Game extends ApplicationAdapter {
 	    batch.dispose();
 		objectManager.dispose();
 		map.dispose();
+		shader.dispose();
 	}
 	
 }

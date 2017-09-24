@@ -2,6 +2,8 @@ package assetManager;
 
 import java.util.ArrayList;
 
+import ecu.se.Utils;
+
 public class AssetManager {
     public static ArrayList<TextureAsset> textures = new ArrayList<TextureAsset>();
     public static ArrayList<FontAsset> fonts = new ArrayList<FontAsset>();
@@ -16,7 +18,7 @@ public class AssetManager {
         FontAsset temp = new FontAsset(name);
         
         if (temp.loadedSuccessfully()) {
-            System.out.println("Adding a new font for: " + name);
+            Utils.println(AssetManager.class.getClass(), "Adding a new font for: " + name);
             fonts.add(temp);
             return temp.getAsset();
         }
@@ -34,7 +36,8 @@ public class AssetManager {
         TextureAsset temp = new TextureAsset(name);
         
         if (temp.loadedSuccessfully()) {
-            System.out.println("Adding a new texture for: " + name);
+            Utils.println(AssetManager.class.getClass(), "Adding a new texture for: " + name);
+
             textures.add(temp);
             return temp.getAsset();
         }
@@ -59,7 +62,8 @@ public class AssetManager {
     	SpriteAsset temp = new SpriteAsset(name);
     	
     	if (temp.loadedSuccessfully()) {
-    		System.out.println("Adding a new sprite for: " + name);
+            Utils.println(AssetManager.class.getClass(), "Adding a new sprite for: " + name);
+
     		sprites.add(temp);
     		return temp.getAsset();
     	}
