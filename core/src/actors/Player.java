@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import assetManager.Animation;
 import assetManager.AssetManager;
-import ecu.se.Utils;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
 

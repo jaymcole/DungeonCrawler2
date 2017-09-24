@@ -8,6 +8,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Renderable;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
+import com.badlogic.gdx.graphics.g3d.utils.DefaultTextureBinder;
+import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
@@ -15,7 +23,6 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 import actors.Player;
 import actors.TestActor;
-import assetManager.AssetManager;
 import ecu.se.gui.HUD;
 import ecu.se.map.Map;
 
@@ -34,6 +41,10 @@ public class Game extends ApplicationAdapter {
 	
 	// DEBUG THINGS - Needs to be deleted later
     private ShapeRenderer shaperRenderer;
+	private ShaderProgram shader;
+	private Renderable renderable;
+	private Environment environment;
+	private RenderContext renderContext;
 	
 	@Override
 	public void create () {
@@ -55,6 +66,16 @@ public class Game extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		shaperRenderer = new ShapeRenderer();
 		//AssetManager.getSpriteSheet("texture/spritesheet/adventuretime_sprites.png");
+		
+		ShaderProgram.pedantic = false;
+	    shader = new ShaderProgram(
+	            Gdx.files.internal("shader/test.vertex.glsl").readString(),
+	            Gdx.files.internal("shader/lightTest.frag").readString());
+	    if(!shader.isCompiled()) {
+	        Gdx.app.log("Problem loading shader:", shader.getLog());
+	    }
+	    batch.setShader(shader);
+
 	}
 	
 	// Update all game objects
@@ -73,16 +94,24 @@ public class Game extends ApplicationAdapter {
 	    Gdx.gl.glClearColor(0f, 0f, 0f, 1);
 	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
+	    
+	    
+
+	    
+	    
+	    
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
 		
+		batch.setShader(shader);
 		map.render(batch, (int)player.x, (int)player.y);
 		objectManager.render(deltaTime, batch);
-		//hud.render(batch);
+		
+		batch.setShader(null);
+		hud.render(batch);
 		
 		
 		batch.end();
-		
 		
 		
 		if(Globals.DEBUG) {
