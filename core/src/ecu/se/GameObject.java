@@ -4,8 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Polygon;
 
-public abstract class GameObject {
-    
+public abstract class GameObject {    
     protected float x,y,z;
     protected Texture texture;
     protected boolean alive;
@@ -17,7 +16,7 @@ public abstract class GameObject {
         this.y = y;
         this.z = z;
         alive = true;
-        bounds = Utils.getRectangleBounds(x, y, 20, 20, Utils.ALIGN_CENTERED);
+        bounds = Utils.getRectangleBounds(x, y, 20, 20, Utils.ALIGN_BOTTOM_CENTER);
         
     }
     
@@ -26,7 +25,7 @@ public abstract class GameObject {
         this.y = y;
         this.z = Globals.Z_LEVEL_FLOOR;
         alive = true;
-        bounds = Utils.getRectangleBounds(x, y, 5, 5, Utils.ALIGN_CENTERED);
+        bounds = Utils.getRectangleBounds(x, y, 5, 5, Utils.ALIGN_BOTTOM_CENTER);
         
     }
    

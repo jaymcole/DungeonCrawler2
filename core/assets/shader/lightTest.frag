@@ -2,7 +2,7 @@
     precision highp float;
 #endif
 
-float falloff = 0.3;
+float falloff = 0.3; //0.3;
 float damper  = 0.1;
 
 float brightness(float maxDistance, vec2 coords, vec2 light)

@@ -33,8 +33,8 @@ public abstract class Actor extends GameObject{
     protected Direction direction;
     
     protected Animation animation;
-    protected int spriteWidth = 40;
-    protected int spriteHeight = 48;
+    protected int spriteWidth;// = 40;
+    protected int spriteHeight;// = 48;
     protected int spriteSequences = 5;
     protected TextureRegion textureRegion;
     
@@ -45,11 +45,13 @@ public abstract class Actor extends GameObject{
         animation = asset.getAnimation();
         spriteWidth = asset.getSpriteWidth();
         spriteHeight = asset.getSpriteHeight();      
+
+        
         
         textureRegion = asset.getTexture().getTextureRegion();
         texture = asset.getTexture().getTexture();
         
-        bounds = Utils.getRectangleBounds(x, y, spriteWidth, spriteHeight, Utils.ALIGN_TOP_RIGHT);
+        bounds = Utils.getRectangleBounds(x, y, (int)(spriteWidth*0.5), spriteHeight, Utils.ALIGN_BOTTOM_CENTER);
     }
     
     public String getName() {

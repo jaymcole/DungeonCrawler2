@@ -28,13 +28,16 @@ public class ObjectManager {
     private Actor actor2;
     private Boolean doneChecking;
     
-    
     public ObjectManager() {
         objects = new ArrayList<GameObject>();
         waitList = new ArrayList<GameObject>();
         actors = new ArrayList<GameObject>();
     }
     
+    /**
+     * Uses deltaTime to update all GameObjects
+     * @param deltaTime - The time between frames.
+     */
     public void update(float deltaTime) {
         // UPDATE OBJECTS
         updater = objects.iterator();
@@ -87,7 +90,11 @@ public class ObjectManager {
         updateList();
     }
     
-    
+    /**
+     * Renders all gameObjects.
+     * @param deltaTime - time between last frame.
+     * @param batch - Used for rendering.
+     */
     public void render(float deltaTime, SpriteBatch batch) {
         updater = objects.iterator();        
         while(updater.hasNext()) {
@@ -141,6 +148,10 @@ public class ObjectManager {
         
     }
     
+    /**
+     * Adds/removes waiting objects after the every update tick. Objects need to wait to be added/removed until the update cycle has completed. 
+     * Adding/removing objects during an update tick with cause an exception.
+     */
     public void updateList() {
         updater = waitList.iterator();
         GameObject object;
@@ -162,19 +173,28 @@ public class ObjectManager {
         waitList.clear();
     }
     
+    /**
+     * Add a new GameObject to be updated/rendered.
+     * @param object - The new GameObject.
+     */
     public void add(GameObject object) {
         object.alive = true;
         object.objectManager = this;
         waitList.add(object);
     }
     
-    
+    /**
+     * Remove a GameObject from the update/render list.
+     * @param object - GameObjkect to be removed.
+     */
     public void remove(GameObject object) {
         object.alive = false;
         waitList.add(object);
     }
     
-    
+    /**
+     * Cleanup all resources. Needs to be called before program is closed.
+     */
     public void dispose() {
         updater = waitList.iterator();
         GameObject object;
@@ -185,14 +205,31 @@ public class ObjectManager {
             object.dispose();
         }
     }
-    
+    /**
+     * 
+     * @param object
+     * @param object2
+     * @return Returns true if object is colliding with object2.
+     */
     public boolean isColliding(GameObject object, GameObject object2)
     {
         return Intersector.overlapConvexPolygons(object.getBounds(), object2.getBounds());
     }
     
-    public Player setPlayer(Player player)
+    /**
+     * Sets the current player.
+     * @param player
+     * @return
+     */
+    public void setPlayer(Player player)
+    {
+        this.player = player;
+    }
+    
+    /* Who wrote this??
+     public Player setPlayer(Player player)
     {
         return this.player = player;
     }
+     */
 }

@@ -45,6 +45,8 @@ public class Utils {
     public static final int ALIGN_BOTTOM_RIGHT = 2;
     public static final int ALIGN_TOP_RIGHT = 3;
     public static final int ALIGN_TOP_LEFT = 4;
+    public static final int ALIGN_BOTTOM_CENTER = 5;
+    
     
     public static Polygon getRectangleBounds(float x, float y, float width, float height, int ALIGN) {
 //        height *= 0.5f;
@@ -55,34 +57,61 @@ public class Utils {
         
         switch (ALIGN) {
             case ALIGN_CENTERED:
-                poly.setOrigin(width *0.5f, height*0.5f);
-                break;
+//                poly.setOrigin(width *0.5f, height*0.5f);
+
+            	poly.setVertices(new float[]{
+            			-(int)(width*0.5), -(int)(height*0.5),
+            			(int)(width*0.5), -(int)(height*0.5),
+            			(int)(width*0.5), (int)(height*0.5),
+            			-(int)(width*0.5), (int)(height*0.5)
+            			});
+            	break;
             case ALIGN_BOTTOM_LEFT:
-                poly.setOrigin(0, 0);
-                break;
+//                poly.setOrigin(0, 0);
+
+            	poly.setVertices(new float[]{0, 0, width, 0, width, height, 0, height});
+            	break;
             case ALIGN_BOTTOM_RIGHT:
-                poly.setOrigin(width, 0);
-                break;
+//                poly.setOrigin(width, 0);
+
+            	poly.setVertices(new float[]{0, 0, width, 0, width, height, 0, height});
+
+            	break;
             case ALIGN_TOP_RIGHT:
-                poly.setOrigin(width, height);
-                break;
+//                poly.setOrigin(width, height);
+
+            	poly.setVertices(new float[]{0, 0, width, 0, width, height, 0, height});
+            	break;
             case ALIGN_TOP_LEFT:
-                poly.setOrigin(0, height);
-                break;                
+//                poly.setOrigin(0, height);
+
+            	poly.setVertices(new float[]{0, 0, width, 0, width, height, 0, height});
+            	break; 
+            case ALIGN_BOTTOM_CENTER:
+            	poly.setVertices(new float[]{
+            			-(int)(width*0.5), 0,
+            			(int)(width*0.5), 0,
+            			(int)(width*0.5), (int)(height*0.5),
+            			-(int)(width*0.5), (int)(height*0.5)
+            			});
+            	break;
         }
-        poly.setVertices(new float[]{0, 0, width, 0, width, height, 0, height});
+        poly.setOrigin(x, y);
         poly.setPosition(x, y);
         poly.setScale(1, 1);
         
         return poly;
     }
     
-    public static Texture loadTexture(String filePath) {
-        
+    /**
+     * ***Deprecated - Use AssetManager.getTexture(String filePath)
+     * 		- Really only good now for watching the absurd amount of ram used when loading a new texture for every GameObject.
+     * @param filePath
+     * @return Returns a Texture object for the texture found at filePath.
+     */
+    public static Texture loadTexture(String filePath) {     
         if (Globals.USE_TEXTURE_MANAGER)
             return AssetManager.getTexture(filePath).getTexture();
-        
-
         Texture texture;
         try {
             texture = new Texture(filePath);      
@@ -98,15 +127,99 @@ public class Utils {
         return texture;
     }
     
+    /**
+     * Prints string to stdout along with the class that's printing (caller). 
+     * @param caller - The object that's printing.
+     * @param string - The message to be printed.
+     */
     public static void println(Object caller, String string) {
-        System.out.println("[" + caller.getClass().getName() + "] " + string);
+        System.out.println("[" + caller.getClass().getSimpleName() + "] " + string);
     }
     
+    /**
+     * Prints string to stdout along with the class that's printing (caller). 
+     * @param caller - The object that's printing.
+     * @param string - The message to be printed.
+     */
     public static void print(Object caller, String string ) {
-        System.out.print("[" + caller.getClass().getName() + "] " + string);
+        System.out.print("[" + caller.getClass().getSimpleName() + "] " + string);
     }
     
+    /**
+     * Prints string to stdout along with the class that's printing (caller). 
+     * @param caller - The class that's printing.
+     * @param string - The message to be printed.
+     */
+    public static void println(Class caller, String string) {
+        System.out.println("[" + caller.getSimpleName() + "] " + string);
+    }
+    
+    /**
+     * Prints string to stdout along with the class that's printing (caller). 
+     * @param caller - The class that's printing.
+     * @param string - The message to be printed.
+     */
+    public static void print(Class caller, String string ) {
+        System.out.print("[" + caller.getSimpleName() + "] " + string);
+    }
+    
+    /**
+     * Prints string to stdout along with the class that's printing (caller). 
+     * @param caller - The class that's printing.
+     * @param string - The message to be printed.
+     */
+    public static void print(String string ) {
+        System.out.print(string);
+    }
+    
+    /**
+     * Clamps a value between min and max.
+     * @param min - The minimum value to return.
+     * @param max - The maximum value to return.
+     * @param val - The value to clamp.
+     * @return Returns val when val is between min and max, otherwise returns min or max.
+     */
     public static float clamp(float min, float max, float val)
+    {
+        if(val < min)
+        {
+            return min;
+        }
+        if(val > max)
+        {
+            return max;
+        }
+        return val;
+    }
+    
+    /**
+     * Clamps a value between min and max.
+     * @param min - The minimum value to return.
+     * @param max - The maximum value to return.
+     * @param val - The value to clamp.
+     * @return Returns val when val is between min and max, otherwise returns min or max.
+     */
+    public static double clamp(double min, double max, double val)
+    {
+        if(val < min)
+        {
+            return min;
+        }
+        if(val > max)
+        {
+            return max;
+        }
+        return val;
+    }
+    
+    /**
+     * Clamps a value between min and max.
+     * @param min - The minimum value to return.
+     * @param max - The maximum value to return.
+     * @param val - The value to clamp.
+     * @return Returns val when val is between min and max, otherwise returns min or max.
+     */
+    public static int clamp(int min, int max, int val)
     {
         if(val < min)
         {
