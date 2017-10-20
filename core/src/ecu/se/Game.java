@@ -89,17 +89,12 @@ public class Game extends ApplicationAdapter {
 	
 	@Override
 	public void render () {
+	    input(); // JUST MOVED THIS FROM THE BOTTOM TO THE TOP
 	    update();
 		
 	    Gdx.gl.glClearColor(0f, 0f, 0f, 1);
 	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-	    
-	    
 
-	    
-	    
-	    
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
 		
@@ -129,7 +124,6 @@ public class Game extends ApplicationAdapter {
             Utils.DrawDebugLine(new Vector2(-50,0), new Vector2(50,0), camera.combined);
         }
 		
-		input();
 		
 	}
 	int floor = 0;
