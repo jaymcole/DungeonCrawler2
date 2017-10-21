@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import ecu.se.Globals;
 
-public class TextureAsset {
+public class TextureAsset extends Asset{
     private Texture texture;
     private TextureRegion textureRegion;
     private String name;

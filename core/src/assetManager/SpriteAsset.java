@@ -1,15 +1,10 @@
 package assetManager;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.GdxRuntimeException;
-
 import java.util.*;
 import java.io.*;
 import ecu.se.Globals;
 
-public class SpriteAsset {
+public class SpriteAsset extends Asset{
 
 	private TextureAsset sprite;
 	private String name;
@@ -82,4 +77,12 @@ public class SpriteAsset {
     public Animation getAnimation() {
     	return new Animation(0, 0, 0, this);
     }
+
+	@Override
+	public void dispose() {
+		if(animation != null)
+			animation.dispose();
+		if (sprite != null)
+			sprite.dispose();
+	}
 }

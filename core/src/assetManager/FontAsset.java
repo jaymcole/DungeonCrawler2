@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-public class FontAsset {
+public class FontAsset extends Asset{
     private BitmapFont font;
     private FreeTypeFontParameter parameter;
     private String name;

@@ -1,74 +1,75 @@
 package assetManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import ecu.se.Utils;
 
 public class AssetManager {
-    public static ArrayList<TextureAsset> textures = new ArrayList<TextureAsset>();
-    public static ArrayList<FontAsset> fonts = new ArrayList<FontAsset>();
-    public static ArrayList<SpriteAsset> sprites = new ArrayList<SpriteAsset>();
-    public static FontAsset getFont(String name) {
-        for(FontAsset f : fonts) {
-            if(f.getName().equals(name)) {
-                return f.getAsset();
-            }
-        }
-        
-        FontAsset temp = new FontAsset(name);
-        
-        if (temp.loadedSuccessfully()) {
-            Utils.println(AssetManager.class, "Adding a new font for: " + name);
-            fonts.add(temp);
-            return temp.getAsset();
-        }
-        System.err.println("Failed to load font.");
-        return null;   
-    }
-    
-    public static TextureAsset getTexture(String name) {
-        for(TextureAsset t : textures) {
-            if(t.getName().equals(name)) {
-                return t.getAsset();
-            }
-        }
-        
-        TextureAsset temp = new TextureAsset(name);
-        
-        if (temp.loadedSuccessfully()) {
-            Utils.println(AssetManager.class, "Adding a new texture for: " + name);
+	//public static ArrayList<TextureAsset> textures = new ArrayList<TextureAsset>();
+	//public static ArrayList<FontAsset> fonts = new ArrayList<FontAsset>();
+	//public static ArrayList<SpriteAsset> sprites = new ArrayList<SpriteAsset>();
+	
+	public static HashMap<String, Asset> assets = new HashMap<String, Asset>();
+	
+	public static FontAsset getFont(String name) {
+		if(assets.containsKey(name))
+			return (FontAsset)(assets.get(name));
+		
+		FontAsset temp = new FontAsset(name);
+		if (temp.loadedSuccessfully()) {
+			Utils.println(AssetManager.class, "Adding a new font for: " + name);
+			assets.put(name, temp);
+			return temp.getAsset();
+		}
+		System.err.println("Failed to load font.");
+		return null;
+	}
 
-            textures.add(temp);
-            return temp.getAsset();
-        }
-        System.err.println("Failed to load texture.");
-        return null;   
-    }
-    
-    
-    public static void dispose() {
-        for(TextureAsset t : textures) {
-            t.dispose();
-        }
-    }
-    
-    public static SpriteAsset getSpriteSheet(String name) {
-    	for(SpriteAsset s : sprites) {
-    		if(s.getName().equals(name)) {
-    			return s.getAsset();
-    		}
-    	}
-    	
-    	SpriteAsset temp = new SpriteAsset(name);
-    	
-    	if (temp.loadedSuccessfully()) {
-            Utils.println(AssetManager.class, "Adding a new sprite for: " + name);
+	public static TextureAsset getTexture(String name) {
+		if(assets.containsKey(name))
+			return (TextureAsset)(assets.get(name));
+		
 
-    		sprites.add(temp);
-    		return temp.getAsset();
-    	}
-    	System.err.println("Failed to load sprite.");
-    	return null;
-    }
-    
+		TextureAsset temp = new TextureAsset(name);
+
+		if (temp.loadedSuccessfully()) {
+			Utils.println(AssetManager.class, "Adding a new texture for: " + name);
+
+			assets.put(name, temp);
+			return temp.getAsset();
+		}
+		System.err.println("Failed to load texture.");
+		return null;
+	}
+
+	public static SpriteAsset getSpriteSheet(String name) {
+		if(assets.containsKey(name))
+			return (SpriteAsset)(assets.get(name));
+
+		SpriteAsset temp = new SpriteAsset(name);
+
+		if (temp.loadedSuccessfully()) {
+			Utils.println(AssetManager.class, "Adding a new sprite for: " + name);
+
+			assets.put(name, temp);
+			return temp.getAsset();
+		}
+		System.err.println("Failed to load sprite.");
+		return null;
+	}
+
+	public static void dispose() {
+		
+		for(Map.Entry<String, Asset> entry : assets.entrySet()) {
+			Asset a = entry.getValue();
+			a.dispose();
+		}
+		
+//		This looks cool, but we'd have to change the project to 1.8
+//		TODO: Check if everyone has 1.8
+//		assets.forEach((k,v) -> v.dispose());
+
+	}
 }
