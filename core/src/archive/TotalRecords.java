@@ -1,0 +1,25 @@
+package archive;
+
+public enum TotalRecords {
+
+//	// PLAYERS STATS
+	DAM_TAKEN,
+	DAM_GIVEN,
+	DAM_MITIGATED,
+	MAX_LEVEL,
+//	
+//	// TIME
+//	MAX_TIME_PER_LIFE,
+//	AVERAGE_TIME_PER_LIFE,
+//	AVERAGE_TIME_PER_FLOOR,
+//	
+//	// MISC
+//	FLOORS_CLEARED,
+//	AVERAGE_LEVEL_AT_DEATH,
+//	
+//	// NPC / MONSTER
+//	MONSTERS_SLAIN,
+	
+	
+	
+}

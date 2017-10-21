@@ -10,10 +10,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Renderable;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
-import com.badlogic.gdx.graphics.g3d.utils.DefaultTextureBinder;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -23,6 +19,8 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 import actors.Player;
 import actors.TestActor;
+import archive.Archiver;
+import assetManager.AssetManager;
 import ecu.se.gui.HUD;
 import ecu.se.map.Map;
 
@@ -65,7 +63,10 @@ public class Game extends ApplicationAdapter {
 	    camera = new OrthographicCamera(screenWidth, screenHeight);
 		batch = new SpriteBatch();
 		shaperRenderer = new ShapeRenderer();
-		//AssetManager.getSpriteSheet("texture/spritesheet/adventuretime_sprites.png");
+
+		// RECORDS
+		Archiver.startArchiver();
+		
 		
 		ShaderProgram.pedantic = false;
 	    shader = new ShaderProgram(
@@ -159,10 +160,12 @@ public class Game extends ApplicationAdapter {
 	
 	@Override
 	public void dispose () {
+		Archiver.dispose();
 	    batch.dispose();
 		objectManager.dispose();
 		map.dispose();
 		shader.dispose();
+		AssetManager.dispose();
 	}
 	
 }
