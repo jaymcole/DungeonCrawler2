@@ -5,16 +5,14 @@ import java.util.Random;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Renderable;
-import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import actors.Player;
@@ -23,6 +21,7 @@ import archive.Archiver;
 import assetManager.AssetManager;
 import ecu.se.gui.HUD;
 import ecu.se.map.Map;
+import ecu.se.objects.Light;
 
 public class Game extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -34,15 +33,14 @@ public class Game extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	private Player player;
 	private HUD hud;
+	//private Lighting lighting;
 	
-	private int zoom = Globals.DEFAULT_CAMERA_ZOOM;
+	private float zoom = Globals.DEFAULT_CAMERA_ZOOM;
 	
-	// DEBUG THINGS - Needs to be deleted later
-    private ShapeRenderer shaperRenderer;
-	private ShaderProgram shader;
-	private Renderable renderable;
-	private Environment environment;
-	private RenderContext renderContext;
+	// DEBUG OBJECT(S)
+	private ShapeRenderer shaperRenderer;
+	private Light light;
+	// END DEBUG OBJECT(S)
 	
 	@Override
 	public void create () {
@@ -66,16 +64,21 @@ public class Game extends ApplicationAdapter {
 
 		// RECORDS
 		Archiver.startArchiver();
+	    Lighting.init(hud.getCamera());
+		Lighting.setShader(batch);
 		
 		
-		ShaderProgram.pedantic = false;
-	    shader = new ShaderProgram(
-	            Gdx.files.internal("shader/test.vertex.glsl").readString(),
-	            Gdx.files.internal("shader/lightTest.frag").readString());
-	    if(!shader.isCompiled()) {
-	        Gdx.app.log("Problem loading shader:", shader.getLog());
-	    }
-	    batch.setShader(shader);
+		for(int i = 0 ; i < 32; i++) {
+			light = new Light(new Vector3(i*50,i*50,0));
+//			light = new Light(player.getPosition());
+			light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
+			//light.setColor(new Color(111f,111f,111f, 1.0f));
+			light.setIntensity(25);
+			Lighting.addLight(light);
+			
+		}
+		
+		
 
 	}
 	
@@ -86,20 +89,27 @@ public class Game extends ApplicationAdapter {
         player.update(deltaTime);
         camera.update();
         camera.zoom = zoom;
+        Lighting.updateLights(deltaTime);
 	}
+	
+	private static Random rand = new Random();
 	
 	@Override
 	public void render () {
 	    input(); // JUST MOVED THIS FROM THE BOTTOM TO THE TOP
-	    update();
 		
-	    Gdx.gl.glClearColor(0f, 0f, 0f, 1);
+	    update();
+	    
+	    //TEST
+	    
+	    
+	    Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+//	    camera.zoom = zoom;
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
 		
-		batch.setShader(shader);
+		Lighting.setShader(batch);
 		map.render(batch, (int)player.x, (int)player.y);
 		objectManager.render(deltaTime, batch);
 		
@@ -113,14 +123,15 @@ public class Game extends ApplicationAdapter {
 		if(Globals.DEBUG) {
 		    shaperRenderer.begin(ShapeType.Line);
 		    int radius = 25;
-		    shaperRenderer.ellipse((int)(camera.viewportWidth*0.5-radius*0.5), (int)(camera.viewportHeight*0.5-radius*0.5), 25, 25);
+		    Vector3 temp = camera.project(light.getPos());
+		    Vector3 temp2 = camera.project(player.getPosition());
 		    shaperRenderer.end();
 		    
-		}
-		map.debugRender(camera.combined, (int)player.x, (int)player.y);
-		objectManager.debugRender(camera.combined);
+//		}
+			map.debugRender(camera.combined, (int)player.x, (int)player.y);
+			objectManager.debugRender(camera.combined);
 		
-		if(Globals.DEBUG) {
+//		if(Globals.DEBUG) {
             Utils.DrawDebugLine(new Vector2(0,-50), new Vector2(0,50), camera.combined);
             Utils.DrawDebugLine(new Vector2(-50,0), new Vector2(50,0), camera.combined);
         }
@@ -129,15 +140,18 @@ public class Game extends ApplicationAdapter {
 	}
 	int floor = 0;
 	public void input() {
+		
 	    player.input(deltaTime);
         camera.position.set(player.x, player.y, 0);
         // Zoom camera
         if(Gdx.input.isKeyPressed(Input.Keys.E)){
-            zoom += 1;
+            zoom += 0.01f;
+            System.out.println("Zoom=" +zoom);
         } else if(Gdx.input.isKeyPressed(Input.Keys.Q)){
-            zoom -= 1;
+            zoom -= 0.01f;
+            System.out.println("Zoom=" +zoom);
         }else if(Gdx.input.isKeyPressed(Input.Keys.R)){
-            zoom = 1;
+            zoom = Globals.DEFAULT_CAMERA_ZOOM;
         }
         
         // Generate new floor
@@ -155,6 +169,15 @@ public class Game extends ApplicationAdapter {
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)){
             Globals.RENDER_ALL_TILES ^= true; 
         }
+        
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            Lighting.printLog();
+        }
+        
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+        	
+            dispose();
+        }
            
 	}
 	
@@ -164,8 +187,7 @@ public class Game extends ApplicationAdapter {
 	    batch.dispose();
 		objectManager.dispose();
 		map.dispose();
-		shader.dispose();
+		Lighting.dispose();
 		AssetManager.dispose();
 	}
-	
 }

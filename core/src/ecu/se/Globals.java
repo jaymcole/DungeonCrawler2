@@ -33,6 +33,9 @@ public class Globals {
     
     public static final String SPRITE_PATH = "spriteInfo";
     
+    //LIGHTING
+    public static final int MAX_LIGHTS = 32; //Must also be changed in the shader
+    
     // DEBUG Settings
     // All of these will probably have to be cleaned up (removed along with whatever functions use them) later.
     public static boolean RENDER_ALL_TILES = false;

@@ -3,7 +3,6 @@ package ecu.se;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -120,7 +119,7 @@ public class ObjectManager {
     
     ShapeRenderer debugRenderer = new ShapeRenderer();
     public void debugRender(Matrix4 projection) {
-        
+
         debugRenderer.begin(ShapeType.Line);
         debugRenderer.setProjectionMatrix(projection);
         debugRenderer.setColor(Color.BLUE);

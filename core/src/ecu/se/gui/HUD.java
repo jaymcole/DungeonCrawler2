@@ -1,6 +1,5 @@
 package ecu.se.gui;
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -62,6 +61,8 @@ public class HUD {
         
         batch.draw(texture, getProportionalX(0), getProportionalY(0), convertX(1920), convertY(1080));
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), getProportionalX(20), getProportionalY(1080-40));
+        font.draw(batch, "Player Position: " + player.getPosition().toString(), getProportionalX(20), getProportionalY(1080-60));
+        font.draw(batch, "Camera Position: " + hudCamera.position.toString(), getProportionalX(20), getProportionalY(1080-80));
         
         
         // END RENDER CODE
@@ -81,6 +82,10 @@ public class HUD {
     
     private int getProportionalY(int y) {
         return convertY(y) - halfHeight;
+    }
+    
+    public OrthographicCamera getCamera() {
+    	return hudCamera;
     }
     
     

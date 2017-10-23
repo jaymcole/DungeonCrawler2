@@ -5,8 +5,7 @@ public enum TotalRecords {
 //	// PLAYERS STATS
 	DAM_TAKEN,
 	DAM_GIVEN,
-	DAM_MITIGATED,
-	MAX_LEVEL,
+	DAM_MITIGATED;
 //	
 //	// TIME
 //	MAX_TIME_PER_LIFE,

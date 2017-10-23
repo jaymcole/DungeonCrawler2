@@ -3,6 +3,8 @@ package ecu.se;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public abstract class GameObject {    
     protected float x,y,z;
@@ -43,6 +45,10 @@ public abstract class GameObject {
         if(objectManager != null) 
             objectManager.remove(this);
         dispose();
+    }
+    
+    public Vector3 getPosition() {
+    	return new Vector3(x, y, 1);
     }
     
     public Polygon getBounds()
