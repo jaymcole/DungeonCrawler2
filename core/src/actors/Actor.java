@@ -15,6 +15,9 @@ import ecu.se.map.Map;
 
 public abstract class Actor extends GameObject{
 
+	
+	//WEAPON_DECAY_RATE, STAMINA
+	
     protected String name;
     protected String spriteSheet;
     //for the different types of enemies
@@ -37,6 +40,9 @@ public abstract class Actor extends GameObject{
     protected int spriteHeight;// = 48;
     protected int spriteSequences = 5;
     protected TextureRegion textureRegion;
+    protected float[] baseStats  = new float[Stats.values().length];
+    protected float[] modifierStats  = new float[Stats.values().length];
+    protected float[] currentStats  = new float[Stats.values().length];
     
     public Actor(float x, float y, float z, Map map, String spriteSheet) {
         super(x, y, z);    
@@ -102,6 +108,17 @@ public abstract class Actor extends GameObject{
     {
     	x = oldx;
     	y = oldy;
+    }
+    
+    public void setStats()
+    {
+    	for(int i = 0; i < Stats.values().length; i++)
+    	{
+    		baseStats[i] = 1;
+    		modifierStats[i] = 0;
+    		currentStats[i] = baseStats[i] + modifierStats[i];
+    		
+    	}
     }
     
     

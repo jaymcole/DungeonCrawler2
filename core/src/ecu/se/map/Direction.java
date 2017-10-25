@@ -223,4 +223,28 @@ public enum Direction {
     public Direction getExpandedDirectionTo(int x1, int y1, int x2, int y2) {
         return NORTH;
     }
+    
+    public static Direction directionTo(float x1, float y1, float x2, float y2)
+    {
+    	
+    	
+    	if (x1 > x2 && y1 > y2)
+    	{
+    		return SOUTHWEST;
+    	}
+    	else if (x1 < x2 && y1 > y2)
+    	{
+    		return SOUTHEAST;
+    	}
+    	else if (x1 > x2 && y1 < y2)
+    	{
+    		return NORTHWEST;
+    	}
+    	else
+    	{
+    		return NORTHEAST;
+    	}
+    		
+    	
+    }
 }

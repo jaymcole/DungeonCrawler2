@@ -78,7 +78,7 @@ public class ObjectManager {
             while(collisionChecker.hasNext() || doneChecking) {
                 actor2 = (Actor) collisionChecker.next();
                 
-                if(isColliding(actor1, actor2))
+                if(isColliding(actor1, actor2) && actor1 != actor2)
                 {
                     actor1.revert();
                     actor2.revert();

@@ -18,6 +18,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import actors.BadGuy;
 import actors.Player;
 import actors.TestActor;
 import archive.Archiver;
@@ -62,7 +63,7 @@ public class Game extends ApplicationAdapter {
 	    
 	    Random random  = new Random();
 	    for(int  i = 0; i < 50; i++) {
-	        objectManager.add(new TestActor(random.nextInt(Globals.MAP_TILE_WIDTH * 128), random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0, map, "texture/spritesheet/adventuretime_sprites.png"));	        
+	        objectManager.add(new BadGuy(random.nextInt(Globals.MAP_TILE_WIDTH * 128), random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0, map, "texture/spritesheet/adventuretime_sprites.png", player));	        
 	    }
 	    hud = new HUD(player, screenWidth, screenHeight);
 	    camera = new OrthographicCamera(screenWidth, screenHeight);

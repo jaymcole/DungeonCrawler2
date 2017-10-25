@@ -3,7 +3,7 @@ package ecu.se;
 public class Globals {
     public static final String VERSION = " MISSING";
     
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
     
     // Render Levels.
     public static final float Z_LEVEL_FLOOR =    0.0f;
