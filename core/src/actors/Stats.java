@@ -15,3 +15,4 @@ public enum Stats {
 		
 }
 
+//WEAPON_DECAY_RATE, STAMINA

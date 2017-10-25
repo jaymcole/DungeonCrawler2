@@ -14,9 +14,6 @@ import ecu.se.map.Direction;
 import ecu.se.map.Map;
 
 public abstract class Actor extends GameObject{
-
-	
-	//WEAPON_DECAY_RATE, STAMINA
 	
     protected String name;
     protected String spriteSheet;
