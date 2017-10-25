@@ -57,6 +57,17 @@ public class Floor {
         }
     }
     
+    public void fillFloor() {
+    	generated = true;
+    	for(int i = 0; i < mapWidth; i++) {
+            for(int j = 0; j < mapHeight; j++) {
+                tiles[i][j] = new Tile(i*tileWidth, j*tileHeight, tileWidth, tileHeight);
+                tiles[i][j].setTexture(Utils.loadTexture("texture/floor/castle_tile.jpg"));
+                tiles[i][j].setWall(false);
+            }
+        }
+    }
+    
     public void generate() {
         generated = true;
         // Fill tiles array with walls.

@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 
@@ -34,10 +35,11 @@ public class Lighting {
 		ShaderProgram.pedantic = false;
 		
 	    shader = new ShaderProgram(
-	            Gdx.files.internal("shader/test.vertex.glsl").readString(),
-	            Gdx.files.internal("shader/lightTest.frag").readString());
+	            Gdx.files.internal("shader/light1.vert").readString(),
+//	    		DefaultShader.getDefaultVertexShader(),
+	            Gdx.files.internal("shader/light1.frag").readString());
 	    if(!shader.isCompiled()) {
-	        Gdx.app.log("Problem loading shader:", shader.getLog());
+	        Gdx.app.log("[Lighting] Problem loading shader:", shader.getLog());
 	    }
 	    
 //	    lightSize = shader.getUniformSize("LightSource");
@@ -90,18 +92,17 @@ public class Lighting {
 //		float oldZoom = camera.zoom;
 //		camera.zoom = Globals.DEFAULT_CAMERA_ZOOM;
 		shader.begin();
+
 		while(updater.hasNext() && counter < Globals.MAX_LIGHTS) 
         {
             light = updater.next();
             if (light != null && light.on) {
             	light.update(deltaTime);
             	color = light.getColor();
-            	//position = camera.project(light.getPos());
             	
             	position = light.getPos();
-//            	position= camera.project(light.getPos(), 500, 500, 500, 500);
             	
-            	
+//            	position = (camera.position);
             	shader.setUniformf("lights["+counter+"].color", color.r, color.g, color.b, color.a);
             	shader.setUniformf("lights["+counter+"].position", position.x, position.y);
             	shader.setUniformf("lights["+counter+"].intensity", light.getIntensity());            	
@@ -110,11 +111,10 @@ public class Lighting {
         }
 		shader.setUniformMatrix("view_matrix", camera.view);
 		shader.setUniformi("totalLights", counter);
-		shader.setUniformf("worldPosition", camera.position.x, camera.position.y);
-		shader.setUniformMatrix("u_projViewTrans", camera.combined);
-		
+		shader.setUniformf("worldPos", camera.position.x, camera.position.y);
+		shader.setUniformMatrix("u_projViewTrans", camera.view);
+		shader.setUniformMatrix("inverseProjectionMatrix", camera.invProjectionView);
 	    shader.end();
-//	    camera.zoom = oldZoom;
 	}
 	
 	/**

@@ -8,6 +8,8 @@ float damper  = 0.1;
 float brightness(float maxDistance, vec2 coords, vec2 light)
 {
     float dist = (distance(coords, light));
+    if (dist > maxDistance*10)
+    	return 0;
     float brightness = falloff/((dist+(maxDistance*damper) )/maxDistance);
     return brightness;
 }
@@ -26,30 +28,24 @@ struct LightSource
 };
 
 
-uniform LightSource lights[32];
-uniform int totalLights;
+uniform mat4 inverseProjectionMatrix; 
+in vec2 texCoord;
+
 varying vec4 v_color;
 varying vec2 v_texCoords;
-varying vec2 worldPosition;
 uniform sampler2D u_texture;
-
-uniform float test_brightness;
-void main()
-{
-
-	gl_FragColor = vec4(0.1,0.1,0.1,1);
-	
+uniform vec3 worldPos;
+uniform LightSource lights[32];
+uniform int totalLights;
+   
+void main() {
+    vec4 worldSpacePositionOfScreenFragment = inverseProjectionMatrix * vec4(v_texCoords.xy * 2.0 - 1.0, 0.0, 1.0);
+    vec3 processingPosition = vec3(worldSpacePositionOfScreenFragment.xyz/worldSpacePositionOfScreenFragment.w)  ;
+    
+    gl_FragColor = vec4(0.0,0.0,0.0,1);
 	for ( int i = 0; i < totalLights; i++ ) {
-		gl_FragColor += lights[i].color * brightness(lights[i].intensity, vec2(gl_FragCoord.x/gl_FragCoord.w + worldPosition.x, gl_FragCoord.y/gl_FragCoord.w + worldPosition.y), lights[i].position);		//* brightness(lights[i].intensity, vec2(gl_FragCoord.x, gl_FragCoord.y), lights[i].position);
+		gl_FragColor += lights[i].color * brightness(lights[i].intensity, vec2(processingPosition.xy) - worldPos.xy, lights[i].position);
 	}	
-	//gl_FragColor /= totalLights;
    	gl_FragColor *= v_color * texture2D(u_texture, v_texCoords);
-   	
-   	
-   	
-   	
-   	
-   	//gl_FragColor = v_color * texture2D(u_texture, v_texCoords);
+    
 }
-
-

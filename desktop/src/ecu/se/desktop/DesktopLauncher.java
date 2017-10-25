@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
 		config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
 		config.vSyncEnabled = false;
-		config.foregroundFPS = 120; // Setting this to 0 == uncapped fps
+		config.foregroundFPS = 0; // Setting this to 0 == uncapped fps
 		config.backgroundFPS = 5;
 		config.fullscreen = false;
 		new LwjglApplication(new Game(), config);

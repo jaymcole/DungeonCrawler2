@@ -8,7 +8,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
@@ -21,6 +24,7 @@ import archive.Archiver;
 import assetManager.AssetManager;
 import ecu.se.gui.HUD;
 import ecu.se.map.Map;
+import ecu.se.map.Tile;
 import ecu.se.objects.Light;
 
 public class Game extends ApplicationAdapter {
@@ -33,7 +37,10 @@ public class Game extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	private Player player;
 	private HUD hud;
-	//private Lighting lighting;
+	
+	
+	private FrameBuffer frameBuffer;
+	private TextureRegion frameBufferRegion;
 	
 	private float zoom = Globals.DEFAULT_CAMERA_ZOOM;
 	
@@ -61,25 +68,37 @@ public class Game extends ApplicationAdapter {
 	    camera = new OrthographicCamera(screenWidth, screenHeight);
 		batch = new SpriteBatch();
 		shaperRenderer = new ShapeRenderer();
-
+		
 		// RECORDS
 		Archiver.startArchiver();
-	    Lighting.init(hud.getCamera());
+	    Lighting.init(camera);
 		Lighting.setShader(batch);
 		
+		light = new Light(player);
+		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
+		light.setIntensity(205);
+		Lighting.addLight(light);
 		
-		for(int i = 0 ; i < 32; i++) {
-			light = new Light(new Vector3(i*50,i*50,0));
-//			light = new Light(player.getPosition());
+		light = new Light(player);
+		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
+		light.setIntensity(205);
+		Lighting.addLight(light);
+		
+		light = new Light(player);
+		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
+		light.setIntensity(205);
+		Lighting.addLight(light);
+		for(int i = 0 ; i < 25; i++) {
+			light = new Light(new Vector3(i*100,i*100,0));
 			light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
-			//light.setColor(new Color(111f,111f,111f, 1.0f));
-			light.setIntensity(25);
+			light.setIntensity(200);
 			Lighting.addLight(light);
 			
 		}
 		
 		
-
+		halfWidth = screenWidth * 0.5f;
+		halfHeight = screenHeight * 0.5f;
 	}
 	
 	// Update all game objects
@@ -88,12 +107,13 @@ public class Game extends ApplicationAdapter {
         objectManager.update(deltaTime);
         player.update(deltaTime);
         camera.update();
-        camera.zoom = zoom;
         Lighting.updateLights(deltaTime);
+        camera.zoom = zoom;
 	}
 	
 	private static Random rand = new Random();
-	
+	private float halfWidth;
+	private float halfHeight;
 	@Override
 	public void render () {
 	    input(); // JUST MOVED THIS FROM THE BOTTOM TO THE TOP
@@ -101,23 +121,31 @@ public class Game extends ApplicationAdapter {
 	    update();
 	    
 	    //TEST
-	    
+	    frameBuffer = new FrameBuffer(Format.RGBA8888, screenWidth, screenHeight, false);
+		frameBufferRegion = new TextureRegion(frameBuffer.getColorBufferTexture(), (int)(camera.viewportWidth), (int)(camera.viewportHeight));
+		frameBufferRegion.flip(false, true);
 	    
 	    Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-//	    camera.zoom = zoom;
+	    frameBuffer.begin();
+			batch.begin();
+				batch.setProjectionMatrix(camera.combined);	
+				map.render(batch, (int)player.x, (int)player.y);
+				objectManager.render(deltaTime, batch);		
+			batch.end();
+		frameBuffer.end();
+		
+	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
 		batch.begin();
-		batch.setProjectionMatrix(camera.combined);
-		
-		Lighting.setShader(batch);
-		map.render(batch, (int)player.x, (int)player.y);
-		objectManager.render(deltaTime, batch);
-		
-		batch.setShader(null);
-		hud.render(batch);
-		
-		
+			Lighting.setShader(batch);
+			batch.draw(frameBufferRegion, camera.position.x - halfWidth, camera.position.y - halfHeight, (int)(camera.viewportWidth), (int)(camera.viewportHeight));
+			batch.setShader(null);
+			hud.render(batch);
 		batch.end();
+		
+		frameBuffer.dispose();
+
 		
 		
 		if(Globals.DEBUG) {
@@ -127,11 +155,9 @@ public class Game extends ApplicationAdapter {
 		    Vector3 temp2 = camera.project(player.getPosition());
 		    shaperRenderer.end();
 		    
-//		}
 			map.debugRender(camera.combined, (int)player.x, (int)player.y);
 			objectManager.debugRender(camera.combined);
 		
-//		if(Globals.DEBUG) {
             Utils.DrawDebugLine(new Vector2(0,-50), new Vector2(0,50), camera.combined);
             Utils.DrawDebugLine(new Vector2(-50,0), new Vector2(50,0), camera.combined);
         }

@@ -1,5 +1,7 @@
 package ecu.se.objects;
 
+import java.util.Random;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -45,7 +47,11 @@ public class Light {
 	private Vector3 offset;
 	private Vector3 position;
 	private float intensity;
-
+	private float baseIntensity;
+	private float time;
+	private static Random rand = new Random();
+	private int intensityPosition =  rand.nextInt(flickerTest.length);
+	
 	public Light(Vector3 position) {
 		this.parent = null;
 		this.hasParent = false;
@@ -61,6 +67,14 @@ public class Light {
 	}
 
 	public void update(float deltaTime) {
+		time += deltaTime;
+		if (time > 0.1f) {
+			time = 0;
+			intensityPosition++;
+			intensityPosition %= flickerTest.length;
+		}
+		intensity = baseIntensity * (flickerTest[intensityPosition] * 0.5f);
+		
 		if (hasParent) {
 			if (parent == null) {
 				Lighting.removeLight(this);
@@ -78,7 +92,7 @@ public class Light {
 	}
 
 	public void setIntensity(float intensity) {
-		this.intensity = intensity;
+		this.baseIntensity = intensity;
 	}
 
 	public Color getColor() {
