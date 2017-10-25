@@ -42,9 +42,11 @@ public class Player extends Actor {
         }
         */
         bounds.setPosition(x,y);
-        
+        animation.setIdle(idle);
         animation.update(deltaTime);
         animation.setXY((int) x,(int) y);
+        System.out.println(idle);
+        idle = true;
     }
 
     @Override

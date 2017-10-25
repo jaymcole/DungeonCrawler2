@@ -12,6 +12,7 @@ public abstract class GameObject {
     protected boolean alive;
     protected ObjectManager objectManager;
     protected Polygon bounds;
+    protected boolean idle;
         
     public GameObject(float x, float y, float z) {
         this.x = x;

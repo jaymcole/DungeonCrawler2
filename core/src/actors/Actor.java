@@ -94,6 +94,9 @@ public abstract class Actor extends GameObject{
         currentSpeed.x = Utils.clamp(-topSpeed, topSpeed, currentSpeed.x);        
         currentSpeed.y += (acceleration * deltaTime) * direction.y;
         currentSpeed.y = Utils.clamp(-topSpeed, topSpeed, currentSpeed.y);
+        animation.rowSelect (Direction.valueOf(direction.name()).ordinal());
+        idle = false;
+
     }
     public void revert()
     {

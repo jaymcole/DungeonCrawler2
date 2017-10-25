@@ -9,7 +9,8 @@ import ecu.se.GameObject;
 public class Animation extends GameObject{
 
 	
-	private int height, width, spriteX, spriteY, tRow, tColumn, frame;
+	private boolean hold = true;
+	private int height, width, spriteX, spriteY, tRow, tColumn, frame,sRow, selectedRow;
 //	private SpriteAsset spriteAsset;
 	private Texture texture;
 	private TextureRegion textureRegion;
@@ -30,6 +31,7 @@ public class Animation extends GameObject{
 	
 	public Animation(float x, float y, float z,SpriteAsset spriteAsset) {
 		super(x, y, z);
+		
 		tRow = spriteAsset.getSpriteRows();
 		tColumn = spriteAsset.getSpriteColumns();
 		height = spriteAsset.getSpriteHeight();
@@ -41,11 +43,21 @@ public class Animation extends GameObject{
 		offsetX = (int) (width * -0.5f);
 		offsetY = 0;
 	}
+	
+	public void rowSelect ( int aRow){
+		spriteY=(aRow/2)* height;
+	}
+	 public void setIdle( boolean holding){
+		 hold = holding;
+	 }
 
 	@Override
 	public void update(float deltaTime) {
-	    time+=deltaTime;
-	    if(time >= speed) {
+		time+=deltaTime;
+		
+		if(hold){
+			spriteX = 0;
+		} else if(time >= speed) {
 	        frame++;
 	        frame %= tRow-1;
 	        time -= speed;
