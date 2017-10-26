@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.particles.ParticleChannels.TextureRegionInitializer;
 import com.badlogic.gdx.math.Vector2;
 
+import archive.Archiver;
+import archive.TimeRecords;
 import assetManager.Animation;
 import assetManager.AssetManager;
 import ecu.se.map.Direction;
@@ -22,11 +24,15 @@ public class Player extends Actor {
         drag = 0.3f;
         topSpeed = 900;
         acceleration = 900;
+        Archiver.set(TimeRecords.TIME_IDLE, false);
+
     }
    
 
     @Override
     public void update(float deltaTime) {
+    	
+    	
         textureRegion.setRegion(0, 0, spriteWidth, spriteHeight);
         oldx = x;
         oldy = y;
@@ -35,18 +41,26 @@ public class Player extends Actor {
         y += currentSpeed.y;
         currentSpeed.x *= drag *deltaTime;
         currentSpeed.y *= drag *deltaTime;
-        /*
+        
         if(map.currentTile((int) x, (int) y) == null || map.currentTile((int) x, (int) y).getWall()) {
             x = oldx;
             y = oldy;
         }
-        */
+        
         bounds.setPosition(x,y);
         animation.setIdle(idle);
         animation.update(deltaTime);
         animation.setXY((int) x,(int) y);
-        System.out.println(idle);
         idle = true;
+    }
+    
+    public void setIdle(boolean idle) {
+    	this.idle = idle;
+    	if(idle) {
+    		Archiver.set(TimeRecords.TIME_IDLE, false);
+    	} else {
+    		Archiver.set(TimeRecords.TIME_MOVING, false);
+    	}
     }
 
     @Override
@@ -60,7 +74,6 @@ public class Player extends Actor {
     }
     
     public void input(float deltaTime) {
-        // Pan Camera
         if(Gdx.input.isKeyPressed(Input.Keys.W)){
              move(deltaTime, Direction.NORTH);
         } if(Gdx.input.isKeyPressed(Input.Keys.A)){

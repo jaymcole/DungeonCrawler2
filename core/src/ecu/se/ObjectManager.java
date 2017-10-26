@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Matrix4;
 
 import actors.Actor;
 import actors.Player;
+import ecu.se.map.Direction;
 
 public class ObjectManager {
 
@@ -60,8 +61,12 @@ public class ObjectManager {
                 object.update(deltaTime);            
             if(isColliding(player, object))
             {
-                Utils.println(this, "Player is colliding with Object");
-                player.revert();
+//                Utils.println(this, "Player is colliding with Object");
+                player.move(deltaTime, Direction.directionTo(object.x, object.y, player.x, player.y));
+                if (object instanceof Actor) {
+                	((Actor)object).move(deltaTime, Direction.directionTo(player.x, player.y, object.x, object.y));
+                	
+                }
             }
             } else {
                 this.remove(object);
@@ -80,8 +85,10 @@ public class ObjectManager {
                 
                 if(isColliding(actor1, actor2) && actor1 != actor2)
                 {
-                    actor1.revert();
-                    actor2.revert();
+                	actor1.move(deltaTime, Direction.directionTo(actor2.x, actor2.y, actor1.x, actor1.y));
+//                	actor2.move(deltaTime, Direction.directionTo(actor1.x, actor1.y, actor2.x, actor2.y));
+//                    actor1.revert();
+//                    actor2.revert();
                 }
 
             }
@@ -108,9 +115,10 @@ public class ObjectManager {
             actor1 = (Actor) updater.next();
             if (actor1.alive) {
                 actor1.render(batch);
-            } else {
-                Utils.println(this, "Actor is not rendering.");
-            }
+            } 
+//            else {
+//                Utils.println(this, "Actor is not rendering.");
+//            }
         }
         
         player.render(batch);

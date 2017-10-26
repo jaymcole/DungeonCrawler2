@@ -77,17 +77,17 @@ public class Game extends ApplicationAdapter {
 		
 		light = new Light(player);
 		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
-		light.setIntensity(205);
+		light.setIntensity(200);
 		Lighting.addLight(light);
 		
 		light = new Light(player);
 		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
-		light.setIntensity(205);
+		light.setIntensity(200);
 		Lighting.addLight(light);
 		
 		light = new Light(player);
 		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
-		light.setIntensity(205);
+		light.setIntensity(200);
 		Lighting.addLight(light);
 		for(int i = 0 ; i < 25; i++) {
 			light = new Light(new Vector3(i*100,i*100,0));

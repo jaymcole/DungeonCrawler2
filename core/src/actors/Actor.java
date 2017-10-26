@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import archive.Archiver;
+import archive.TimeRecords;
 import assetManager.Animation;
 import assetManager.AssetManager;
 import assetManager.SpriteAsset;
@@ -91,6 +93,11 @@ public abstract class Actor extends GameObject{
     public void setdefense(int defense) {
         this.defense = defense;
     }
+    
+    public void setIdle(boolean idle) {
+    	this.idle = idle;
+    }
+    
     public void move(float deltaTime, Direction direction)
     {
         currentSpeed.x += (acceleration * deltaTime) * direction.x;
@@ -98,8 +105,7 @@ public abstract class Actor extends GameObject{
         currentSpeed.y += (acceleration * deltaTime) * direction.y;
         currentSpeed.y = Utils.clamp(-topSpeed, topSpeed, currentSpeed.y);
         animation.rowSelect (Direction.valueOf(direction.name()).ordinal());
-        idle = false;
-
+       setIdle(false);
     }
     public void revert()
     {
