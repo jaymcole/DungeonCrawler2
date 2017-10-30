@@ -3,12 +3,16 @@ package ecu.se.map;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
+import assetManager.AssetManager;
 import ecu.se.Globals;
 import ecu.se.Utils;
 
@@ -34,10 +38,12 @@ public class Map {
     private Tile[][] visibleTiles;
     private ArrayList<Floor> floors;
     private Floor currentFloor;
+    private TextureRegion background;
     
     public Map() {
         floors = new ArrayList<Floor>(200);
         setFloor(0);
+        
     }
     
     public void setFloor(int floor) {

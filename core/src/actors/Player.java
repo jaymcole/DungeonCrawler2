@@ -23,7 +23,7 @@ public class Player extends Actor {
         currentSpeed = new Vector2(0, 0);
         drag = 0.3f;
         topSpeed = 900;
-        acceleration = 900;
+        acceleration = 300;
         Archiver.set(TimeRecords.TIME_IDLE, false);
 
     }
@@ -31,8 +31,6 @@ public class Player extends Actor {
 
     @Override
     public void update(float deltaTime) {
-    	
-    	
         textureRegion.setRegion(0, 0, spriteWidth, spriteHeight);
         oldx = x;
         oldy = y;
@@ -52,6 +50,10 @@ public class Player extends Actor {
         animation.update(deltaTime);
         animation.setXY((int) x,(int) y);
         idle = true;
+    }
+    
+    public void act(float deltaTime) {
+    	
     }
     
     public void setIdle(boolean idle) {

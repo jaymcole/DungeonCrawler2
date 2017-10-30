@@ -28,6 +28,7 @@ public class Lighting {
     private static int lightsPosition;
     private static Color color;
     private static Vector3 position;
+    private static boolean lightsOn;
     
 	public static void init(OrthographicCamera cam) {
 		camera = cam;
@@ -36,50 +37,11 @@ public class Lighting {
 		
 	    shader = new ShaderProgram(
 	            Gdx.files.internal("shader/light1.vert").readString(),
-//	    		DefaultShader.getDefaultVertexShader(),
 	            Gdx.files.internal("shader/light1.frag").readString());
 	    if(!shader.isCompiled()) {
 	        Gdx.app.log("[Lighting] Problem loading shader:", shader.getLog());
 	    }
-	    
-//	    lightSize = shader.getUniformSize("LightSource");
-//	    lightsPosition = shader.getUniformLocation("lights");
-//	    System.out.println("\n\nlightSize=" + lightSize);
-//	    System.out.println("lightsPosition=" + lightsPosition);
-//		
-//	    System.out.println("ALL attributes");
-//	    System.out.println("\tAttr\t\tType\tSize\tLoc");
-//	    for(String s : shader.getAttributes()) {	    	
-//	    	System.out.println("\t" + s + "\t" + shader.getAttributeType(s) + "\t" + shader.getAttributeSize(s) + "\t" + shader.getAttributeLocation((s)));
-//	    }
-//	    
-//	    System.out.println("ALL uniforms");
-//	    System.out.println("\tUnif\t\tType\tSize\tLoc");
-//	    for(String s : shader.getUniforms()) {	
-//	    	System.out.println("\t" + s + "\t" + shader.getUniformType(s) + "\t" + shader.getUniformSize(s) + "\t" + shader.getUniformLocation((s)));
-//	    	//System.out.println("\t" + s);
-//	    }
-//	    
-//	    System.out.println("\nVariable Size");	    
-//	    int v_color = shader.getAttributeSize("v_color");
-//	    int v_texCoords = shader.getAttributeSize("v_texCoords");
-//	    int worldPosition = shader.getAttributeSize("worldPosition");
-//	    int u_texture = shader.getAttributeSize("u_texture");
-//	    System.out.println("v_color=" + v_color);
-//	    System.out.println("v_texCoords=" + v_texCoords);
-//	    System.out.println("worldPosition=" + worldPosition);
-//	    System.out.println("u_texture=" + u_texture);
-//
-//	    System.out.println("\n\nVariable Positions");
-//	    v_color = shader.getUniformLocation("v_color");
-//	    v_texCoords = shader.getUniformLocation("v_texCoords");	    
-//	    worldPosition = shader.getUniformLocation("worldPosition");
-//	    u_texture = shader.getUniformLocation("u_texture");
-//	    System.out.println("v_color=" + v_color);
-//	    System.out.println("v_texCoords=" + v_texCoords);
-//	    System.out.println("worldPosition=" + worldPosition);
-//	    System.out.println("u_texture=" + u_texture);
-	    
+
 	}
 	
 	/**
@@ -92,7 +54,13 @@ public class Lighting {
 //		float oldZoom = camera.zoom;
 //		camera.zoom = Globals.DEFAULT_CAMERA_ZOOM;
 		shader.begin();
-
+		
+		if (lightsOn) 
+			shader.setUniformf("ambientLight", 1f, 1f, 1f, 1f);
+		else
+			shader.setUniformf("ambientLight", 0f, 0f, 0f, 0f);
+		
+		
 		while(updater.hasNext() && counter < Globals.MAX_LIGHTS) 
         {
             light = updater.next();
@@ -109,6 +77,8 @@ public class Lighting {
             	counter++;
             }
         }
+		
+		
 		shader.setUniformMatrix("view_matrix", camera.view);
 		shader.setUniformi("totalLights", counter);
 		shader.setUniformf("worldPos", camera.position.x, camera.position.y);
@@ -137,6 +107,10 @@ public class Lighting {
 		lights.add(light);
 	}
 	
+	public static void toggleLights() {
+		lightsOn ^= true; ;
+	}
+	
 	/**
 	 * Disposes the assets used by Lighting.
 	 * Including:
@@ -145,8 +119,5 @@ public class Lighting {
 	public static void dispose() {
 		shader.dispose();
 	}	
-	
-	public static void printLog() {
-		System.out.println(shader.getLog());
-	}
+
 }

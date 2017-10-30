@@ -15,7 +15,7 @@ public class Globals {
     
     public static final int CAMERA_SCROLL_SPEED_X_AXIS = 5;
     public static final int CAMERA_SCROLL_SPEED_Y_AXIS = 5;
-    public static final int DEFAULT_CAMERA_ZOOM = 1;
+    public static final float DEFAULT_CAMERA_ZOOM = 0.75f;
     
     
     // Map Gen Settings (probably as a percent)
@@ -34,7 +34,7 @@ public class Globals {
     public static final String SPRITE_PATH = "spriteInfo";
     
     //LIGHTING
-    public static final int MAX_LIGHTS = 32; //Must also be changed in the shader
+    public static final int MAX_LIGHTS = 200; //Must also be changed in the shader
     
     // DEBUG Settings
     // All of these will probably have to be cleaned up (removed along with whatever functions use them) later.

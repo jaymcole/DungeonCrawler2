@@ -39,6 +39,7 @@ public abstract class Actor extends GameObject{
     protected int spriteHeight;// = 48;
     protected int spriteSequences = 5;
     protected TextureRegion textureRegion;
+    
     protected float[] baseStats  = new float[Stats.values().length];
     protected float[] modifierStats  = new float[Stats.values().length];
     protected float[] currentStats  = new float[Stats.values().length];
@@ -50,14 +51,26 @@ public abstract class Actor extends GameObject{
         animation = asset.getAnimation();
         spriteWidth = asset.getSpriteWidth();
         spriteHeight = asset.getSpriteHeight();      
-
-        
-        
         textureRegion = asset.getTexture().getTextureRegion();
         texture = asset.getTexture().getTexture();
-        
         bounds = Utils.getRectangleBounds(x, y, (int)(spriteWidth*0.5), spriteHeight, Utils.ALIGN_BOTTOM_CENTER);
     }
+    
+    public void update(float deltaTime) {
+    	act(deltaTime);
+    	textureRegion.setRegion(0, 0, spriteWidth, spriteHeight);
+        x += currentSpeed.x;
+        y += currentSpeed.y;
+        currentSpeed.x *= drag *deltaTime;
+        currentSpeed.y *= drag *deltaTime;        
+        bounds.setPosition(x,y);
+        animation.setIdle(idle);
+        animation.update(deltaTime);
+        animation.setXY((int) x,(int) y);
+        idle = true;
+    }
+    
+    public abstract void act(float deltaTime);
     
     public String getName() {
         return name;
@@ -106,11 +119,6 @@ public abstract class Actor extends GameObject{
         currentSpeed.y = Utils.clamp(-topSpeed, topSpeed, currentSpeed.y);
         animation.rowSelect (Direction.valueOf(direction.name()).ordinal());
        setIdle(false);
-    }
-    public void revert()
-    {
-    	x = oldx;
-    	y = oldy;
     }
     
     public void setStats()

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import ecu.se.GameObject;
 import ecu.se.Utils;
 
@@ -37,9 +38,9 @@ public class Tile extends GameObject{
             batch.draw(texture, x, y, width, height);
         }
         
-        for(GameObject object : objects) {
-            object.render(batch);
-        }
+//        for(GameObject object : objects) {
+//            object.render(batch);
+//        }
     }
 
     public void dispose() {

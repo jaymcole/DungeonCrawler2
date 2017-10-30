@@ -9,17 +9,20 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import actors.BadGuy;
 import actors.Player;
+import actors.RangedBadGuy;
 import actors.TestActor;
 import archive.Archiver;
 import assetManager.AssetManager;
@@ -45,6 +48,9 @@ public class Game extends ApplicationAdapter {
 	
 	private float zoom = Globals.DEFAULT_CAMERA_ZOOM;
 	
+	private String backgroundTextureName = "texture/test/test_face_red.png";
+	private Texture backgroundTexture;
+	
 	// DEBUG OBJECT(S)
 	private ShapeRenderer shaperRenderer;
 	private Light light;
@@ -63,8 +69,9 @@ public class Game extends ApplicationAdapter {
 	    
 	    Random random  = new Random();
 	    for(int  i = 0; i < 50; i++) {
-	        objectManager.add(new BadGuy(random.nextInt(Globals.MAP_TILE_WIDTH * 128), random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0, map, "texture/spritesheet/adventuretime_sprites.png", player));	        
+	        objectManager.add(new RangedBadGuy(random.nextInt(Globals.MAP_TILE_WIDTH * 128), random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0, map, "texture/spritesheet/adventuretime_sprites.png", player));	        
 	    }
+
 	    hud = new HUD(player, screenWidth, screenHeight);
 	    camera = new OrthographicCamera(screenWidth, screenHeight);
 		batch = new SpriteBatch();
@@ -89,14 +96,7 @@ public class Game extends ApplicationAdapter {
 		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
 		light.setIntensity(200);
 		Lighting.addLight(light);
-		for(int i = 0 ; i < 25; i++) {
-			light = new Light(new Vector3(i*100,i*100,0));
-			light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
-			light.setIntensity(200);
-			Lighting.addLight(light);
-			
-		}
-		
+		backgroundTexture = AssetManager.getTexture(backgroundTextureName).getTexture();
 		
 		halfWidth = screenWidth * 0.5f;
 		halfHeight = screenHeight * 0.5f;
@@ -115,6 +115,7 @@ public class Game extends ApplicationAdapter {
 	private static Random rand = new Random();
 	private float halfWidth;
 	private float halfHeight;
+	private Matrix4 projectionMatrix = new Matrix4();
 	@Override
 	public void render () {
 	    input(); // JUST MOVED THIS FROM THE BOTTOM TO THE TOP
@@ -123,14 +124,16 @@ public class Game extends ApplicationAdapter {
 	    
 	    //TEST
 	    frameBuffer = new FrameBuffer(Format.RGBA8888, screenWidth, screenHeight, false);
-		frameBufferRegion = new TextureRegion(frameBuffer.getColorBufferTexture(), (int)(camera.viewportWidth), (int)(camera.viewportHeight));
+		frameBufferRegion = new TextureRegion(frameBuffer.getColorBufferTexture(), Gdx.graphics.getWidth(), (int)(Gdx.graphics.getHeight()));
 		frameBufferRegion.flip(false, true);
 	    
 	    Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 	    frameBuffer.begin();
 			batch.begin();
 				batch.setProjectionMatrix(camera.combined);	
+				batch.draw(backgroundTexture, camera.position.x - Gdx.graphics.getWidth() * 0.5f, camera.position.y - Gdx.graphics.getHeight() * 0.5f, Gdx.graphics.getWidth(), (int)(Gdx.graphics.getHeight()));
 				map.render(batch, (int)player.x, (int)player.y);
 				objectManager.render(deltaTime, batch);		
 			batch.end();
@@ -139,8 +142,9 @@ public class Game extends ApplicationAdapter {
 	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		batch.begin();
+			batch.setProjectionMatrix(camera.combined);	
 			Lighting.setShader(batch);
-			batch.draw(frameBufferRegion, camera.position.x - halfWidth, camera.position.y - halfHeight, (int)(camera.viewportWidth), (int)(camera.viewportHeight));
+			batch.draw(frameBufferRegion, camera.position.x - halfWidth, camera.position.y - halfHeight, Gdx.graphics.getWidth(), (int)(Gdx.graphics.getHeight()));
 			batch.setShader(null);
 			hud.render(batch);
 		batch.end();
@@ -198,7 +202,7 @@ public class Game extends ApplicationAdapter {
         }
         
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-            Lighting.printLog();
+        	Lighting.toggleLights();; 
         }
         
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){

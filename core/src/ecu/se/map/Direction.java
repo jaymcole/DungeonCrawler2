@@ -19,6 +19,7 @@ public enum Direction {
     public int x, y;
     Direction(String name, String shorthand, int x, int y) {
         this.name = name;
+        this.shorthand = shorthand;
         this.x = x;
         this.y = y;
     }

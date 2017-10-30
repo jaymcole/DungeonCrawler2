@@ -1,6 +1,5 @@
 package actors;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -21,25 +20,9 @@ public class BadGuy extends Actor{
 	        acceleration = 200;
 		// TODO Auto-generated constructor stub
 	}
-
-	@Override
-	public void update(float deltaTime) {
+	
+	public void act(float deltaTime) {
 		move(deltaTime, Direction.directionTo(x, y, player.getPosition().x, player.getPosition().y));
-		 textureRegion.setRegion(0, 0, spriteWidth, spriteHeight);
-	        oldx = x;
-	        oldy = y;
-
-	        x += currentSpeed.x;
-	        y += currentSpeed.y;
-	        currentSpeed.x *= drag *deltaTime;
-	        currentSpeed.y *= drag *deltaTime;
-
-	        bounds.setPosition(x,y);
-	        animation.setIdle(idle);
-	        animation.update(deltaTime);
-	        animation.setXY((int) x,(int) y);
-	        idle = true;
-		
 	}
 
 	@Override

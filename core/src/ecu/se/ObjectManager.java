@@ -82,11 +82,13 @@ public class ObjectManager {
             doneChecking = false;
             while(collisionChecker.hasNext() || doneChecking) {
                 actor2 = (Actor) collisionChecker.next();
-                
+//                if (actor2 == player) {
+//                	
+//                } else
                 if(isColliding(actor1, actor2) && actor1 != actor2)
                 {
-                	actor1.move(deltaTime, Direction.directionTo(actor2.x, actor2.y, actor1.x, actor1.y));
-//                	actor2.move(deltaTime, Direction.directionTo(actor1.x, actor1.y, actor2.x, actor2.y));
+                	actor1.move(deltaTime*0.2f, Direction.directionTo(actor2.x, actor2.y, actor1.x, actor1.y));
+                	actor2.move(deltaTime*0.2f, Direction.directionTo(actor1.x, actor1.y, actor2.x, actor2.y));
 //                    actor1.revert();
 //                    actor2.revert();
                 }
@@ -159,7 +161,7 @@ public class ObjectManager {
      * Adds/removes waiting objects after the every update tick. Objects need to wait to be added/removed until the update cycle has completed. 
      * Adding/removing objects during an update tick with cause an exception.
      */
-    public void updateList() {
+    private void updateList() {
         updater = waitList.iterator();
         GameObject object;
         

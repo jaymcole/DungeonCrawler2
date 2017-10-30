@@ -35,14 +35,16 @@ varying vec4 v_color;
 varying vec2 v_texCoords;
 uniform sampler2D u_texture;
 uniform vec3 worldPos;
-uniform LightSource lights[32];
+uniform LightSource lights[200];
 uniform int totalLights;
+uniform vec4 ambientLight;
    
 void main() {
     vec4 worldSpacePositionOfScreenFragment = inverseProjectionMatrix * vec4(v_texCoords.xy * 2.0 - 1.0, 0.0, 1.0);
     vec3 processingPosition = vec3(worldSpacePositionOfScreenFragment.xyz/worldSpacePositionOfScreenFragment.w)  ;
     
-    gl_FragColor = vec4(0.0,0.0,0.0,1);
+    //gl_FragColor = vec4(0.0,0.0,0.0,1);
+    gl_FragColor = ambientLight;
 	for ( int i = 0; i < totalLights; i++ ) {
 		gl_FragColor += lights[i].color * brightness(lights[i].intensity, vec2(processingPosition.xy) - worldPos.xy, lights[i].position);
 	}	
