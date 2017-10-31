@@ -31,7 +31,7 @@ public class Globals {
     public static final int TILE_PIXEL_WIDTH = 128;
     public static final int TILE_PIXEL_HEIGHT= 128;
     
-    public static final String SPRITE_PATH = "spriteInfo";
+    public static final String SPRITE_INFORMATION_EXTENSION = "spriteInfo";
     
     //LIGHTING
     public static final int MAX_LIGHTS = 200; //Must also be changed in the shader

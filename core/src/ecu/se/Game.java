@@ -48,7 +48,7 @@ public class Game extends ApplicationAdapter {
 	
 	private float zoom = Globals.DEFAULT_CAMERA_ZOOM;
 	
-	private String backgroundTextureName = "texture/test/test_face_red.png";
+	private String backgroundTextureName = "texture/misc/black.jpg";
 	private Texture backgroundTexture;
 	
 	// DEBUG OBJECT(S)
@@ -69,7 +69,7 @@ public class Game extends ApplicationAdapter {
 	    
 	    Random random  = new Random();
 	    for(int  i = 0; i < 50; i++) {
-	        objectManager.add(new RangedBadGuy(random.nextInt(Globals.MAP_TILE_WIDTH * 128), random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0, map, "texture/spritesheet/adventuretime_sprites.png", player));	        
+	        objectManager.add(new RangedBadGuy(random.nextInt(Globals.MAP_TILE_WIDTH * 128), random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0, map, "texture/spritesheet/goblin_sprites.png", player));	        
 	    }
 
 	    hud = new HUD(player, screenWidth, screenHeight);
@@ -170,6 +170,7 @@ public class Game extends ApplicationAdapter {
 		
 	}
 	int floor = 0;
+	private boolean mouseLeftDown = false;
 	public void input() {
 		
 	    player.input(deltaTime);
@@ -209,6 +210,13 @@ public class Game extends ApplicationAdapter {
         	
             dispose();
         }
+        
+        if(mouseLeftDown && !Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+        	Utils.print("Spawn boi");
+        	Vector3 pos = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        	objectManager.add(new RangedBadGuy(pos.x, pos.y, 0, map, "texture/spritesheet/goblin_sprites.png", player));
+        }
+        mouseLeftDown = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
            
 	}
 	

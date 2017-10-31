@@ -3,8 +3,6 @@ package ecu.se.map;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -12,24 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
-import assetManager.AssetManager;
 import ecu.se.Globals;
-import ecu.se.Utils;
-
-// TODO: Add all used (tiles that actually need to be rendered) to a list for rendering.
-//      - To avoid having to check a render flag on a bunch of unused tiles.
-
-// TODO: Cleanup Islands
-//      - And/Or make passage ways connecting the islands.
-
-// TODO: Generation may need to optimized significantly for it to be viable. Idk, someone with a slower computer
-//          will have to give it a try ;);););) ... Or we just need to test it on whichever computer we intend on 
-//          showing it with.
-
-// TODO: Generate Monsters / Loot / Treasure
-
-// IMPORTANT
-// TODO: Dispose floors
 
 public class Map {
     private int tilesVertical = 5;
@@ -39,10 +20,11 @@ public class Map {
     private ArrayList<Floor> floors;
     private Floor currentFloor;
     private TextureRegion background;
+    private int currentLevel = 0;
     
     public Map() {
         floors = new ArrayList<Floor>(200);
-        setFloor(0);
+        setFloor(currentLevel);
         
     }
     

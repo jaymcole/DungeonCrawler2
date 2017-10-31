@@ -1,16 +1,11 @@
 package assetManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import ecu.se.Utils;
 
-public class AssetManager {
-	//public static ArrayList<TextureAsset> textures = new ArrayList<TextureAsset>();
-	//public static ArrayList<FontAsset> fonts = new ArrayList<FontAsset>();
-	//public static ArrayList<SpriteAsset> sprites = new ArrayList<SpriteAsset>();
-	
+public class AssetManager {	
 	public static HashMap<String, Asset> assets = new HashMap<String, Asset>();
 	
 	public static FontAsset getFont(String name) {
@@ -49,7 +44,6 @@ public class AssetManager {
 			return (SpriteAsset)(assets.get(name));
 
 		SpriteAsset temp = new SpriteAsset(name);
-
 		if (temp.loadedSuccessfully()) {
 			Utils.println(AssetManager.class, "Adding a new sprite for: " + name);
 

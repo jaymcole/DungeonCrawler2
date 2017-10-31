@@ -31,7 +31,7 @@ public class Player extends Actor {
 
     @Override
     public void update(float deltaTime) {
-        textureRegion.setRegion(0, 0, spriteWidth, spriteHeight);
+//        textureRegion.setRegion(0, 0, spriteWidth, spriteHeight);
         oldx = x;
         oldy = y;
 

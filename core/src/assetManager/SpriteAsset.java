@@ -12,7 +12,7 @@ public class SpriteAsset extends Asset{
 	public int numCol;
 	public int spriteW;
 	public int spriteH;
-	public Animation animation;
+//	public Animation animation;
 
 	//Load text file with sprite sheet 
 	
@@ -22,24 +22,22 @@ public class SpriteAsset extends Asset{
 
         sprite = AssetManager.getTexture(name);
         
-        name = name.substring(0, name.indexOf('.')) + "." + Globals.SPRITE_PATH;
+        name = name.substring(0, name.indexOf('.')) + "." + Globals.SPRITE_INFORMATION_EXTENSION;
         System.out.println("Path=" + name);
         Scanner spriteFile = null;
         try {
         	spriteFile = new Scanner(new File(name));
-        	
+        	numRows = spriteFile.nextInt();
+        	numCol = spriteFile.nextInt();
+        	spriteW = spriteFile.nextInt();
+        	spriteH = spriteFile.nextInt();        	
+        	spriteFile.close();
         }
         catch(FileNotFoundException e) {
-        	System.out.println("Could not find sprite sheet.");
-        	System.exit(1);
+        	System.err.println("!!! Missing Texture: Could not find sprite sheet.");
+        	System.err.println("\tFailed: " + name);
         }
-        numRows = spriteFile.nextInt();
-        numCol = spriteFile.nextInt();
-        spriteW = spriteFile.nextInt();
-        spriteH = spriteFile.nextInt();
         System.out.println(numRows + " " + numCol + " " + spriteW + " " + spriteH);
-        
-        //animation = new Animation(0, 0, 0, this);
     }
 	
     public boolean loadedSuccessfully() {
@@ -74,14 +72,14 @@ public class SpriteAsset extends Asset{
     	return sprite;
     }
     
-    public Animation getAnimation() {
-    	return new Animation(0, 0, 0, this);
-    }
+//    public Animation getAnimation() {
+//    	return new Animation(0, 0, 0, this);
+//    }
 
 	@Override
 	public void dispose() {
-		if(animation != null)
-			animation.dispose();
+//		if(animation != null)
+//			animation.dispose();
 		if (sprite != null)
 			sprite.dispose();
 	}

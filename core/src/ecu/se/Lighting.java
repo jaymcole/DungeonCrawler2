@@ -24,8 +24,6 @@ public class Lighting {
     private static Iterator<Light> updater;
     private static Light light;
     private static int counter = 0; 
-    private static int lightSize;
-    private static int lightsPosition;
     private static Color color;
     private static Vector3 position;
     private static boolean lightsOn;

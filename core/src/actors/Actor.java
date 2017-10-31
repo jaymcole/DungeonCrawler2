@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import archive.Archiver;
-import archive.TimeRecords;
 import assetManager.Animation;
 import assetManager.AssetManager;
 import assetManager.SpriteAsset;
@@ -48,7 +46,7 @@ public abstract class Actor extends GameObject{
         super(x, y, z);    
         this.map = map;
         SpriteAsset asset = AssetManager.getSpriteSheet(spriteSheet);
-        animation = asset.getAnimation();
+        animation = new Animation(0,0,0,asset);        
         spriteWidth = asset.getSpriteWidth();
         spriteHeight = asset.getSpriteHeight();      
         textureRegion = asset.getTexture().getTextureRegion();
@@ -118,7 +116,7 @@ public abstract class Actor extends GameObject{
         currentSpeed.y += (acceleration * deltaTime) * direction.y;
         currentSpeed.y = Utils.clamp(-topSpeed, topSpeed, currentSpeed.y);
         animation.rowSelect (Direction.valueOf(direction.name()).ordinal());
-       setIdle(false);
+        setIdle(false);
     }
     
     public void setStats()
