@@ -15,7 +15,8 @@ import actors.Player;
 import ecu.se.map.Direction;
 
 public class ObjectManager {
-
+	
+	//TODO: Make ObjectManager a static class.
     private ArrayList<GameObject> objects;
     private ArrayList<GameObject> waitList;
     private ArrayList<GameObject> actors;
@@ -112,9 +113,6 @@ public class ObjectManager {
             if (actor1.alive) {
                 actor1.render(batch);
             } 
-//            else {
-//                Utils.println(this, "Actor is not rendering.");
-//            }
         }
         
         player.render(batch);

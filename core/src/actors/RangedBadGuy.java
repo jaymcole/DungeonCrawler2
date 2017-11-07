@@ -17,9 +17,11 @@ public class RangedBadGuy extends Actor {
 		super(x, y, z, map, spriteSheet);
 		this.player = player;
 		 currentSpeed = new Vector2(0, 0);
-	        drag = 0.3f;
-	        topSpeed = 50;
-	        acceleration = 200;
+		 setDefaults();
+	        updateStats();
+//	        drag = 0.3f;
+//	        topSpeed = 50;
+//	        acceleration = 200;
 	}
 	
 	public void act(float deltaTime) {
@@ -39,17 +41,4 @@ public class RangedBadGuy extends Actor {
 		
 
     }
-
-	@Override
-	public void render(SpriteBatch batch) {
-		 animation.render(batch);
-		
-	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

@@ -21,11 +21,12 @@ public class Player extends Actor {
     public Player(float x, float y, float z, Map map, OrthographicCamera camera, String spriteSheet) {
         super(x, y, z, map, spriteSheet);
         currentSpeed = new Vector2(0, 0);
-        drag = 0.3f;
-        topSpeed = 900;
-        acceleration = 300;
+//        drag = 0.3f;
+//        topSpeed = 900;
+//        acceleration = 300;
         Archiver.set(TimeRecords.TIME_IDLE, false);
-
+        Stats.print(currentStats);
+        currentHealth = 100;
     }
    
 
@@ -37,8 +38,8 @@ public class Player extends Actor {
 
         x += currentSpeed.x;
         y += currentSpeed.y;
-        currentSpeed.x *= drag *deltaTime;
-        currentSpeed.y *= drag *deltaTime;
+        currentSpeed.x *= currentStats[Stats.MOVEMENT_DRAG.ordinal()] * deltaTime;
+        currentSpeed.y *= currentStats[Stats.MOVEMENT_DRAG.ordinal()] * deltaTime;
         
         if(map.currentTile((int) x, (int) y) == null || map.currentTile((int) x, (int) y).getWall()) {
             x = oldx;
@@ -65,16 +66,6 @@ public class Player extends Actor {
     	}
     }
 
-    @Override
-    public void render(SpriteBatch batch) {
-        animation.render(batch);
-    }
-
-    @Override
-    public void dispose() {
-        
-    }
-    
     public void input(float deltaTime) {
         if(Gdx.input.isKeyPressed(Input.Keys.W)){
              move(deltaTime, Direction.NORTH);
@@ -88,7 +79,4 @@ public class Player extends Actor {
        
            
     }
-
-    
-
 }

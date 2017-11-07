@@ -20,15 +20,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 
-import actors.BadGuy;
 import actors.Player;
 import actors.RangedBadGuy;
-import actors.TestActor;
 import archive.Archiver;
 import assetManager.AssetManager;
 import ecu.se.gui.HUD;
 import ecu.se.map.Map;
-import ecu.se.map.Tile;
 import ecu.se.objects.Light;
 
 public class Game extends ApplicationAdapter {

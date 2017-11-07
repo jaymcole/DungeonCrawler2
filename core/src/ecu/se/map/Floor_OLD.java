@@ -20,9 +20,7 @@ public class Floor_OLD {
     private int tileHeight = Globals.TILE_PIXEL_HEIGHT;
     
     Tile[][] tiles;
-    
-    // TODO: Floor/Map uses an absurd amount of memory. This needs to be cleaned up.
-    
+        
     public Floor_OLD () {
         random = new Random();
         seed = random.nextLong();
@@ -116,10 +114,6 @@ public class Floor_OLD {
         }
         return false;
     }
-    
-    
-    // TODO: get the shortest path for each island and build a new
-    // TODO: Find largest ISLAND
     
     private void searchPath(Vector2 coord, ArrayList<Vector2> path) { 
         if (path.contains(coord))

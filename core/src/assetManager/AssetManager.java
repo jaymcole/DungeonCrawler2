@@ -55,15 +55,9 @@ public class AssetManager {
 	}
 
 	public static void dispose() {
-		
 		for(Map.Entry<String, Asset> entry : assets.entrySet()) {
 			Asset a = entry.getValue();
 			a.dispose();
 		}
-		
-//		This looks cool, but we'd have to change the project to 1.8
-//		TODO: Check if everyone has 1.8
-//		assets.forEach((k,v) -> v.dispose());
-
 	}
 }

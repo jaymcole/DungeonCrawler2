@@ -28,7 +28,6 @@ public class Animation{
 		height = spriteAsset.getSpriteHeight();
 		width = spriteAsset.getSpriteWidth();
 		textureRegion = new TextureRegion(spriteAsset.getTexture().getTexture());
-//		textureRegion = spriteAsset.getTexture().getTextureRegion();
 		frame = 0;
 		
 		offsetX = (int) (width * -0.5f);

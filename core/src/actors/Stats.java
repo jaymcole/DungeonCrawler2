@@ -1,12 +1,15 @@
 package actors;
 
+import ecu.se.map.Direction;
+
 public enum Stats {
-	
 	ATTACK,
 	DEFENSE,
 	STRENGTH,
 	HEALTH,
 	MOVEMENT_SPEED,
+	MOVEMENT_DRAG,
+	MOVEMENT_ACCELERATION,
 	RANGED_WEAPON_ATTACK,
 	RANGED_WEAPON_RANGE,
 	RANGED_WEAPON_SPEED,
@@ -37,7 +40,15 @@ public enum Stats {
 	FIRE_RESISTANCE,
 	COLD_RESISTANCE,
 	SHOCK_RESISTANCE;
-		
+
+	Stats() {}
+	
+	public static void print(float[] stats) {
+		for(int i = 0; i < Stats.values().length; i++) {
+			System.out.println(Stats.values()[i].name() + ": " + stats[i]);
+		}
+    }
 }
+
 
 //WEAPON_DECAY_RATE, STAMINA

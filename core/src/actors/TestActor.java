@@ -18,11 +18,6 @@ public class TestActor extends Actor {
     }
 
     @Override
-    public void render(SpriteBatch batch) {
-        animation.render(batch);
-    }
-
-    @Override
     public void dispose() {
 
     }
