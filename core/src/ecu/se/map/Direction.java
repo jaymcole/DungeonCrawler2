@@ -5,23 +5,24 @@ import java.util.Random;
 import com.badlogic.gdx.math.Vector2;
 
 public enum Direction {
-    NORTH		("NORTH"	 , "N"	, 0, 	1),
-    NORTHEAST	("NORTH EAST", "NE"	, 1,	1),
-    EAST		("EAST"		 , "E"	, 1, 	0),
-    SOUTHEAST	("SOUTH EAST", "SE"	, 1,	-1),
-    SOUTH		("SOUTH"	 , "S"	, 0, 	-1),
-    SOUTHWEST	("SOUTH WEST", "SW"	, -1, 	-1),
-    WEST		("WEST"		 , "W"	,-1, 	0),
-	NORTHWEST	("NORTH WEST", "NW"	, -1, 	1);
+    NORTH		("NORTH"	 , "N"	, 0, 	1, 	90),
+    NORTHEAST	("NORTH EAST", "NE"	, 1,	1, 	45),
+    EAST		("EAST"		 , "E"	, 1, 	0, 	0),
+    SOUTHEAST	("SOUTH EAST", "SE"	, 1,	-1, 315),
+    SOUTH		("SOUTH"	 , "S"	, 0, 	-1, 270),
+    SOUTHWEST	("SOUTH WEST", "SW"	, -1, 	-1, 225),
+    WEST		("WEST"		 , "W"	,-1, 	0, 	180),
+	NORTHWEST	("NORTH WEST", "NW"	, -1, 	1, 	135);
     
 
     public String name, shorthand;
-    public int x, y;
-    Direction(String name, String shorthand, int x, int y) {
+    public int x, y, degAngle;
+    Direction(String name, String shorthand, int x, int y, int degAngle) {
         this.name = name;
         this.shorthand = shorthand;
         this.x = x;
         this.y = y;
+        this.degAngle = degAngle;
     }
     
     private static final int directionValues = Direction.values().length;
