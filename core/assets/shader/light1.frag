@@ -4,6 +4,7 @@
 
 float falloff = 0.3; //0.3;
 float damper  = 0.1;
+#define M_PI 3.1415926535897932384626433832795
 
 float brightness(float maxDistance, vec2 coords, vec2 light)
 {
@@ -17,6 +18,13 @@ float brightness(float maxDistance, vec2 coords, vec2 light)
 float brightness2 (float intensity, vec2 pixelCoords, vec2 lightCoords) 
 {
 	return 1.0/(distance(pixelCoords, lightCoords));
+}
+
+float brightness3(float maxDistance, vec2 coords, vec2 light)
+{
+    float dist = (distance(coords, light));
+	dist = dist;
+	return maxDistance*2 / (4 * M_PI * dist);	
 }
 
 
@@ -46,7 +54,7 @@ void main() {
     //gl_FragColor = vec4(0.0,0.0,0.0,1);
     gl_FragColor = ambientLight;
 	for ( int i = 0; i < totalLights; i++ ) {
-		gl_FragColor += lights[i].color * brightness(lights[i].intensity, vec2(processingPosition.xy) - worldPos.xy, lights[i].position);
+		gl_FragColor += lights[i].color * brightness3(lights[i].intensity, vec2(processingPosition.xy) - worldPos.xy, lights[i].position);
 	}	
    	gl_FragColor *= v_color * texture2D(u_texture, v_texCoords);
     
