@@ -22,12 +22,6 @@ public abstract class Actor extends GameObject{
 	
     protected String name;
     protected String spriteSheet;
-//    protected int attack;
-//    protected int defense;
-    
-//    protected float topSpeed;
-//    protected float acceleration;
-//    protected float drag;
     protected Texture texture;
     protected Map map;
     protected float oldx = 0;
@@ -134,17 +128,8 @@ public abstract class Actor extends GameObject{
 	@Override
 	public void render(SpriteBatch batch) {
 		 animation.render(batch);
-//		 batch.draw(debugHealthBarTexture, x - (int)(spriteWidth * 0.5f), y + spriteHeight , spriteWidth, barHeight*2);
-//		 batch.setColor(Color.RED);
-//		 batch.draw(debugHealthBarTexture, 
-//				 x - (int)(spriteWidth * 0.5f) + borderWidth, 
-//				 y + spriteHeight + borderWidth , 
-//				 (int)((spriteWidth - borderWidth*2) * (currentHealth / (currentStats[Stats.HEALTH.ordinal()]+0.0f))), 
-//				 barHeight + (int)(borderWidth));
-//		 batch.setColor(Color.WHITE);	
 		 
-		 
-		 
+		 // Renders a healthbar
 		 batch.draw(debugHealthBarTexture, x - (int)(spriteWidth * 0.5f) - borderWidth, y + spriteHeight - borderWidth, spriteWidth + borderWidth*2, barHeight*2 + borderWidth*2);
 		 batch.setColor(Color.RED);
 		 batch.draw(debugHealthBarTexture, x - (int)(spriteWidth * 0.5f), y + spriteHeight , spriteWidth * (currentHealth / (currentStats[Stats.HEALTH.ordinal()]+0.0f)), barHeight*2);
