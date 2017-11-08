@@ -6,10 +6,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import ecu.se.Game;
 import ecu.se.GameObject;
 import ecu.se.Lighting;
 
-public class Light {
+public class Light implements Comparable<Light> {
 
 	private static float a = 1 / 26.0f;
 	private static float b = 2 / 26.0f;
@@ -49,9 +50,11 @@ public class Light {
 	private float intensity;
 	private float baseIntensity;
 	private float time;
+	private float distance;
 	private static Random rand = new Random();
-	private int intensityPosition =  rand.nextInt(flickerTest.length);
-	
+	private int intensityPosition = rand.nextInt(flickerTest.length);
+	private GameObject renderTarget;
+
 	public Light(Vector3 position) {
 		this.parent = null;
 		this.hasParent = false;
@@ -66,7 +69,7 @@ public class Light {
 		on = true;
 	}
 
-	public void update(float deltaTime) {
+	public void update(float deltaTime, Vector2 targetVector) {
 		time += deltaTime;
 		if (time > 0.1f) {
 			time = 0;
@@ -74,13 +77,15 @@ public class Light {
 			intensityPosition %= flickerTest.length;
 		}
 		intensity = baseIntensity * (flickerTest[intensityPosition] * 0.5f);
-		
+
 		if (hasParent) {
 			if (parent == null) {
 				Lighting.removeLight(this);
 			}
 			this.position = parent.getPosition();
 		}
+		
+		distance = Vector2.dst2(position.x, position.y, targetVector.x, targetVector.y);
 	}
 
 	public void setOffset(Vector3 offset) {
@@ -105,5 +110,30 @@ public class Light {
 
 	public Vector3 getPos() {
 		return position;
+	}
+	
+	public void setX(float x) {
+		position.x = x;
+	}
+	
+	public void setY(float y) {
+		position.y = y;
+	}
+
+	public float getDistance() {
+		return distance;
+	}
+
+	public void setTarget(GameObject object) {
+		renderTarget = object;
+	}
+
+	@Override
+	public int compareTo(Light arg0) {
+		if (distance > arg0.getDistance())
+			return 1;
+		else if (distance == arg0.getDistance())
+			return 0;
+		return -1;
 	}
 }

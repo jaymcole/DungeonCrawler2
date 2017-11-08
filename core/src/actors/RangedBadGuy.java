@@ -33,10 +33,10 @@ public class RangedBadGuy extends Actor {
 		
 		if(dist > maxDist)
 		{
-			move(deltaTime, Direction.directionTo(x, y, player.getPosition().x, player.getPosition().y));
+			move(deltaTime, Direction.directionTo(x, y, player.getPosition().x, player.getPosition().y), true);
 		} else if(dist < minDist)
 		{
-			move(deltaTime, Direction.directionTo(player.getPosition().x, player.getPosition().y, x, y));
+			move(deltaTime, Direction.directionTo(player.getPosition().x, player.getPosition().y, x, y), true);
 		}
 		
 

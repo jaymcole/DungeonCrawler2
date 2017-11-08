@@ -1,6 +1,7 @@
 package ecu.se;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -8,8 +9,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import ecu.se.objects.Light;
@@ -27,12 +28,13 @@ public class Lighting {
     private static Color color;
     private static Vector3 position;
     private static boolean lightsOn;
+    private static GameObject renderTarget;
     
-	public static void init(OrthographicCamera cam) {
+	public static void init(OrthographicCamera cam, GameObject rt) {
 		camera = cam;
 		rand = new Random();
 		ShaderProgram.pedantic = false;
-		
+		renderTarget = rt;
 	    shader = new ShaderProgram(
 	            Gdx.files.internal("shader/light1.vert").readString(),
 	            Gdx.files.internal("shader/light1.frag").readString());
@@ -46,29 +48,29 @@ public class Lighting {
 	 * Updates the lights and shader.
 	 * @param deltaTime - Time since last render call.
 	 */
-	public static void updateLights (float deltaTime) {
+	public static void updateLights (float deltaTime, Vector2 targetVector) {
+		updater = lights.iterator();
+		
+		while(updater.hasNext()) {
+			light = updater.next();
+			light.update(deltaTime, targetVector);
+		}
+		Collections.sort(lights);
+		
 		updater = lights.iterator();
 		counter = 0;
-//		float oldZoom = camera.zoom;
-//		camera.zoom = Globals.DEFAULT_CAMERA_ZOOM;
 		shader.begin();
-		
 		if (lightsOn) 
 			shader.setUniformf("ambientLight", 1f, 1f, 1f, 1f);
 		else
 			shader.setUniformf("ambientLight", 0f, 0f, 0f, 0f);
 		
-		
 		while(updater.hasNext() && counter < Globals.MAX_LIGHTS) 
         {
             light = updater.next();
             if (light != null && light.on) {
-            	light.update(deltaTime);
             	color = light.getColor();
-            	
             	position = light.getPos();
-            	
-//            	position = (camera.position);
             	shader.setUniformf("lights["+counter+"].color", color.r, color.g, color.b, color.a);
             	shader.setUniformf("lights["+counter+"].position", position.x, position.y);
             	shader.setUniformf("lights["+counter+"].intensity", light.getIntensity());            	
@@ -76,13 +78,16 @@ public class Lighting {
             }
         }
 		
-		
 		shader.setUniformMatrix("view_matrix", camera.view);
 		shader.setUniformi("totalLights", counter);
 		shader.setUniformf("worldPos", camera.position.x, camera.position.y);
 		shader.setUniformMatrix("u_projViewTrans", camera.view);
 		shader.setUniformMatrix("inverseProjectionMatrix", camera.invProjectionView);
 	    shader.end();
+	}
+	
+	public static void setLights(ArrayList<Light> newLights) {
+		lights = newLights;
 	}
 	
 	/**
@@ -102,7 +107,8 @@ public class Lighting {
 	}
 	
 	public static void addLight(Light light) {
-		lights.add(light);
+		light.setTarget(Game.player);
+		lights.add(light);		
 	}
 	
 	public static void toggleLights() {

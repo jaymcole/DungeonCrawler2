@@ -1,6 +1,5 @@
 package ecu.se.map;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class PathNode {

@@ -1,5 +1,7 @@
 package ecu.se.map;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 
 import com.badlogic.gdx.graphics.Color;
@@ -23,21 +25,25 @@ public class Floor {
 	private static final int ROOM 	= 3; private static final String PRINT_ROOM 	= "R";
 	private static final int SPAWN 	= 4; private static final String PRINT_SPAWN 	= "O";
 	private static final int PILLAR	= 5; private static final String PRINT_PILLAR 	= "P";
+	private static final int LIGHT 	= 6; private static final String PRINT_LIGHT	= "L";
+	
 
 	private int mapWidth = Globals.MAP_TILE_WIDTH;
 	private int mapHeight = Globals.MAP_TILE_HEIGHT;
 	private int tileWidth = Globals.TILE_PIXEL_WIDTH;
 	private int tileHeight = Globals.TILE_PIXEL_HEIGHT;
 	
+//	private static final int PATH_END_FACTOR = (int)((1.0f/((Math.max(Globals.MAP_TILE_HEIGHT, Globals.MAP_TILE_WIDTH)/10))) * (Globals.MAP_TILE_HEIGHT * Globals.MAP_TILE_WIDTH));
 	private static final int PATH_END_FACTOR = (int)(0.001f * (Globals.MAP_TILE_HEIGHT * Globals.MAP_TILE_WIDTH));
-
+	
 	private int totalWalkable = 0;
 	private Vector2 minTile = new Vector2(mapWidth + 1, mapHeight + 1);
 	private Vector2 maxTile = new Vector2(-1, -1);
 
 	private Tile[][] tiles;
 	private int[][] map;
-
+	private ArrayList<Light> lights;
+	
 	public Floor() {
 		random = new Random();
 		seed = random.nextLong();
@@ -62,9 +68,15 @@ public class Floor {
 
 	private void init() {
 		map = new int[mapWidth][mapHeight];
+		lights = new ArrayList<Light>();
 		buildChances();
+		spawnMap();
 	}
 
+	public void spawnMap() {
+		Lighting.setLights(lights);
+	}
+	
 	public int tempSpawnX = 0;
 	public int tempSpawnY = 0;
 
@@ -92,8 +104,8 @@ public class Floor {
 		}
 		map = temp;
 
-		printFloor();
 		finalizeFloor();
+		printFloor();
 	}
 
 	private void finalizeFloor() {
@@ -101,7 +113,8 @@ public class Floor {
 		int temp = 0;
 		for (int i = 0; i < mapWidth; i++) {
 			for (int j = 0; j < mapHeight; j++) {
-				temp = map[i][j];
+				temp = map[i][j];				
+				
 				switch (temp) {
 				case EMPTY:
 					break;
@@ -110,12 +123,17 @@ public class Floor {
 				case FLOOR:
 				case ROOM:
 				case SPAWN:
+				case LIGHT:
+					if (random.nextInt(100) > 89) {
+//					if (random.nextInt(100) > 89) {
+//						createLight((int)(i * tileWidth + (tileWidth * 0.5f)), (int)(j * tileHeight + (tileHeight * 0.5f)));
+						createLight(i * tileWidth, j * tileHeight);
+					}
 					makeTileWalkable(i, j);
 					break;
 				}
 			}
 		}
-
 	}
 
 	public void printFloor() {
@@ -143,6 +161,8 @@ public class Floor {
 					System.out.print(PRINT_ROOM);
 				else if (map[i][j] == PILLAR)
 					System.out.print(PRINT_PILLAR);
+				else if (map[i][j] == LIGHT)
+					System.out.print(PRINT_LIGHT);
 			}
 			System.out.println("");
 		}
@@ -170,17 +190,6 @@ public class Floor {
 		if (!inBounds(node.x, node.y))
 			return;
 
-		// if (isTaken(new BuildNode(node.x + node.direction.x, node.y +
-		// node.direction.y, node.direction)))
-		// return;
-
-		// if (isTaken(node))
-		// return;
-
-		if (random.nextInt(100) > 89) {
-			createLight(node.x * tileWidth, node.y * tileHeight);
-			Utils.println(this, "\tCreate Light");
-		}
 		setTile(node.x, node.y, FLOOR);
 		
 		if (endPath()){
@@ -321,6 +330,8 @@ public class Floor {
 			tiles[x][y] = new Tile(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
 			tiles[x][y].setTexture(Utils.loadTexture("texture/floor/castle_tile.jpg"));
 			tiles[x][y].setWall(false);
+//			createLight((int)(x * tileWidth - (tileWidth * 0.5f)), (int)(y * tileHeight - (tileHeight * 0.5f)));
+//			createLight((int)(x * tileWidth), (int)(y * tileHeight));
 		}
 	}
 
@@ -345,10 +356,10 @@ public class Floor {
 	}
 
 	private void createLight(int x, int y) {
-		Light light = new Light(new Vector3(x, y, 0));
+		Light light = new Light(new Vector3(x + random.nextInt(tileWidth), y + random.nextInt(tileWidth), 0));
 		light.setColor(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1.0f));
-		light.setIntensity(200);
-		Lighting.addLight(light);
+		light.setIntensity(500);
+		lights.add(light);
 	}
 
 	public void renderAll(SpriteBatch batch) {
@@ -424,20 +435,5 @@ public class Floor {
 	public Vector2 getSpawn(int x, int y) {
 		return new Vector2((tempSpawnX * tileWidth) + (tileWidth * 0.5f),
 				(tempSpawnY * tileHeight) + (tileHeight * 0.5f));
-
-		// for(int i = 0; i < Globals.MAP_TILE_WIDTH; i++)
-		// {
-		// for(int n = 0; n < Globals.MAP_TILE_HEIGHT; n++)
-		//
-		// {
-		// if(!tiles[i][n].getWall())
-		// {
-		// return new Vector2((i * tileWidth)+(tileWidth*0.5f),(n *
-		// tileHeight)+(tileHeight*0.5f));
-		//
-		// }
-		// }
-		// }
-		// return null;
 	}
 }

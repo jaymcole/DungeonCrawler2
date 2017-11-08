@@ -23,8 +23,12 @@ float brightness2 (float intensity, vec2 pixelCoords, vec2 lightCoords)
 float brightness3(float maxDistance, vec2 coords, vec2 light)
 {
     float dist = (distance(coords, light));
-	dist = dist;
-	return maxDistance*2 / (4 * M_PI * dist);	
+  	//dist = 
+  	return maxDistance*2 / (4 * M_PI * dist);	
+  	//if (dist < 0.01)
+	//	return 0;
+	//else 
+	//	return dist;
 }
 
 

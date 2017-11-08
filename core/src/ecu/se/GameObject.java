@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-public abstract class GameObject {    
+public abstract class GameObject implements Comparable<GameObject>{    
     protected float x,y,z;
     protected Texture texture;
     protected boolean alive;
@@ -38,8 +38,13 @@ public abstract class GameObject {
    
     public abstract void dispose();
     
-   
- 
+    @Override
+	public int compareTo(GameObject arg0) {
+    	if ( this.y > arg0.y )
+    		return -1;
+		return 1;
+	}
+    
     
     protected void kill() {
         this.alive = false;
@@ -50,6 +55,10 @@ public abstract class GameObject {
     
     public Vector3 getPosition() {
     	return new Vector3(x, y, 1);
+    }
+    
+    public Vector2 getPositionV2() {
+    	return new Vector2(x, y);
     }
     
     public Polygon getBounds()

@@ -5,6 +5,7 @@ import java.util.Random;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -28,7 +29,7 @@ import ecu.se.gui.HUD;
 import ecu.se.map.Map;
 import ecu.se.objects.Light;
 
-public class Game extends ApplicationAdapter {
+public class Game extends ApplicationAdapter{
 	SpriteBatch batch;
 	
 	private float deltaTime;
@@ -36,7 +37,7 @@ public class Game extends ApplicationAdapter {
 	private int screenHeight, screenWidth;
 	private Map map;
 	private OrthographicCamera camera;
-	private Player player;
+	public static Player player;
 	private HUD hud;
 	
 	
@@ -45,7 +46,8 @@ public class Game extends ApplicationAdapter {
 	
 	private float zoom = Globals.DEFAULT_CAMERA_ZOOM;
 	
-	private String backgroundTextureName = "texture/misc/black.jpg";
+//	private String backgroundTextureName = "texture/misc/black.jpg";
+	private String backgroundTextureName = "texture/floor/castle_tile.jpg";
 	private Texture backgroundTexture;
 	
 	// DEBUG OBJECT(S)
@@ -76,23 +78,26 @@ public class Game extends ApplicationAdapter {
 		
 		// RECORDS
 		Archiver.startArchiver();
-	    Lighting.init(camera);
+		if (player == null) { 
+			System.err.println("Player is null for some reason");
+		}
+	    Lighting.init(camera, player);
 		Lighting.setShader(batch);
 		
-		light = new Light(player);
-		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
-		light.setIntensity(200);
-		Lighting.addLight(light);
-		
-		light = new Light(player);
-		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
-		light.setIntensity(200);
-		Lighting.addLight(light);
-		
-		light = new Light(player);
-		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
-		light.setIntensity(200);
-		Lighting.addLight(light);
+//		light = new Light(player);
+//		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
+//		light.setIntensity(200);
+//		Lighting.addLight(light);
+//		
+//		light = new Light(player);
+//		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
+//		light.setIntensity(200);
+//		Lighting.addLight(light);
+//		
+//		light = new Light(player);
+//		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
+//		light.setIntensity(200);
+//		Lighting.addLight(light);
 		backgroundTexture = AssetManager.getTexture(backgroundTextureName).getTexture();
 		
 		halfWidth = screenWidth * 0.5f;
@@ -105,7 +110,7 @@ public class Game extends ApplicationAdapter {
         objectManager.update(deltaTime);
         player.update(deltaTime);
         camera.update();
-        Lighting.updateLights(deltaTime);
+        Lighting.updateLights(deltaTime, player.getPositionV2());
         camera.zoom = zoom;
 	}
 	
@@ -208,6 +213,22 @@ public class Game extends ApplicationAdapter {
             dispose();
         }
         
+        if (Gdx.input.isKeyPressed(Input.Keys.MINUS)) {
+        	Globals.MAX_LIGHTS -= 1;
+    		if(Globals.MAX_LIGHTS < 0)
+    			Globals.MAX_LIGHTS = 0;
+    		if(Globals.MAX_LIGHTS > 200)
+    			Globals.MAX_LIGHTS = 200;
+        }
+        
+        if (Gdx.input.isKeyPressed(Input.Keys.EQUALS)) {
+        	Globals.MAX_LIGHTS += 1;
+    		if(Globals.MAX_LIGHTS < 0)
+    			Globals.MAX_LIGHTS = 0;
+    		if(Globals.MAX_LIGHTS > 200)
+    			Globals.MAX_LIGHTS = 200;
+        }
+                
         if(mouseLeftDown && !Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
         	Utils.print("Spawn boi");
         	Vector3 pos = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
@@ -216,6 +237,8 @@ public class Game extends ApplicationAdapter {
         mouseLeftDown = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
            
 	}
+	
+	
 	
 	@Override
 	public void dispose () {
@@ -226,4 +249,6 @@ public class Game extends ApplicationAdapter {
 		Lighting.dispose();
 		AssetManager.dispose();
 	}
+
+
 }

@@ -21,18 +21,13 @@ public class Player extends Actor {
     public Player(float x, float y, float z, Map map, OrthographicCamera camera, String spriteSheet) {
         super(x, y, z, map, spriteSheet);
         currentSpeed = new Vector2(0, 0);
-//        drag = 0.3f;
-//        topSpeed = 900;
-//        acceleration = 300;
         Archiver.set(TimeRecords.TIME_IDLE, false);
-        Stats.print(currentStats);
         currentHealth = 100;
     }
    
 
     @Override
     public void update(float deltaTime) {
-//        textureRegion.setRegion(0, 0, spriteWidth, spriteHeight);
         oldx = x;
         oldy = y;
 
@@ -68,13 +63,13 @@ public class Player extends Actor {
 
     public void input(float deltaTime) {
         if(Gdx.input.isKeyPressed(Input.Keys.W)){
-             move(deltaTime, Direction.NORTH);
+             move(deltaTime, Direction.NORTH, true);
         } if(Gdx.input.isKeyPressed(Input.Keys.A)){
-            move(deltaTime, Direction.WEST);
+            move(deltaTime, Direction.WEST, true);
         } if(Gdx.input.isKeyPressed(Input.Keys.S)){
-            move(deltaTime, Direction.SOUTH);
+            move(deltaTime, Direction.SOUTH, true);
         } if(Gdx.input.isKeyPressed(Input.Keys.D)){
-            move(deltaTime, Direction.EAST);
+            move(deltaTime, Direction.EAST, true);
         }
        
            

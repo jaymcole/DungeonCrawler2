@@ -3,7 +3,7 @@ package actors;
 import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.map.Map;
-
+import ecu.se.GameObject;
 import ecu.se.map.Direction;
 
 public class BadGuy extends Actor{
@@ -17,7 +17,6 @@ public class BadGuy extends Actor{
 	}
 	
 	public void act(float deltaTime) {
-		move(deltaTime, Direction.directionTo(x, y, player.getPosition().x, player.getPosition().y));
+		move(deltaTime, Direction.directionTo(x, y, player.getPosition().x, player.getPosition().y), true);
 	}
-
 }

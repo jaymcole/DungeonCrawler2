@@ -1,6 +1,7 @@
 package ecu.se;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 import com.badlogic.gdx.graphics.Color;
@@ -16,7 +17,6 @@ import ecu.se.map.Direction;
 
 public class ObjectManager {
 	
-	//TODO: Make ObjectManager a static class.
     private ArrayList<GameObject> objects;
     private ArrayList<GameObject> waitList;
     private ArrayList<GameObject> actors;
@@ -62,9 +62,9 @@ public class ObjectManager {
                 object.update(deltaTime);            
             if(isColliding(player, object))
             {
-                player.move(deltaTime, Direction.directionTo(object.x, object.y, player.x, player.y));
+                player.move(deltaTime, Direction.directionTo(object.x, object.y, player.x, player.y), true);
                 if (object instanceof Actor) {
-                	((Actor)object).move(deltaTime, Direction.directionTo(player.x, player.y, object.x, object.y));
+                	((Actor)object).move(deltaTime, Direction.directionTo(player.x, player.y, object.x, object.y), true);
                 	
                 }
             }
@@ -84,8 +84,8 @@ public class ObjectManager {
                 actor2 = (Actor) collisionChecker.next();
                 if(isColliding(actor1, actor2) && actor1 != actor2)
                 {
-                	actor1.move(deltaTime*0.5f, Direction.directionTo(actor2.x, actor2.y, actor1.x, actor1.y));
-                	actor2.move(deltaTime*0.5f, Direction.directionTo(actor1.x, actor1.y, actor2.x, actor2.y));
+                	actor1.move(deltaTime, Direction.directionTo(actor2.x, actor2.y, actor1.x, actor1.y), false);
+//                	actor2.move((int)(deltaTime * 0.5f), Direction.directionTo(actor1.x, actor1.y, actor2.x, actor2.y), false);
                 }
 
             }
@@ -172,6 +172,7 @@ public class ObjectManager {
             }
         }
         waitList.clear();
+        Collections.sort(actors);
     }
     
     /**

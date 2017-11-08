@@ -33,6 +33,7 @@ public abstract class Actor extends GameObject{
     protected int spriteHeight;// = 48;
     protected int spriteSequences = 5;
     protected TextureRegion textureRegion;
+    protected boolean awake;
     
     /**
      * baseStats: All permanent stats.
@@ -86,6 +87,7 @@ public abstract class Actor extends GameObject{
         currentHealth = currentStats[Stats.HEALTH.ordinal()];
         Random random = new Random();
         currentHealth = random.nextInt(100);
+        this.awake = false;
     }
     
     /**
@@ -130,9 +132,13 @@ public abstract class Actor extends GameObject{
 		 animation.render(batch);
 		 
 		 // Renders a healthbar
+		 batch.setColor(1.0f, 1.0f, 1.0f, 0.5f);
 		 batch.draw(debugHealthBarTexture, x - (int)(spriteWidth * 0.5f) - borderWidth, y + spriteHeight - borderWidth, spriteWidth + borderWidth*2, barHeight*2 + borderWidth*2);
-		 batch.setColor(Color.RED);
+//		 batch.setColor(Color.RED);
+		 batch.setColor(1.0f, 0f, 0f, 0.5f);
 		 batch.draw(debugHealthBarTexture, x - (int)(spriteWidth * 0.5f), y + spriteHeight , spriteWidth * (currentHealth / (currentStats[Stats.HEALTH.ordinal()]+0.0f)), barHeight*2);
+		 
+		 
 		 batch.setColor(Color.WHITE);
 	}
     
@@ -183,15 +189,17 @@ public abstract class Actor extends GameObject{
     	this.idle = idle;
     }
     
-    public void move(float deltaTime, Direction direction)
+    public void move(float deltaTime, Direction direction, boolean updateDirection)
     {
         currentSpeed.x += (currentStats[Stats.MOVEMENT_ACCELERATION.ordinal()] * deltaTime) * direction.x;
         currentSpeed.x = Utils.clamp(-currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentSpeed.x);        
         currentSpeed.y += (currentStats[Stats.MOVEMENT_ACCELERATION.ordinal()] * deltaTime) * direction.y;
         currentSpeed.y = Utils.clamp(-currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentSpeed.y);
-        animation.rowSelect (Direction.valueOf(direction.name()).ordinal());
+        if(updateDirection)
+        	animation.rowSelect (Direction.valueOf(direction.name()).ordinal());
         setIdle(false);
     }
+    
     
     //TODO: Add different defaults for different classes (Could be done by subclasses)
     public void setDefaults() {

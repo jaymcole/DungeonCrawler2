@@ -99,9 +99,7 @@ public class Map {
     public void setScreenResolution(int screenWidth, int screenHeight) {
         tilesHorizontal = (screenWidth/Globals.TILE_PIXEL_WIDTH) + 2;
         tilesVertical = (screenHeight/Globals.TILE_PIXEL_HEIGHT) + 2;
-    }
-    
-    
+    }    
     
     //TODO: Pathfinding! 
     public LinkedList<Vector2> getPath(Vector2 from, Vector2 to) {
