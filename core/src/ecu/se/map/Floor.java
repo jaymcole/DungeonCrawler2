@@ -42,7 +42,7 @@ public class Floor {
 
 	private Tile[][] tiles;
 	private int[][] map;
-	private ArrayList<Light> lights;
+	private LinkedList<Light> lights;
 	
 	public Floor() {
 		random = new Random();
@@ -68,7 +68,7 @@ public class Floor {
 
 	private void init() {
 		map = new int[mapWidth][mapHeight];
-		lights = new ArrayList<Light>();
+		lights = new LinkedList<Light>();
 		buildChances();
 		spawnMap();
 	}
@@ -111,6 +111,7 @@ public class Floor {
 	private void finalizeFloor() {
 		tiles = new Tile[mapWidth][mapHeight];
 		int temp = 0;
+		int totalLights = 0;
 		for (int i = 0; i < mapWidth; i++) {
 			for (int j = 0; j < mapHeight; j++) {
 				temp = map[i][j];				
@@ -123,17 +124,18 @@ public class Floor {
 				case FLOOR:
 				case ROOM:
 				case SPAWN:
-				case LIGHT:
-					if (random.nextInt(100) > 89) {
+					if (random.nextInt(100) > 95) {
 //					if (random.nextInt(100) > 89) {
 //						createLight((int)(i * tileWidth + (tileWidth * 0.5f)), (int)(j * tileHeight + (tileHeight * 0.5f)));
 						createLight(i * tileWidth, j * tileHeight);
+						totalLights++;
 					}
 					makeTileWalkable(i, j);
 					break;
 				}
 			}
 		}
+		Utils.print("Light Count: " + totalLights + "\n");
 	}
 
 	public void printFloor() {
@@ -161,8 +163,6 @@ public class Floor {
 					System.out.print(PRINT_ROOM);
 				else if (map[i][j] == PILLAR)
 					System.out.print(PRINT_PILLAR);
-				else if (map[i][j] == LIGHT)
-					System.out.print(PRINT_LIGHT);
 			}
 			System.out.println("");
 		}
@@ -358,7 +358,7 @@ public class Floor {
 	private void createLight(int x, int y) {
 		Light light = new Light(new Vector3(x + random.nextInt(tileWidth), y + random.nextInt(tileWidth), 0));
 		light.setColor(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1.0f));
-		light.setIntensity(500);
+		light.setIntensity(Globals.DEFAULT_LIGHT_INTENSITY);
 		lights.add(light);
 	}
 

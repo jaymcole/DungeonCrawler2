@@ -12,48 +12,48 @@ import ecu.se.Lighting;
 
 public class Light implements Comparable<Light> {
 
-	private static float a = 1 / 26.0f;
-	private static float b = 2 / 26.0f;
-	private static float c = 3 / 26.0f;
-	private static float d = 4 / 26.0f;
-	private static float e = 5 / 26.0f;
-	private static float f = 6 / 26.0f;
-	private static float g = 7 / 26.0f;
-	private static float h = 8 / 26.0f;
-	private static float i = 9 / 26.0f;
-	private static float j = 10 / 26.0f;
-	private static float k = 11 / 26.0f;
-	private static float l = 12 / 26.0f;
-	private static float m = 13 / 26.0f;
-	private static float n = 14 / 26.0f;
-	private static float o = 15 / 26.0f;
-	private static float p = 16 / 26.0f;
-	private static float q = 17 / 26.0f;
-	private static float r = 18 / 26.0f;
-	private static float s = 19 / 26.0f;
-	private static float t = 20 / 26.0f;
-	private static float u = 21 / 26.0f;
-	private static float v = 22 / 26.0f;
-	private static float w = 23 / 26.0f;
-	private static float x = 24 / 26.0f;
-	private static float y = 25 / 26.0f;
-	private static float z = 1;
+	protected static float a = 1 / 26.0f;
+	protected static float b = 2 / 26.0f;
+	protected static float c = 3 / 26.0f;
+	protected static float d = 4 / 26.0f;
+	protected static float e = 5 / 26.0f;
+	protected static float f = 6 / 26.0f;
+	protected static float g = 7 / 26.0f;
+	protected static float h = 8 / 26.0f;
+	protected static float i = 9 / 26.0f;
+	protected static float j = 10 / 26.0f;
+	protected static float k = 11 / 26.0f;
+	protected static float l = 12 / 26.0f;
+	protected static float m = 13 / 26.0f;
+	protected static float n = 14 / 26.0f;
+	protected static float o = 15 / 26.0f;
+	protected static float p = 16 / 26.0f;
+	protected static float q = 17 / 26.0f;
+	protected static float r = 18 / 26.0f;
+	protected static float s = 19 / 26.0f;
+	protected static float t = 20 / 26.0f;
+	protected static float u = 21 / 26.0f;
+	protected static float v = 22 / 26.0f;
+	protected static float w = 23 / 26.0f;
+	protected static float x = 24 / 26.0f;
+	protected static float y = 25 / 26.0f;
+	protected static float z = 1;
 
 	public boolean on;
-	private boolean hasParent;
-	private GameObject parent;
-
-	private float[] flickerTest = { m, m, n, m, m, o, m, m, o, m, m, n, o, n, m, m, o, n, q, n, m, m, o };
-	private Color color;
-	private Vector3 offset;
-	private Vector3 position;
-	private float intensity;
-	private float baseIntensity;
-	private float time;
-	private float distance;
-	private static Random rand = new Random();
-	private int intensityPosition = rand.nextInt(flickerTest.length);
-	private GameObject renderTarget;
+	public boolean delete = false;
+	protected boolean hasParent;
+	protected GameObject parent;
+	protected float[] flickerTest = { m, m, n, m, m, o, m, m, o, m, m, n, o, n, m, m, o, n, q, n, m, m, o };
+	protected Color color;
+	protected float offsetX, offsetY;
+	
+	protected Vector3 position;
+	protected float intensity;
+	protected float baseIntensity;
+	protected float time;
+	protected float distance;
+	protected static Random rand = new Random();
+	protected int intensityPosition = rand.nextInt(flickerTest.length);
 
 	public Light(Vector3 position) {
 		this.parent = null;
@@ -63,6 +63,15 @@ public class Light implements Comparable<Light> {
 	}
 
 	public Light(GameObject parent) {
+		this.parent = parent;
+		this.hasParent = true;
+		this.position = parent.getPosition();
+		on = true;
+	}
+	
+	public Light (GameObject parent, Color color, float intensity) {
+		this.color = color;
+		this.intensity = intensity;
 		this.parent = parent;
 		this.hasParent = true;
 		this.position = parent.getPosition();
@@ -79,17 +88,29 @@ public class Light implements Comparable<Light> {
 		intensity = baseIntensity * (flickerTest[intensityPosition] * 0.5f);
 
 		if (hasParent) {
-			if (parent == null) {
+			if (parent == null || !parent.isAlive()) {
 				Lighting.removeLight(this);
 			}
 			this.position = parent.getPosition();
 		}
-		
+		this.position.x += offsetX;
+		this.position.y += offsetY;
 		distance = Vector2.dst2(position.x, position.y, targetVector.x, targetVector.y);
 	}
 
+	public void setParent(GameObject parent) {
+		this.parent = parent;
+		hasParent = true;
+	}
+	
+	public void setOffset(float x, float y) {
+		offsetX = x;
+		offsetY = y;
+	}
+	
 	public void setOffset(Vector3 offset) {
-		this.offset = offset;
+		offsetX = offset.x;
+		offsetY = offset.y;
 	}
 
 	public void setColor(Color c) {
@@ -124,9 +145,6 @@ public class Light implements Comparable<Light> {
 		return distance;
 	}
 
-	public void setTarget(GameObject object) {
-		renderTarget = object;
-	}
 
 	@Override
 	public int compareTo(Light arg0) {

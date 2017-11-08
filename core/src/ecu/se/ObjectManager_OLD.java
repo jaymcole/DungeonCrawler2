@@ -3,7 +3,6 @@ package ecu.se;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,31 +15,31 @@ import actors.Actor;
 import actors.Player;
 import ecu.se.map.Direction;
 
-public class ObjectManager {
+public class ObjectManager_OLD {
 	
-    private static LinkedList<GameObject> objects;
-    private static LinkedList<GameObject> waitList;
-    private static LinkedList<GameObject> actors;
-    private static Iterator<GameObject> updater;
-    private static Iterator<GameObject> collisionChecker;
-    private static Player player;
+    private ArrayList<GameObject> objects;
+    private ArrayList<GameObject> waitList;
+    private ArrayList<GameObject> actors;
+    private Iterator<GameObject> updater;
+    private Iterator<GameObject> collisionChecker;
+    private Player player;
 
-    private static GameObject object;
-    private static Actor actor1;
-    private static Actor actor2;
-    private static Boolean doneChecking;
+    private GameObject object;
+    private Actor actor1;
+    private Actor actor2;
+    private Boolean doneChecking;
     
-    public ObjectManager() {
-        objects = new LinkedList<GameObject>();
-        waitList = new LinkedList<GameObject>();
-        actors = new LinkedList<GameObject>();
+    public ObjectManager_OLD() {
+        objects = new ArrayList<GameObject>();
+        waitList = new ArrayList<GameObject>();
+        actors = new ArrayList<GameObject>();
     }
     
     /**
      * Uses deltaTime to update all GameObjects
      * @param deltaTime - The time between frames.
      */
-    public static void update(float deltaTime) {
+    public void update(float deltaTime) {
         // UPDATE OBJECTS
         updater = objects.iterator();
         while(updater.hasNext()) 
@@ -49,7 +48,7 @@ public class ObjectManager {
             if (object.alive) {
                 object.update(deltaTime);
             } else {
-                remove(object);
+                this.remove(object);
             }
         }
         
@@ -70,7 +69,7 @@ public class ObjectManager {
                 }
             }
             } else {
-                remove(object);
+                this.remove(object);
             }
         }
         
@@ -90,18 +89,6 @@ public class ObjectManager {
                 }
 
             }
-            
-            collisionChecker = objects.iterator();
-            GameObject temp;
-            while(collisionChecker.hasNext() || doneChecking) {
-                temp = collisionChecker.next();
-                if(isColliding(actor1, temp) && actor1 != temp)
-                {
-                	temp.collision(actor1);
-                	actor1.collision(temp);
-                }
-
-            }
         }
         updateList();
     }
@@ -111,7 +98,7 @@ public class ObjectManager {
      * @param deltaTime - time between last frame.
      * @param batch - Used for rendering.
      */
-    public static void render(float deltaTime, SpriteBatch batch) {
+    public void render(float deltaTime, SpriteBatch batch) {
         updater = objects.iterator();        
         while(updater.hasNext()) {
             object = updater.next();
@@ -166,7 +153,7 @@ public class ObjectManager {
      * Adds/removes waiting objects after the every update tick. Objects need to wait to be added/removed until the update cycle has completed. 
      * Adding/removing objects during an update tick with cause an exception.
      */
-    private static void updateList() {
+    private void updateList() {
         updater = waitList.iterator();
         GameObject object;
         
@@ -192,8 +179,9 @@ public class ObjectManager {
      * Add a new GameObject to be updated/rendered.
      * @param object - The new GameObject.
      */
-    public static void add(GameObject object) {
+    public void add(GameObject object) {
         object.alive = true;
+//        object.objectManager = this;
         waitList.add(object);
     }
     
@@ -201,7 +189,7 @@ public class ObjectManager {
      * Remove a GameObject from the update/render list.
      * @param object - GameObjkect to be removed.
      */
-    public static void remove(GameObject object) {
+    public void remove(GameObject object) {
         object.alive = false;
         waitList.add(object);
     }
@@ -209,7 +197,7 @@ public class ObjectManager {
     /**
      * Cleanup all resources. Needs to be called before program is closed.
      */
-    public static void dispose() {
+    public void dispose() {
         updater = waitList.iterator();
         GameObject object;
         
@@ -225,7 +213,7 @@ public class ObjectManager {
      * @param object2
      * @return Returns true if object is colliding with object2.
      */
-    public static boolean isColliding(GameObject object, GameObject object2)
+    public boolean isColliding(GameObject object, GameObject object2)
     {
         return Intersector.overlapConvexPolygons(object.getBounds(), object2.getBounds());
     }
@@ -235,9 +223,9 @@ public class ObjectManager {
      * @param player
      * @return
      */
-    public static void setPlayer(Player player)
+    public void setPlayer(Player player)
     {
-        ObjectManager.player = player;
+        this.player = player;
     }
     
 }

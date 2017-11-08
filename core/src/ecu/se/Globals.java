@@ -26,15 +26,16 @@ public class Globals {
     
     public static final float MIN_PATH_DENSITY = 0.3f;
     
-    public static final int MAP_TILE_WIDTH = 500;
-    public static final int MAP_TILE_HEIGHT = 500;
+    public static final int MAP_TILE_WIDTH = 100;
+    public static final int MAP_TILE_HEIGHT = 100;
     public static final int TILE_PIXEL_WIDTH = 128;
     public static final int TILE_PIXEL_HEIGHT= 128;
     
     public static final String SPRITE_INFORMATION_EXTENSION = "spriteInfo";
     
     //LIGHTING
-    public static int MAX_LIGHTS = 10; //Must also be changed in the shader
+    public static int MAX_LIGHTS = 50; //Must also be changed in the shader
+    public static float DEFAULT_LIGHT_INTENSITY = 300;
     
     // DEBUG Settings
     // All of these will probably have to be cleaned up (removed along with whatever functions use them) later.

@@ -14,6 +14,7 @@ import assetManager.Animation;
 import assetManager.AssetManager;
 import assetManager.SpriteAsset;
 import ecu.se.GameObject;
+import ecu.se.ObjectManager;
 import ecu.se.Utils;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
@@ -34,6 +35,7 @@ public abstract class Actor extends GameObject{
     protected int spriteSequences = 5;
     protected TextureRegion textureRegion;
     protected boolean awake;
+    
     
     /**
      * baseStats: All permanent stats.
@@ -113,6 +115,10 @@ public abstract class Actor extends GameObject{
         	stat.update(deltaTime);
         }
         
+        if(currentHealth <= 0) {
+        	this.kill();
+        }
+        
         idle = true;
     }
     
@@ -134,13 +140,17 @@ public abstract class Actor extends GameObject{
 		 // Renders a healthbar
 		 batch.setColor(1.0f, 1.0f, 1.0f, 0.5f);
 		 batch.draw(debugHealthBarTexture, x - (int)(spriteWidth * 0.5f) - borderWidth, y + spriteHeight - borderWidth, spriteWidth + borderWidth*2, barHeight*2 + borderWidth*2);
-//		 batch.setColor(Color.RED);
 		 batch.setColor(1.0f, 0f, 0f, 0.5f);
 		 batch.draw(debugHealthBarTexture, x - (int)(spriteWidth * 0.5f), y + spriteHeight , spriteWidth * (currentHealth / (currentStats[Stats.HEALTH.ordinal()]+0.0f)), barHeight*2);
 		 
 		 
 		 batch.setColor(Color.WHITE);
 	}
+	
+	public float defend(Stats type, float damage) {
+    	currentHealth -= damage;
+    	return damage;
+    }
     
     /**
      * 
@@ -230,6 +240,8 @@ public abstract class Actor extends GameObject{
     public void addTempStat(TempStatModifier stat) {
     	tempStatModifiers.add(stat);
     }
+    
+
     
     //TODO: Place corpse texture (needs to fade eventually)
     //		Drop Loot.

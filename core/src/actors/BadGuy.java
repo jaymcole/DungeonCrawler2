@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.map.Map;
 import ecu.se.GameObject;
+import ecu.se.ObjectManager;
 import ecu.se.map.Direction;
 
 public class BadGuy extends Actor{

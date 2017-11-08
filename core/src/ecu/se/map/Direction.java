@@ -202,7 +202,7 @@ public enum Direction {
      * @return Returns the NON-Expanded Direction from (x1, y1), to (x2, y2).
      * i.e. only NORTH, EAST, SOUTH, WEST
      */
-    public Direction getDirectionTo(int x1, int y1, int x2, int y2) {
+    public static Direction getDirectionTo(int x1, int y1, int x2, int y2) {
         int deltaX = x1 - x2;
         int deltaY = y1 - y2;
         
@@ -215,6 +215,22 @@ public enum Direction {
                 return Direction.NORTH;
             return Direction.SOUTH;
         }
+    }
+    
+    public static Direction getExpandedDirection(double rads) {
+//    	int degree = (int) Math.toDegrees(rads);
+//    	degree %= 360;
+//    	System.out.println("Returnning " + Direction.values()[(int) ((degree-22.5) / 45) -1].name);
+//    	return Direction.NORTH;
+    	
+    	
+    	
+    	
+    	int degree = (int) Math.toDegrees(rads);
+    	degree %= 360;
+    	degree = Math.abs(((int)((degree-22.5-90) / 45) % Direction.directionValues));
+    	System.out.println("Returnning " + degree);
+    	return Direction.values()[degree];
     }
     
     /**

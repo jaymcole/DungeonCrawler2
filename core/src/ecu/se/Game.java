@@ -158,8 +158,8 @@ public class Game extends ApplicationAdapter{
 		if(Globals.DEBUG) {
 		    shaperRenderer.begin(ShapeType.Line);
 		    int radius = 25;
-		    Vector3 temp = camera.project(light.getPos());
-		    Vector3 temp2 = camera.project(player.getPosition());
+//		    Vector3 temp = camera.project(light.getPos());
+//		    Vector3 temp2 = camera.project(player.getPosition());
 		    shaperRenderer.end();
 		    
 			map.debugRender(camera.combined, (int)player.x, (int)player.y);
@@ -230,9 +230,10 @@ public class Game extends ApplicationAdapter{
         }
                 
         if(mouseLeftDown && !Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-        	Utils.print("Spawn boi");
+//        	Utils.print("Spawn boi");
         	Vector3 pos = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-        	objectManager.add(new RangedBadGuy(pos.x, pos.y, 0, map, "texture/spritesheet/goblin_sprites.png", player));
+//        	objectManager.add(new RangedBadGuy(pos.x, pos.y, 0, map, "texture/spritesheet/goblin_sprites.png", player));
+        	player.attack(pos.x, pos.y);
         }
         mouseLeftDown = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
            
@@ -242,6 +243,8 @@ public class Game extends ApplicationAdapter{
 	
 	@Override
 	public void dispose () {
+		Gdx.app.exit();
+		System.out.println("Disposing everything else");
 		Archiver.dispose();
 	    batch.dispose();
 		objectManager.dispose();

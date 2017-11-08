@@ -14,22 +14,23 @@ import com.badlogic.gdx.math.Vector2;
 import ecu.se.Globals;
 
 public class Map {
-    private int tilesVertical = 5;
-    private int tilesHorizontal = 5;
+    private static int tilesVertical = 5;
+    private static int tilesHorizontal = 5;
     
-    private Tile[][] visibleTiles;
-    private ArrayList<Floor> floors;
-    private Floor currentFloor;
-    private TextureRegion background;
-    private int currentLevel = 0;
+    private static Tile[][] visibleTiles;
+    private static ArrayList<Floor> floors;
+    private static Floor currentFloor;
+    private static TextureRegion background;
+    private static int currentLevel = 0;
+    
+    //TODO: Bug: Occasionally crashes on generating map. Seems to happen more often when global map size is set high (500+)
     
     public Map() {
         floors = new ArrayList<Floor>(200);
-        setFloor(currentLevel);
-        
+        setFloor(currentLevel); 
     }
     
-    public void setFloor(int floor) {
+    public static void setFloor(int floor) {
         if(floor < 0) 
             floor = 0;
         if(floors.size() <= floor) { 
@@ -46,7 +47,7 @@ public class Map {
         }     
     }
     
-    public void render(SpriteBatch batch, int cameraX, int cameraY) { 
+    public static void render(SpriteBatch batch, int cameraX, int cameraY) { 
         if(Globals.RENDER_ALL_TILES) {
             currentFloor.renderAll(batch);
             return;
@@ -62,8 +63,8 @@ public class Map {
         }
     }
     
-    private ShapeRenderer debugRenderer = new ShapeRenderer();
-    public void debugRender(Matrix4 projection, int cameraX, int cameraY) { 
+    private static ShapeRenderer debugRenderer = new ShapeRenderer();
+    public static void debugRender(Matrix4 projection, int cameraX, int cameraY) { 
         debugRenderer.begin(ShapeType.Line);
         debugRenderer.setProjectionMatrix(projection);
         debugRenderer.setColor(Color.RED);
@@ -81,28 +82,28 @@ public class Map {
         debugRenderer.end();
     }
     
-    public void dispose() {
+    public static void dispose() {
         for(Floor f : floors) {
             if(f != null)
                 f.dispose();
         }
     }
     
-    public Tile currentTile(int x, int y) {
+    public static Tile currentTile(int x, int y) {
         return currentFloor.getTile(x, y);
     }
     
-    public Vector2 floorHelper(int x, int y) {
+    public static Vector2 floorHelper(int x, int y) {
         return currentFloor.getSpawn(x,y);
     }
     
-    public void setScreenResolution(int screenWidth, int screenHeight) {
+    public static void setScreenResolution(int screenWidth, int screenHeight) {
         tilesHorizontal = (screenWidth/Globals.TILE_PIXEL_WIDTH) + 2;
         tilesVertical = (screenHeight/Globals.TILE_PIXEL_HEIGHT) + 2;
     }    
     
     //TODO: Pathfinding! 
-    public LinkedList<Vector2> getPath(Vector2 from, Vector2 to) {
+    public static LinkedList<Vector2> getPath(Vector2 from, Vector2 to) {
     	// Return a list of Vector2s. Should correspond to tile indices in tiles.
     	return null;
     }

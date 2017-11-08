@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.map.Map;
-
+import ecu.se.ObjectManager;
 import ecu.se.map.Direction;
 
 public class RangedBadGuy extends Actor {

@@ -3,75 +3,112 @@ package actors;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.particles.ParticleChannels.TextureRegionInitializer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import archive.Archiver;
 import archive.TimeRecords;
-import assetManager.Animation;
-import assetManager.AssetManager;
+import ecu.se.ObjectManager;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
-
+import ecu.se.objects.Projectile;
 
 public class Player extends Actor {
+	private Direction dir;
 
-    public Player(float x, float y, float z, Map map, OrthographicCamera camera, String spriteSheet) {
-        super(x, y, z, map, spriteSheet);
-        currentSpeed = new Vector2(0, 0);
-        Archiver.set(TimeRecords.TIME_IDLE, false);
-        currentHealth = 100;
-    }
-   
+	public Player(float x, float y, float z, Map map, OrthographicCamera camera, String spriteSheet) {
+		super(x, y, z, map, spriteSheet);
+		currentSpeed = new Vector2(0, 0);
+		Archiver.set(TimeRecords.TIME_IDLE, false);
+		currentHealth = 100;
+		dir = Direction.NORTH;
 
-    @Override
-    public void update(float deltaTime) {
-        oldx = x;
-        oldy = y;
+	}
 
-        x += currentSpeed.x;
-        y += currentSpeed.y;
-        currentSpeed.x *= currentStats[Stats.MOVEMENT_DRAG.ordinal()] * deltaTime;
-        currentSpeed.y *= currentStats[Stats.MOVEMENT_DRAG.ordinal()] * deltaTime;
-        
-        if(map.currentTile((int) x, (int) y) == null || map.currentTile((int) x, (int) y).getWall()) {
-            x = oldx;
-            y = oldy;
-        }
-        
-        bounds.setPosition(x,y);
-        animation.setIdle(idle);
-        animation.update(deltaTime);
-        animation.setXY((int) x,(int) y);
-        idle = true;
-    }
-    
-    public void act(float deltaTime) {
-    	
-    }
-    
-    public void setIdle(boolean idle) {
-    	this.idle = idle;
-    	if(idle) {
-    		Archiver.set(TimeRecords.TIME_IDLE, false);
-    	} else {
-    		Archiver.set(TimeRecords.TIME_MOVING, false);
-    	}
-    }
+	@Override
+	public void update(float deltaTime) {
+		oldx = x;
+		oldy = y;
 
-    public void input(float deltaTime) {
-        if(Gdx.input.isKeyPressed(Input.Keys.W)){
-             move(deltaTime, Direction.NORTH, true);
-        } if(Gdx.input.isKeyPressed(Input.Keys.A)){
-            move(deltaTime, Direction.WEST, true);
-        } if(Gdx.input.isKeyPressed(Input.Keys.S)){
-            move(deltaTime, Direction.SOUTH, true);
-        } if(Gdx.input.isKeyPressed(Input.Keys.D)){
-            move(deltaTime, Direction.EAST, true);
-        }
-       
-           
-    }
+		x += currentSpeed.x;
+		y += currentSpeed.y;
+		currentSpeed.x *= currentStats[Stats.MOVEMENT_DRAG.ordinal()] * deltaTime;
+		currentSpeed.y *= currentStats[Stats.MOVEMENT_DRAG.ordinal()] * deltaTime;
+
+		if (map.currentTile((int) x, (int) y) == null || map.currentTile((int) x, (int) y).getWall()) {
+			x = oldx;
+			y = oldy;
+		}
+		bounds.setPosition(x, y);
+		animation.setIdle(idle);
+		animation.update(deltaTime);
+		animation.setXY((int) x, (int) y);
+		idle = true;
+	}
+
+	public void act(float deltaTime) {
+
+	}
+
+	public void setIdle(boolean idle) {
+		this.idle = idle;
+		if (idle) {
+			Archiver.set(TimeRecords.TIME_IDLE, false);
+		} else {
+			Archiver.set(TimeRecords.TIME_MOVING, false);
+		}
+	}
+
+	//TODO: Come up with a better solution to this (if someone could make a system for adding directions, that'd be great).
+	public void input(float deltaTime) {
+		if (Gdx.input.isKeyPressed(Input.Keys.W) && Gdx.input.isKeyPressed(Input.Keys.D)) {
+			dir = Direction.NORTHEAST;
+			move(deltaTime, dir, true);
+			return;
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.W) && Gdx.input.isKeyPressed(Input.Keys.A)) {
+			dir = Direction.NORTHWEST;
+			move(deltaTime, dir, true);
+			return;
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.S) && Gdx.input.isKeyPressed(Input.Keys.D)) {
+			dir = Direction.SOUTHEAST;
+			move(deltaTime, dir, true);
+			return;
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.S) && Gdx.input.isKeyPressed(Input.Keys.A)) {
+			dir = Direction.SOUTHWEST;
+			move(deltaTime, dir, true);
+			return;
+		}
+
+		if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+			dir = Direction.NORTH;
+			move(deltaTime, dir, true);
+			return;
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+			dir = Direction.WEST;
+			move(deltaTime, dir, true);
+			return;
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+			dir = Direction.SOUTH;
+			move(deltaTime, dir, true);
+			return;
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+			dir = Direction.EAST;
+			move(deltaTime, dir, true);
+			return;
+		}
+
+	}
+	
+	public void attack(double x, double y) {
+		double angleInRadians = Math.atan2(y - this.y, x - this.x) - Math.atan2(0, 0);
+		ObjectManager.add(new Projectile(this.x, this.y, angleInRadians,  this));
+		
+	}
+
 }
