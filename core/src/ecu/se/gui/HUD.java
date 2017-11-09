@@ -63,7 +63,7 @@ public class HUD {
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), getProportionalX(20), getProportionalY(1080-40));
         font.draw(batch, "Player Position: " + player.getPosition().toString(), getProportionalX(20), getProportionalY(1080-60));
         font.draw(batch, "Camera Position: " + hudCamera.position.toString(), getProportionalX(20), getProportionalY(1080-80));
-        
+        font.draw(batch, "Player Mana: " + player.getMana(), getProportionalX(20), getProportionalY(1080-100));
         
         // END RENDER CODE
         batch.setProjectionMatrix(oldProjectionMatrix);

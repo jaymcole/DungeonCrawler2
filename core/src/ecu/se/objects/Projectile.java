@@ -1,12 +1,10 @@
 package ecu.se.objects;
 
-import javax.swing.text.Position;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Polygon;
 
+import actors.Team;
 import assetManager.Animation;
 import assetManager.AssetManager;
 import ecu.se.GameObject;
@@ -19,8 +17,6 @@ import ecu.se.map.Map;
 public class Projectile extends GameObject {
 
 	private GameObject parent;
-	private Direction dir;
-//	private static float speed = 5.0f;
 	private static float lifespan = 10; //in seconds
 	private float timeAlive;
 	private Animation animation;
@@ -35,6 +31,7 @@ public class Projectile extends GameObject {
 		this.x = x;
 		this.y = y;
 		this.parent = parent;
+		this.team = parent.team;
 		angle = angleRAD;
 		bounds = Utils.getRectangleBounds(x, y, 10, 10, Utils.ALIGN_CENTERED);
 		
@@ -48,7 +45,6 @@ public class Projectile extends GameObject {
 		
 		light.setIntensity(500);
 		light.setParent(this);
-//		light.setOffset(animation.getSpriteWidth() * 0.5f * dir.x, animation.getSpriteHeight() * 0.5f * dir.y);
 		Lighting.addLight(light);
 		setSpeed(700.0f);
 	}
@@ -59,7 +55,7 @@ public class Projectile extends GameObject {
 			return;
 		}
 		
-		if (otherObject != this) {
+		if (otherObject != this && !Team.isFriendly(team, otherObject.team)) {
 			otherObject.defend(null, 25);
 			this.kill();
 		}

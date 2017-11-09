@@ -15,6 +15,7 @@ public class BadGuy extends Actor{
 		super(x, y, z, map, spriteSheet);
 		this.player = player;
 		 currentSpeed = new Vector2(0, 0);
+		 team = Team.MOB;
 	}
 	
 	public void act(float deltaTime) {

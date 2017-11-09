@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import actions.Action;
+import actions.Spell_Fireball;
 import archive.Archiver;
 import archive.TimeRecords;
 import ecu.se.ObjectManager;
@@ -22,11 +24,15 @@ public class Player extends Actor {
 		Archiver.set(TimeRecords.TIME_IDLE, false);
 		currentHealth = 100;
 		dir = Direction.NORTH;
-
+		team = Team.PLAYER;
+	
+		primaryAction = new Spell_Fireball(this);
+		secondaryAction = new Spell_Fireball(this);
+	
 	}
-
+	
 	@Override
-	public void update(float deltaTime) {
+	protected void updateMovement(float deltaTime) {
 		oldx = x;
 		oldy = y;
 
@@ -38,6 +44,12 @@ public class Player extends Actor {
 		if (map.currentTile((int) x, (int) y) == null || map.currentTile((int) x, (int) y).getWall()) {
 			x = oldx;
 			y = oldy;
+		}
+		
+		for (Action a : actions) {
+			if (a.isActive()) {
+				a.update(deltaTime);
+			}
 		}
 		bounds.setPosition(x, y);
 		animation.setIdle(idle);

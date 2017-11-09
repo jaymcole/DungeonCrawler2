@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import actors.Stats;
+import actors.Team;
 
 public abstract class GameObject implements Comparable<GameObject> {
 	protected float x, y, z;
@@ -15,6 +16,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 	protected boolean alive;
 	protected Polygon bounds;
 	protected boolean idle;
+	public Team team;
 
 	public GameObject(float x, float y, float z) {
 		this.x = x;
@@ -22,7 +24,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 		this.z = z;
 		alive = true;
 		bounds = Utils.getRectangleBounds(x, y, 20, 20, Utils.ALIGN_BOTTOM_CENTER);
-
+		team = team.NEUTRAL;
 	}
 
 	public GameObject(float x, float y) {
@@ -31,6 +33,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 		this.z = Globals.Z_LEVEL_FLOOR;
 		alive = true;
 		bounds = Utils.getRectangleBounds(x, y, 5, 5, Utils.ALIGN_BOTTOM_CENTER);
+		team = team.NEUTRAL;
 	}
 
 	public abstract void update(float deltaTime);

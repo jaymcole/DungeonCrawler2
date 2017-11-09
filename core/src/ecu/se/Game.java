@@ -46,8 +46,8 @@ public class Game extends ApplicationAdapter{
 	
 	private float zoom = Globals.DEFAULT_CAMERA_ZOOM;
 	
-//	private String backgroundTextureName = "texture/misc/black.jpg";
-	private String backgroundTextureName = "texture/floor/castle_tile.jpg";
+	private String backgroundTextureName = "texture/misc/black.jpg";
+//	private String backgroundTextureName = "texture/floor/castle_tile.jpg";
 	private Texture backgroundTexture;
 	
 	// DEBUG OBJECT(S)
@@ -233,9 +233,16 @@ public class Game extends ApplicationAdapter{
 //        	Utils.print("Spawn boi");
         	Vector3 pos = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 //        	objectManager.add(new RangedBadGuy(pos.x, pos.y, 0, map, "texture/spritesheet/goblin_sprites.png", player));
-        	player.attack(pos.x, pos.y);
+        	player.primaryAction((int)pos.x, (int)pos.y);
         }
         mouseLeftDown = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+        
+        if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+//        	Utils.print("Spawn boi");
+        	Vector3 pos = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+//        	objectManager.add(new RangedBadGuy(pos.x, pos.y, 0, map, "texture/spritesheet/goblin_sprites.png", player));
+        	player.secondaryAction((int)pos.x, (int)pos.y);
+        }
            
 	}
 	

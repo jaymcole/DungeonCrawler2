@@ -18,10 +18,8 @@ public class RangedBadGuy extends Actor {
 		this.player = player;
 		 currentSpeed = new Vector2(0, 0);
 		 setDefaults();
-	        updateStats();
-//	        drag = 0.3f;
-//	        topSpeed = 50;
-//	        acceleration = 200;
+	     updateStats();
+	     team = Team.MOB;
 	}
 	
 	public void act(float deltaTime) {
