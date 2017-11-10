@@ -13,11 +13,13 @@ import archive.TimeRecords;
 import ecu.se.ObjectManager;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
+import ecu.se.objects.InteractableItem;
+import ecu.se.objects.ItemObject;
 import ecu.se.objects.Projectile;
 
 public class Player extends Actor {
 	private Direction dir;
-
+	
 	public Player(float x, float y, float z, Map map, OrthographicCamera camera, String spriteSheet) {
 		super(x, y, z, map, spriteSheet);
 		currentSpeed = new Vector2(0, 0);
@@ -123,4 +125,6 @@ public class Player extends Actor {
 		
 	}
 
+	
+	
 }

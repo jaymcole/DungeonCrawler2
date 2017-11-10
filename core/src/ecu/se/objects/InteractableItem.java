@@ -23,4 +23,11 @@ public abstract class InteractableItem extends ItemObject {
 	public Vector3 getPosition() {
     	return new Vector3(x, y, 1);
     }
+	
+	public boolean itemUsed() {
+		// Item is in use
+		return true;
+	}
+	
+	
 }
