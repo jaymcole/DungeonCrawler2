@@ -108,28 +108,27 @@ public class Map {
     }    
     
     //TODO: Pathfinding! 
-    public static LinkedList<Vector2> getPath(Vector2 from, Vector2 to) {
-    	//Return a list of Vector2s. Should correspond to tile indices in tiles.
-    	LinkedList<Vector2> path = new LinkedList<Vector2>();
-    	LinkedList<Vector2> open = new LinkedList<Vector2>();
-    	LinkedList<Vector2> closed = new LinkedList<Vector2>();
-    	open.add(from);
-    	float gCost, hCost, fCost;
-    	while(true)
-    	{
-    		
-    		open.add(currentFloor.getAdjacent((int)from.x, (int)from.y, currentFloor.getWidth(), currentFloor.getHeight()));
-    	}
-    	while(true) {
-    		for(;;)
-    		{
-    			break;
-    		}
-    		break;
-    	}
-    	return null;
-    	
-    }
+//    public static LinkedList<Vector2> getPath(Vector2 from, Vector2 to) {
+//    	//Return a list of Vector2s. Should correspond to tile indices in tiles.
+//    	LinkedList<Vector2> path = new LinkedList<Vector2>();
+//    	LinkedList<Vector2> open = new LinkedList<Vector2>();
+//    	LinkedList<Vector2> closed = new LinkedList<Vector2>();
+//    	open.add(from);
+//    	float gCost, hCost, fCost;
+//    	while(true)
+//    	{
+//    		open.add(currentFloor.getAdjacent((int)from.x, (int)from.y, currentFloor.getMapWidth(), currentFloor.getMapHeight()));
+//    	}
+//    	while(true) {
+//    		for(;;)
+//    		{
+//    			break;
+//    		}
+//    		break;
+//    	}
+//    	return null;
+//    	
+//    }
     	
    /* if we wanted a 2D array:::
     public static float[][] getPath(Vector2 from, Vector2 to)

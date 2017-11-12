@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import actors.Stats;
 import actors.Team;
+import stats.Stats;
 
 public abstract class GameObject implements Comparable<GameObject> {
 	protected float x, y, z;

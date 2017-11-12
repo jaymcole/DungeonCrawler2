@@ -21,6 +21,8 @@ import ecu.se.ObjectManager;
 import ecu.se.Utils;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
+import stats.Stats;
+import stats.TempStatModifier;
 
 public abstract class Actor extends GameObject {
 
@@ -38,6 +40,12 @@ public abstract class Actor extends GameObject {
 	protected int spriteSequences = 5;
 	protected TextureRegion textureRegion;
 	protected boolean awake;
+	
+	/**
+	 * Used for movement modifiers like explosions.
+	 */
+	protected float externalForcesX;
+	protected float externalForcesY;
 
 
 	/**
@@ -111,9 +119,9 @@ public abstract class Actor extends GameObject {
 	 * @param deltaTime: Time between each frame.
 	 */
 	public void update(float deltaTime) {
+		updateStats(deltaTime);
 		act(deltaTime);
 		updateMovement(deltaTime);
-		updateStats(deltaTime);
 		updateActions(deltaTime);
 		if (currentHealth <= 0) {
 			this.kill();
@@ -121,19 +129,19 @@ public abstract class Actor extends GameObject {
 		idle = true;
 	}
 		
-	protected void updateStats(float deltaTime) {
+	protected void updateStats(float deltaTime) {		
+		finalizeModifiers();
 		for (TempStatModifier stat : tempStatModifiers) {
 			stat.update(deltaTime);
 		}
-		
 		setHealth(deltaTime * getStat(Stats.HEALTH_REGEN));
 		setMana(deltaTime * getStat(Stats.MANA_REGEN));
-		
 	}
 	
 	protected void updateMovement(float deltaTime) {
-		x += currentSpeed.x;
-		y += currentSpeed.y;
+		x += (currentSpeed.x);
+		y += (currentSpeed.y);
+		
 		currentSpeed.x *= currentStats[Stats.MOVEMENT_DRAG.ordinal()] * deltaTime;
 		currentSpeed.y *= currentStats[Stats.MOVEMENT_DRAG.ordinal()] * deltaTime;
 		bounds.setPosition(x, y);
@@ -248,14 +256,22 @@ public abstract class Actor extends GameObject {
 	public void setIdle(boolean idle) {
 		this.idle = idle;
 	}
+	
+	public void push(float x, float y) {
+		currentSpeed.x += x;
+		currentSpeed.y += y;
+	}
 
 	public void move(float deltaTime, Direction direction, boolean updateDirection) {
 		currentSpeed.x += (currentStats[Stats.MOVEMENT_ACCELERATION.ordinal()] * deltaTime) * direction.x;
 		currentSpeed.x = Utils.clamp(-currentStats[Stats.MOVEMENT_SPEED.ordinal()],
-				currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentSpeed.x);
+		currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentSpeed.x);
+		
+		
 		currentSpeed.y += (currentStats[Stats.MOVEMENT_ACCELERATION.ordinal()] * deltaTime) * direction.y;
 		currentSpeed.y = Utils.clamp(-currentStats[Stats.MOVEMENT_SPEED.ordinal()],
-				currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentSpeed.y);
+		currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentSpeed.y);
+		
 		if (updateDirection)
 			animation.rowSelect(Direction.valueOf(direction.name()).ordinal());
 		setIdle(false);
@@ -283,12 +299,25 @@ public abstract class Actor extends GameObject {
 		}
 	}
 
+	public LinkedList<TempStatModifier> modifierChanges = new LinkedList<TempStatModifier>();
 	public void removeTempStat(TempStatModifier stat) {
-		tempStatModifiers.remove(stat);
+		stat.remove = true;
+		modifierChanges.add(stat);
 	}
 
 	public void addTempStat(TempStatModifier stat) {
-		tempStatModifiers.add(stat);
+		stat.remove = false;
+		modifierChanges.add(stat);
+	}
+	
+	public void finalizeModifiers() {
+		for (TempStatModifier stat : modifierChanges) {
+			if (stat.remove) 
+				tempStatModifiers.remove(stat);
+			else 
+				tempStatModifiers.add(stat);
+		}
+		modifierChanges.removeAll(modifierChanges);
 	}
 
 	

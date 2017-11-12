@@ -1,23 +1,23 @@
-package actors;
+package stats;
 
-public class TempStatModifier {
+import actors.Actor;
 
-		protected float value, timeRemaining;
+public abstract class TempStatModifier {
+		public boolean remove = false;
+		protected float value;
 		protected Stats stat;
 		protected int statIndex;
 		protected Actor parent;
 		
-		public TempStatModifier (Stats stat, float value, float timeRemaining) {
+		public TempStatModifier (Stats stat, float value, Actor parent) {
+			this.parent = parent;
 			this.stat = stat;
 			this.value = value;
-			this.timeRemaining = timeRemaining;
 			statIndex = stat.ordinal();
 		}
 		
-		protected void update(float deltaTime) {
-			timeRemaining -= deltaTime;
-		}
-		
+		public abstract void update(float deltaTime);
+
 		public Stats getStat() { 
 			return stat;
 		}

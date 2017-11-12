@@ -1,4 +1,4 @@
-package actors;
+package stats;
 
 public enum Stats {
 	ATTACK,
@@ -27,7 +27,7 @@ public enum Stats {
 	BLUNT_ATTACK,
 	BLUNT_DEFENSE,
 	
-	
+	KNOCKBACK,
 	
 	MAGIC_ATTACK,
 	MAGIC_DEFENSE,

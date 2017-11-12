@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import actions.Action;
+import actions.Spell_Explosion;
 import actions.Spell_Fireball;
 import actions.Spell_Teleport;
 import archive.Archiver;
@@ -17,6 +18,7 @@ import ecu.se.map.Map;
 import ecu.se.objects.InteractableItem;
 import ecu.se.objects.ItemObject;
 import ecu.se.objects.Projectile;
+import stats.Stats;
 
 public class Player extends Actor {
 	private Direction dir;
@@ -29,8 +31,8 @@ public class Player extends Actor {
 		dir = Direction.NORTH;
 		team = Team.PLAYER;
 	
+		primaryAction = new Spell_Fireball(this);
 		secondaryAction = new Spell_Fireball(this);
-		primaryAction = new Spell_Teleport(this);
 	
 	}
 	
@@ -121,9 +123,8 @@ public class Player extends Actor {
 	}
 	
 	public void attack(double x, double y) {
-		double angleInRadians = Math.atan2(y - this.y, x - this.x) - Math.atan2(0, 0);
-		ObjectManager.add(new Projectile(this.x, this.y, angleInRadians,  this));
-		
+//		double angleInRadians = Math.atan2(y - this.y, x - this.x) - Math.atan2(0, 0);
+//		ObjectManager.add(new Projectile(this.x, this.y, angleInRadians,  this));
 	}
 
 	

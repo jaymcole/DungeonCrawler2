@@ -244,8 +244,6 @@ public enum Direction {
     
     public static Direction directionTo(float x1, float y1, float x2, float y2)
     {
-    	
-    	
     	if (x1 > x2 && y1 > y2)
     	{
     		return SOUTHWEST;
@@ -262,7 +260,52 @@ public enum Direction {
     	{
     		return NORTHEAST;
     	}
-    		
-    	
+    }
+    
+    
+    /**
+     * 
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @return The angle between (x1, y1) and (x2, y2) in radians.
+     */
+    public static float angleRad (float x1, float y1, float x2, float y2) {
+    	float deltaX = x2 - x1;
+    	float deltaY = y2 - y1;
+    	return (float)Math.atan2(deltaY, deltaX);
+    }
+    
+    /**
+     * 
+     * @param p1
+     * @param p2
+     * @return The angle between p1 and p2 in radians.
+     */
+    public static float angleRad (Vector2 p1, Vector2 p2) {
+    	return angleRad(p1.x, p1.y, p2.x, p2.y);
+    }
+    
+    /**
+     * 
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @return The angle between (x1, y1) and (x2, y2) in degrees.
+     */
+    public static float angleDeg(float x1, float y1, float x2, float y2) {
+    	return (float)Math.toDegrees(angleRad(x1, y1, x2, y2));
+    }
+    
+    /**
+     * 
+     * @param p1
+     * @param p2
+     * @return The angle between p1 and p2 in degrees.
+     */
+    public static float angleDeg(Vector2 p1, Vector2 p2) {
+    	return (float)Math.toDegrees(angleRad(p1, p2));
     }
 }

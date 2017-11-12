@@ -54,7 +54,7 @@ public class ObjectManager {
         }
         
         
-        // CHECK PLAYER COLLISION
+//        // CHECK PLAYER COLLISION
         updater = actors.iterator();
         while(updater.hasNext())
         {
@@ -63,11 +63,12 @@ public class ObjectManager {
                 object.update(deltaTime);            
             if(isColliding(player, object))
             {
-                player.move(deltaTime, Direction.directionTo(object.x, object.y, player.x, player.y), true);
-                if (object instanceof Actor) {
-                	((Actor)object).move(deltaTime, Direction.directionTo(player.x, player.y, object.x, object.y), true);
+//                player.move(deltaTime, Direction.directionTo(object.x, object.y, player.x, player.y), true);
+//                if (object instanceof Actor) {
+            		((Actor)object).act(deltaTime);
+//                	((Actor)object).move(deltaTime, Direction.directionTo(player.x, player.y, object.x, object.y), true);
                 	
-                }
+//                }
             }
             } else {
                 remove(object);
@@ -86,7 +87,7 @@ public class ObjectManager {
                 if(isColliding(actor1, actor2) && actor1 != actor2)
                 {
                 	actor1.move(deltaTime, Direction.directionTo(actor2.x, actor2.y, actor1.x, actor1.y), false);
-//                	actor2.move((int)(deltaTime * 0.5f), Direction.directionTo(actor1.x, actor1.y, actor2.x, actor2.y), false);
+                	actor2.move((int)(deltaTime * 0.5f), Direction.directionTo(actor1.x, actor1.y, actor2.x, actor2.y), false);
                 }
 
             }
@@ -244,6 +245,11 @@ public class ObjectManager {
     public static void setPlayer(Player player)
     {
         ObjectManager.player = player;
+        actors.add(player);
+    }
+    
+    public static LinkedList<GameObject> getActors() {
+		return actors;
     }
     
 }

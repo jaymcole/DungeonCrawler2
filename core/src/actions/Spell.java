@@ -3,12 +3,13 @@ package actions;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import actors.Actor;
-import actors.Stats;
+import actors.Team;
 import archive.Archiver;
 import archive.TotalRecords;
 import ecu.se.GameObject;
+import stats.Stats;
 
-public abstract class Spell extends Action{
+public abstract class Spell extends Action {
 	public static final int CHANNEL 	= 0;
 	public static final int CAST		= 1;
 	public static final int COOLDOWN	= 2;
@@ -31,11 +32,14 @@ public abstract class Spell extends Action{
 	
 	protected float timer;
 	
+	protected Team team;
+	
 	protected boolean instantCast = false;
 	
 	public Spell(Actor caster) {
 		this.caster = caster;
 		active = false;
+		this.team = caster.team;
 		baseCastSpeed 	= 0;
 		baseCooldown 	= 0;
 		baseManaCost 	= 0.1f;

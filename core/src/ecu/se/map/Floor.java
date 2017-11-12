@@ -83,47 +83,6 @@ public class Floor {
 	public void generate() {
 		generated = true;
 		Generate.generate(random, this);
-//		Direction currentDirection = Direction.randomDirection(random);
-//		floorInX = random.nextInt(mapWidth);
-//		floorInY = random.nextInt(mapHeight);
-//
-//		
-//		
-////		makeTileWalkable(floorInX, floorInY);
-//		minTile = new Vector2(0,0);
-//		maxTile = new Vector2(mapWidth, mapHeight);
-//		
-//		
-//		//intersection(new BuildNode(startX, startY, currentDirection));
-//		map[floorInX][floorInY] = SPAWN;
-//		BuildNode node = new BuildNode(floorInX, floorInY, Direction.NORTH);
-//		
-//		for(int i = 0 ; i < 3; i++) {
-//			node.forward();
-//			map[node.x][node.y] = FLOOR;
-//		}
-//		
-//		node.direction = node.direction.turn(random, node.direction);
-//		node.forward();
-//		map[node.x][node.y] = FLOOR;
-//		node.forward();
-//		map[node.x][node.y] = FLOOR;
-//
-//		floorInX -= minTile.x;
-//		floorInY -= minTile.y;
-//
-////		mapWidth = (int) (maxTile.x - minTile.x);
-////		mapHeight = (int) (maxTile.y - minTile.y);
-//		int[][] temp = new int[mapWidth][mapHeight];
-//		for (int i = 0; i < mapWidth; i++) {
-//			for (int j = 0; j < mapHeight; j++) {
-//				temp[i][j] = map[(int) (i + minTile.x)][(int) (j + minTile.y)];
-//			}
-//		}
-//		map = temp;
-//
-//		finalizeFloor();
-//		printFloor();
 	}
 	
 	public void generatedMap(Tile[][] tiles, LinkedList<Light> lights, Staircase up, Staircase down, int mapWidth, int mapHeight) {
@@ -134,10 +93,7 @@ public class Floor {
 		this.mapWidth = mapWidth;
 		this.mapHeight = mapHeight;
 	}
-
-
 	
-
 	private void makeTileWalkable(int x, int y) {
 		if (tiles[x][y] == null) {
 			tiles[x][y] = new Tile(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
@@ -227,7 +183,14 @@ public class Floor {
 		} else {
 			return null;
 		}
-
+	}
+	
+	public int getMapWidth() {
+		return mapWidth;
+	}
+	
+	public int getMapHeight() {
+		return mapHeight;
 	}
 
 	public Vector2 getFloorIn(int x, int y) {
