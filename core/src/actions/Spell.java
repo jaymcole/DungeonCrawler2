@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import actors.Actor;
 import actors.Stats;
+import archive.Archiver;
+import archive.TotalRecords;
 import ecu.se.GameObject;
 
 public abstract class Spell extends Action{
@@ -34,11 +36,15 @@ public abstract class Spell extends Action{
 	public Spell(Actor caster) {
 		this.caster = caster;
 		active = false;
+		baseCastSpeed 	= 0;
+		baseCooldown 	= 0;
+		baseManaCost 	= 0.1f;
 	}
 	
 	public void act(int x, int y) {
 		if (active)
 			return;
+		Archiver.set(TotalRecords.ACTIONS_TAKEN, 1);
 		// Initialize variables based on caster ability.
 		currentCastSpeed = baseCastSpeed * caster.getStat(Stats.SPELL_CAST_SPEED);
 		currentManaCost = baseManaCost * caster.getStat(Stats.MANA_COST);
@@ -56,7 +62,7 @@ public abstract class Spell extends Action{
 		} else {
 			caster.setMana(-currentManaCost);
 		}
-		System.out.println("Casting: " + this.getClass().getName());
+//		System.out.println("Casting: " + this.getClass().getName());
 		
 		if (instantCast)
 			currentStage = CAST;
@@ -77,6 +83,7 @@ public abstract class Spell extends Action{
 				targetX = target.getX();
 				targetY = target.getY();
 			}
+			Archiver.set(TotalRecords.SPELLS_CAST, 1);
 			cast(deltaTime);
 			break;
 		case COOLDOWN:

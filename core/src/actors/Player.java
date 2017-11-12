@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import actions.Action;
 import actions.Spell_Fireball;
+import actions.Spell_Teleport;
 import archive.Archiver;
 import archive.TimeRecords;
 import ecu.se.ObjectManager;
@@ -28,8 +29,8 @@ public class Player extends Actor {
 		dir = Direction.NORTH;
 		team = Team.PLAYER;
 	
-		primaryAction = new Spell_Fireball(this);
 		secondaryAction = new Spell_Fireball(this);
+		primaryAction = new Spell_Teleport(this);
 	
 	}
 	

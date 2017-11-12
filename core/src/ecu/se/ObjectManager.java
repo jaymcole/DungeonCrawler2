@@ -219,6 +219,12 @@ public class ObjectManager {
             object.dispose();
         }
     }
+    
+    public static LinkedList<Actor> getNearbyActors() {
+    	//TODO: Finish this method
+		return null;
+    }
+    
     /**
      * 
      * @param object

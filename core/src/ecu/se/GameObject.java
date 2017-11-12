@@ -35,6 +35,16 @@ public abstract class GameObject implements Comparable<GameObject> {
 		bounds = Utils.getRectangleBounds(x, y, 5, 5, Utils.ALIGN_BOTTOM_CENTER);
 		team = team.NEUTRAL;
 	}
+	
+	public void setPosition(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	public void setPosition(Vector2 pos) {
+		x = pos.x;
+		y = pos.y;
+	}
 
 	public abstract void update(float deltaTime);
 

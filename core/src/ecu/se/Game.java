@@ -24,6 +24,8 @@ import com.badlogic.gdx.utils.TimeUtils;
 import actors.Player;
 import actors.RangedBadGuy;
 import archive.Archiver;
+import archive.TimeRecords;
+import archive.TotalRecords;
 import assetManager.AssetManager;
 import ecu.se.gui.HUD;
 import ecu.se.map.Map;
@@ -57,13 +59,16 @@ public class Game extends ApplicationAdapter{
 	
 	@Override
 	public void create () {
+		// RECORDS
+		Archiver.startArchiver();
+		Archiver.set(TotalRecords.TIMES_STARTING_GAME, 1);
 	    deltaTime = TimeUtils.millis();
 	    screenHeight = Gdx.graphics.getHeight();
 	    screenWidth = Gdx.graphics.getWidth();
 	    objectManager = new ObjectManager();
 	    map = new Map();
 	    map.setScreenResolution(screenWidth, screenHeight);
-	    player = new Player(map.floorHelper(0,0).x, map.floorHelper(0,0).y, 0, map, camera, "texture/spritesheet/adventuretime_sprites.png");
+	    player = new Player(map.getFloorIn(0,0).x, map.getFloorIn(0,0).y, 0, map, camera, "texture/spritesheet/adventuretime_sprites.png");
 	    objectManager.setPlayer(player);
 	    
 	    Random random  = new Random();
@@ -76,18 +81,16 @@ public class Game extends ApplicationAdapter{
 		batch = new SpriteBatch();
 		shaperRenderer = new ShapeRenderer();
 		
-		// RECORDS
-		Archiver.startArchiver();
 		if (player == null) { 
 			System.err.println("Player is null for some reason");
 		}
 	    Lighting.init(camera, player);
 		Lighting.setShader(batch);
 		
-//		light = new Light(player);
-//		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
-//		light.setIntensity(200);
-//		Lighting.addLight(light);
+		light = new Light(player);
+		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
+		light.setIntensity(600);
+		Lighting.addLight(light);
 //		
 //		light = new Light(player);
 //		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));

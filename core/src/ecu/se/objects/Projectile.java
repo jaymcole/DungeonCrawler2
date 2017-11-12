@@ -24,7 +24,7 @@ public class Projectile extends GameObject {
 	private double angle;
 	private float moveX, moveY;
 	
-	//TODO: Change bounds to a line
+	//TODO: Check collision using a line from current position to next.
 	
 	public Projectile(float x, float y, double angleRAD, GameObject parent) {
 		super(x, y);

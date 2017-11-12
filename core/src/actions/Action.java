@@ -1,9 +1,5 @@
 package actions;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import ecu.se.GameObject;
-
 public abstract class Action {
 
 	protected boolean active = false;

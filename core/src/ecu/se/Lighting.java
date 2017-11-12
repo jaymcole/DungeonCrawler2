@@ -56,7 +56,6 @@ public class Lighting {
 			light = updater.next();
 			light.update(deltaTime, targetVector);
 		}
-		// TODO: This may be causing a stutter.
 		Collections.sort(lights);
 
 		updater = lights.iterator();

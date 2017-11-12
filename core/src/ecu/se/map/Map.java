@@ -3,6 +3,7 @@ package ecu.se.map;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,7 +24,6 @@ public class Map {
     private static TextureRegion background;
     private static int currentLevel = 0;
     
-    //TODO: Bug: Occasionally crashes on generating map. Seems to happen more often when global map size is set high (500+)
     
     public Map() {
         floors = new ArrayList<Floor>(200);
@@ -44,7 +44,8 @@ public class Map {
         currentFloor = floors.get(floor);
         if (!currentFloor.getGenerated()) {
             currentFloor.generate();
-        }     
+        }    
+        
     }
     
     public static void render(SpriteBatch batch, int cameraX, int cameraY) { 
@@ -93,8 +94,12 @@ public class Map {
         return currentFloor.getTile(x, y);
     }
     
-    public static Vector2 floorHelper(int x, int y) {
-        return currentFloor.getSpawn(x,y);
+    public static Vector2 getFloorIn(int x, int y) {
+        return currentFloor.getFloorIn(x,y);
+    }
+    
+    public static Vector2 getFloorOut(int x, int y) {
+        return currentFloor.getFloorOut(x,y);
     }
     
     public static void setScreenResolution(int screenWidth, int screenHeight) {

@@ -113,7 +113,7 @@ public class Archiver {
                 	timeRecords[Integer.parseInt(parts[1])] = Long.parseLong(parts[2]);
                 } else if (parts[0].equals(TOTAL_RECORD)) {
                 	if (parts[2].equals("null"))
-                		totalRecords[Integer.parseInt(parts[1])] = -1.0;
+                		totalRecords[Integer.parseInt(parts[1])] =  0.0;
                 	else
                 		totalRecords[Integer.parseInt(parts[1])] = Double.valueOf(parts[2]);
                 } else {
@@ -135,8 +135,8 @@ public class Archiver {
 	 * @param value - The record to save.
 	 */
 	public static void set(TotalRecords type, double value) {
-		int index = TimeRecords.valueOf(type.name()).ordinal();
-		timeRecords[index] += value;
+		int index = type.ordinal();
+		totalRecords[index] += value;
 	}
 	
 	/**
