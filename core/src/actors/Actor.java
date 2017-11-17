@@ -110,11 +110,11 @@ public abstract class Actor extends GameObject {
 
 //		animation_feet = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/default_character.png"));
 //		animation_feet.setRow(aRow);
-		animation_head = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/default_character.png"));
+		animation_head = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/bleh.png"));
 		animation_head.setRow(1);
-		animation_body = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/default_character.png"));
+		animation_body = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/bleh.png"));
 		animation_body.setRow(2);
-		animation_arms = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/default_character.png"));
+		animation_arms = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/bleh.png"));
 		animation_arms.setRow(3);
 
 		debugHealthBarTexture = AssetManager.getTexture("texture/misc/white.png").getTexture();

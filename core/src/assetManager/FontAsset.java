@@ -30,7 +30,7 @@ public class FontAsset extends Asset{
 //    }
     
     public FontAsset(String name, int size) {
-    	size *= (int)((GUI.conversionX + GUI.conversionY) * 0.5f);
+    	size = (int)(size * (GUI.conversionX + GUI.conversionY) * 0.5f);
     	this.name = name;
         try {
             FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(name));
