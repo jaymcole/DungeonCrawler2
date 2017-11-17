@@ -47,7 +47,6 @@ public class Game extends ApplicationAdapter {
 	private float zoom = Globals.DEFAULT_CAMERA_ZOOM;
 
 	private String backgroundTextureName = "texture/misc/black.jpg";
-	// private String backgroundTextureName = "texture/floor/castle_tile.jpg";
 	private Texture backgroundTexture;
 
 	// DEBUG OBJECT(S)
@@ -191,8 +190,9 @@ public class Game extends ApplicationAdapter {
 	}
 
 	int floor = 0;
-	private boolean mouseLeftDown = false;
-
+	
+	//TODO: Consolidate input groups (things that should be allowed while the game is paused and things that should be blocked)
+	
 	public void input() {
 		if (currentState != GAME_STATE_PAUSED) {
 			player.input(deltaTime);

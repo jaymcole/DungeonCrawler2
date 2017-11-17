@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import assetManager.AssetManager;
+import ecu.se.Utils;
 
 public class Widget_Label extends Widget{
 
@@ -18,10 +19,14 @@ public class Widget_Label extends Widget{
 		this.textColor = textColor;
 		background = AssetManager.getTexture("texture/misc/white.png").getTexture();
 		font = AssetManager.getFont("font/font_jay.ttf", size).getFont();
-//		glyphLayout.setText(font, text);
-//		width = glyphLayout.width;
-//		height = glyphLayout.height;
+		xBuffer = 2;
+		yBuffer = 2;
+		
+		glyphLayout.setText(font, text);
+		this.width = glyphLayout.width;
+		this.height = glyphLayout.height;
 		setText(text);
+		bounds = Utils.getRectangleBounds(this.x, this.y, this.width, this.height, Utils.ALIGN_BOTTOM_LEFT);
 
 	}
 
@@ -37,6 +42,6 @@ public class Widget_Label extends Widget{
 			batch.draw(background, x - xBuffer, y - yBuffer, width + xBuffer * 2, height  + yBuffer * 2);
 		}
 		font.setColor(textColor);
-		font.draw(batch, text, textX, textY);
+		font.draw(batch, text, textX - xBuffer, textY - yBuffer);
 	}
 }

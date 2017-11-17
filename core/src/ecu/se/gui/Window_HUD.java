@@ -1,7 +1,5 @@
 package ecu.se.gui;
 
-import java.util.Random;
-
 import com.badlogic.gdx.graphics.Color;
 
 import ecu.se.Game;
@@ -43,7 +41,7 @@ public class Window_HUD extends Window {
 						System.out.println("mouseReleased");
 					}
 				},
-				new Widget_Label(100, 900, 0, 0, this, "Label Test", 50, Color.BLUE, Color.BLACK),	
+				new Widget_Label(100, 900, 10, 10, this, "Label Test", 50, Color.BLUE, Color.WHITE),	
 		};
 
 	}

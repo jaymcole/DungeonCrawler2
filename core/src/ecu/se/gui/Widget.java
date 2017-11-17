@@ -51,6 +51,7 @@ public abstract class Widget {
 	 */
 	public void debugRender (ShapeRenderer renderer) {
 		renderer.polygon(bounds.getTransformedVertices());
+		renderer.line(0, 0, x, y);
 	}
 	
 	/**
@@ -68,11 +69,11 @@ public abstract class Widget {
 	 * @param text
 	 */
 	public void setText(String text) {
-		glyphLayout.setText(font, text);
 		this.text = text;
-		useText = true;
+		glyphLayout.setText(font, this.text);
 		textX = (int)(x + ((width - glyphLayout.width) * 0.5));
 		textY = (int)(y + ((height + glyphLayout.height) * 0.5));
+		useText = true;
 	}
 	
 	/**
