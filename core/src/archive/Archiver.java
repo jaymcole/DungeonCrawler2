@@ -42,7 +42,7 @@ public class Archiver {
 	public static void startArchiver(String directory, String user) {
 		ARCHIVE_DIRECTORY = directory;
 		PROFILE = user;
-		
+		init();
 	}
 	
 	/**
@@ -136,6 +136,8 @@ public class Archiver {
 	 */
 	public static void set(TotalRecords type, double value) {
 		int index = type.ordinal();
+		if (totalRecords[index] == null) 
+			totalRecords[index] = 0.0;
 		totalRecords[index] += value;
 	}
 	
