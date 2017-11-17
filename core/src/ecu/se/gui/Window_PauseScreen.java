@@ -7,7 +7,7 @@ public class Window_PauseScreen extends Window{
 
 	@Override
 	protected void buildWindow() {
-		Widget_Label label = new Widget_Label(0, 0, GUI.defaultWidth,GUI.defaultHeight , this, "PAUSED", 500, null, Color.BROWN);
+		Widget_Label label = new Widget_Label(0, 0, GUI.defaultWidth,GUI.defaultHeight , this, "PAUSED", 500, null, Color.CHARTREUSE);
 		
 		
 		widgets = new Widget[]{
