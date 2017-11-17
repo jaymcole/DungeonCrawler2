@@ -18,7 +18,7 @@ public class Spell_Fireball extends Spell{
 	@Override
 	protected void cast(float deltaTime) {
 		double angleInRadians = Math.atan2(targetY - caster.getY(), targetX - caster.getX()) - Math.atan2(0, 0);
-		ObjectManager.add(new Projectile(caster.getX(), caster.getY(), angleInRadians,  caster, caster.getStat(Stats.KNOCKBACK) * 100, 25f, 700f));
+		ObjectManager.add(new Projectile(caster.getX(), caster.getY(), angleInRadians,  caster, caster.getStat(Stats.KNOCKBACK) * 100, 25f, 700f, "texture/spritesheet/fireball_spritesheet.png"));
 		currentStage++;
 	}
 

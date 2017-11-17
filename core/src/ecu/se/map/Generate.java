@@ -122,12 +122,6 @@ public class Generate {
 		default:
 			break;
 		}
-
-//		if (random.nextBoolean() && random.nextBoolean()) {
-//			genRoom(node, random.nextInt(5) + 2, random.nextInt(5) + 2, random.nextBoolean(), false);
-//		} else {
-//			genStraightPath(node, random.nextInt(6) + 2, false, true, random.nextBoolean());
-//		}
 	}
 
 	private static void genRoom(BuildNode node, int width, int length, boolean extend, boolean intersect) {
@@ -148,12 +142,6 @@ public class Generate {
 		points[3] = points[2].copy();
 		points[3].turnLeft();
 		points[3].forward(length);
-
-//		setMapInt(points[0].x, points[0].y, 1, false);
-//		setMapInt(points[1].x, points[1].y, 2, false);
-//		setMapInt(points[2].x, points[2].y, 3, false);
-//		setMapInt(points[3].x, points[3].y, 4, false);
-
 		BuildNode maxNode = points[3];
 		BuildNode minNode = points[0];
 
@@ -188,7 +176,6 @@ public class Generate {
 					}
 				}
 				genStraightPath(temp, random.nextInt(5) + 3, false, true, true);
-				// remainingNodes.add(temp);
 			}
 		}
 	}

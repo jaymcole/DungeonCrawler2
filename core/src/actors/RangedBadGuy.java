@@ -37,6 +37,6 @@ public class RangedBadGuy extends Actor {
 			move(deltaTime, Direction.directionTo(player.getPosition().x, player.getPosition().y, x, y), true);
 		}
 		
-
+		lookAt = player.getPositionV2();
     }
 }

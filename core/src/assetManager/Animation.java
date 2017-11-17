@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import ecu.se.map.Direction;
 
 
-public class Animation{
+public class Animation {
 	private boolean hold = true;
 	private int spriteHeight, spriteWidth, spriteX, spriteY, tRow, tColumn, frame,sRow, selectedRow;
 	private TextureRegion textureRegion;
@@ -14,11 +14,10 @@ public class Animation{
 	private int offsetX;
 	private int offsetY;
 	private float x, y;
+	private float scaleX, scaleY;
 	
 	private float speed = 0.1f;
 	private float time = 0;
-	
-	private boolean useExtendedDirections = false;
 	
 	public Animation (float x, float y, float z) {
 		frame = 0;
@@ -33,17 +32,20 @@ public class Animation{
 		spriteWidth = spriteAsset.getSpriteWidth();
 		textureRegion = new TextureRegion(spriteAsset.getTexture().getTexture());
 		frame = 0;
-		if (spriteAsset.numCol == 8) 
-			useExtendedDirections = true;
-		offsetX = (int) (spriteWidth * -0.5f);
+
+		offsetX = 0;
 		offsetY = 0;
+			
+		offsetX = -(int)(spriteWidth * 0.5);
+		offsetY = -(int)(spriteHeight * 0.5);
+
+		scaleX = 1;
+		scaleY = 1;
+		
 	}
 	
-	public void rowSelect ( int aRow){
-		if (useExtendedDirections) 
-			spriteY= aRow * spriteHeight;
-		else
-			spriteY=(aRow/2)* spriteHeight;
+	public void setRow ( int aRow){
+		spriteY= aRow * spriteHeight;
 	}
 	
 	 public void setIdle( boolean holding){
@@ -65,7 +67,13 @@ public class Animation{
 	}
 
 	public void render(SpriteBatch batch) {
-		batch.draw(textureRegion, x, y, spriteWidth * 0.5f, spriteHeight * 0.5f, spriteWidth, spriteHeight, 1, 1, rotation);
+		offsetX = 0;
+		offsetY = 0;
+		
+		offsetX = -(int)(spriteWidth * 0.5);
+		offsetY = -(int)(spriteHeight * 0.5);
+		
+		batch.draw(textureRegion, x, y , spriteWidth * 0.5f, spriteHeight*0.5f, spriteWidth, spriteHeight, scaleX, scaleY, rotation);
 	}
 	
 	/**
@@ -106,18 +114,19 @@ public class Animation{
 		this.textureRegion = tr;
 	}
 	
-	
-	
-	public void setExtendedDirection(boolean useDir) {
-		useExtendedDirections = true;
-	}
-
-	public void dispose() {
-		
+	public void setOffset(float x, float y) {
+		System.err.println("Setting offset!!!");
+		offsetX = (int) x;
+		offsetY = (int) y;
 	}
 	
 	public void setXY(int x, int y) {
 		this.x = x + offsetX;
 		this.y = y + offsetY;
+	}
+	
+	public void setScale(float x, float y) {
+		scaleX = x;
+		scaleY = y;
 	}
 }

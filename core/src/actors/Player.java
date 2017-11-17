@@ -33,7 +33,6 @@ public class Player extends Actor {
 	
 		primaryAction = new Spell_Fireball(this);
 		secondaryAction = new Spell_Fireball(this);
-	
 	}
 	
 	@Override
@@ -57,14 +56,10 @@ public class Player extends Actor {
 			}
 		}
 		bounds.setPosition(x, y);
-		animation.setIdle(idle);
-		animation.update(deltaTime);
-		animation.setXY((int) x, (int) y);
-		idle = true;
 	}
 
 	public void act(float deltaTime) {
-
+		
 	}
 
 	public void setIdle(boolean idle) {

@@ -8,14 +8,17 @@ import ecu.se.Utils;
 public class AssetManager {	
 	public static HashMap<String, Asset> assets = new HashMap<String, Asset>();
 	
-	public static FontAsset getFont(String name) {
-		if(assets.containsKey(name))
-			return (FontAsset)(assets.get(name));
+	public static FontAsset getFont(String name, int size) {
+		String key =name + size + "g";
+		if(assets.containsKey(key)) 
+			return (FontAsset)(assets.get(key));
 		
-		FontAsset temp = new FontAsset(name);
+		FontAsset temp = new FontAsset(name, size);
 		if (temp.loadedSuccessfully()) {
 			Utils.println(AssetManager.class, "Adding a new font for: " + name);
-			assets.put(name, temp);
+			assets.put(key, temp);
+			
+			
 			return temp.getAsset();
 		}
 		System.err.println("Failed to load font.");

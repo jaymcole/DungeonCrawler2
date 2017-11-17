@@ -28,7 +28,7 @@ public class Projectile extends GameObject {
 	private float damage;
 	//TODO: Check collision using a line from current position to next.
 	
-	public Projectile(float x, float y, double angleRAD, Actor parent, float knockback, float damage, float speed) {
+	public Projectile(float x, float y, double angleRAD, Actor parent, float knockback, float damage, float speed, String file) {
 		super(x, y);
 		this.x = x;
 		this.y = y;
@@ -38,8 +38,8 @@ public class Projectile extends GameObject {
 		angle = angleRAD;
 		bounds = Utils.getRectangleBounds(x, y, 10, 10, Utils.ALIGN_CENTERED);
 		this.damage = damage;
-		animation = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/fireball_spritesheet.png"));
-		animation.rowSelect(0);
+		animation = new Animation(0, 0, 0, AssetManager.getSpriteSheet(file));
+		animation.setRow(0);
 		animation.setIdle(false);
 		animation.setRotation((float)Math.toDegrees(angle));
 		timeAlive = 0;
@@ -82,7 +82,7 @@ public class Projectile extends GameObject {
 		}
 
 	}
-
+	
 	public void setSpeed(float speed) {
 		moveX += Math.cos(angle) * speed;
 		moveY += Math.sin(angle) * speed;

@@ -23,7 +23,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 		this.y = y;
 		this.z = z;
 		alive = true;
-		bounds = Utils.getRectangleBounds(x, y, 20, 20, Utils.ALIGN_BOTTOM_CENTER);
+		bounds = Utils.getRectangleBounds(x, y, 20, 20, Utils.ALIGN_CENTERED);
 		team = team.NEUTRAL;
 	}
 
@@ -32,7 +32,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 		this.y = y;
 		this.z = Globals.Z_LEVEL_FLOOR;
 		alive = true;
-		bounds = Utils.getRectangleBounds(x, y, 5, 5, Utils.ALIGN_BOTTOM_CENTER);
+		bounds = Utils.getRectangleBounds(x, y, 5, 5, Utils.ALIGN_CENTERED);
 		team = team.NEUTRAL;
 	}
 	
@@ -52,9 +52,10 @@ public abstract class GameObject implements Comparable<GameObject> {
 
 	public abstract void dispose();
 
-	// public void debugRender(ShapeRenderer render) {
-	// render.polygon(bounds.getVertices());
-	// }
+	 public void debugRender(ShapeRenderer render) {
+		 render.polygon(bounds.getTransformedVertices());
+		 render.ellipse(bounds.getOriginX(), bounds.getOriginY(), 10, 10);
+	 }
 
 	/**
 	 * Should be implements by subclassses.

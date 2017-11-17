@@ -64,23 +64,17 @@ public class Map {
         }
     }
     
-    private static ShapeRenderer debugRenderer = new ShapeRenderer();
-    public static void debugRender(Matrix4 projection, int cameraX, int cameraY) { 
-        debugRenderer.begin(ShapeType.Line);
-        debugRenderer.setProjectionMatrix(projection);
-        debugRenderer.setColor(Color.RED);
+    public static void debugRender(ShapeRenderer renderer, int cameraX, int cameraY) { 
 
-
+    	renderer.setColor(Color.SKY);
         visibleTiles = currentFloor.getAdjacent(cameraX, cameraY, tilesHorizontal, tilesVertical);
         for(int i = 0; i < tilesHorizontal; i++) {
             for(int j = 0; j < tilesVertical; j++) {
                 if(visibleTiles[i][j] != null) {
-                    debugRenderer.polygon(visibleTiles[i][j].getBounds().getTransformedVertices());
+                	renderer.polygon(visibleTiles[i][j].getBounds().getTransformedVertices());
                 }
             }
         }
-        
-        debugRenderer.end();
     }
     
     public static void dispose() {

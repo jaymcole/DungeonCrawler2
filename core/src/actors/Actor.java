@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 
 import actions.Action;
@@ -28,25 +31,27 @@ public abstract class Actor extends GameObject {
 
 	protected String name;
 	protected String spriteSheet;
-	protected Texture texture;
+	// protected Texture texture;
 	protected Map map;
 	protected float oldx = 0;
 	protected float oldy = 0;
 	protected Direction direction;
 
-	protected Animation animation;
+	protected Animation animation_body;
+	protected Animation animation_feet;
+	protected Animation animation_arms;
+	protected Animation animation_head;
+
 	protected int spriteWidth;// = 40;
 	protected int spriteHeight;// = 48;
-	protected int spriteSequences = 5;
-	protected TextureRegion textureRegion;
+//	protected TextureRegion textureRegion;
 	protected boolean awake;
-	
+
 	/**
 	 * Used for movement modifiers like explosions.
 	 */
 	protected float externalForcesX;
 	protected float externalForcesY;
-
 
 	/**
 	 * baseStats: All permanent stats. i.e. Allocated skill points from leveling
@@ -71,35 +76,50 @@ public abstract class Actor extends GameObject {
 	 * that needs to be checked/updated every tic.
 	 */
 	protected LinkedList<TempStatModifier> tempStatModifiers;
+
+	protected int healthbarWidth = 50;
+	protected int healthbarHeight = 40;
 	
 	protected Action primaryAction;
 	protected Action secondaryAction;
 	protected ArrayList<Action> actions = new ArrayList<Action>();
 	protected LinkedList<Action> activeActions = new LinkedList<Action>();
-	
+
 	protected Vector2 currentSpeed;
 	protected float currentHealth;
 	protected float currentMana;
-	
-	//TDOD: Implement this level poop!
+
+	// TDOD: Implement this level poop!
 	protected int currentLevel;
 	protected int currentXP;
 
 	private Texture debugHealthBarTexture;
+	protected float scaleX, scaleY;
+	public Vector2 lookAt;
 
 	public Actor(float x, float y, float z, Map map, String spriteSheet) {
 		super(x, y, z);
 		this.map = map;
 		SpriteAsset asset = AssetManager.getSpriteSheet(spriteSheet);
-		animation = new Animation(0, 0, 0, asset);
-		spriteWidth = asset.getSpriteWidth();
-		spriteHeight = asset.getSpriteHeight();
-		textureRegion = asset.getTexture().getTextureRegion();
-		texture = asset.getTexture().getTexture();
+//		animation_body = new Animation(0, 0, 0, asset);
+//		spriteWidth = asset.getSpriteWidth();
+//		spriteHeight = asset.getSpriteHeight();
+//		textureRegion = asset.getTexture().getTextureRegion();
+		// texture = asset.getTexture().getTexture();]
+		
+
+//		animation_feet = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/default_character.png"));
+//		animation_feet.setRow(aRow);
+		animation_head = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/default_character.png"));
+		animation_head.setRow(1);
+		animation_body = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/default_character.png"));
+		animation_body.setRow(2);
+		animation_arms = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/default_character.png"));
+		animation_arms.setRow(3);
 
 		debugHealthBarTexture = AssetManager.getTexture("texture/misc/white.png").getTexture();
-
-		bounds = Utils.getRectangleBounds(x, y, (int) (spriteWidth * 0.5), spriteHeight, Utils.ALIGN_BOTTOM_CENTER);
+		bounds = Utils.getRectangleBounds(x, y, 40, 80, Utils.ALIGN_CENTERED);
+		bounds = Utils.getEllipseBounds(x, y, 25, 25, 20);
 		tempStatModifiers = new LinkedList<TempStatModifier>();
 		setDefaults();
 		updateStats();
@@ -107,7 +127,8 @@ public abstract class Actor extends GameObject {
 		currentMana = getStat(Stats.MANA);
 		Random random = new Random();
 		currentHealth = random.nextInt(100);
-		this.awake = false;	
+		this.awake = false;
+		lookAt = new Vector2(0, 0);
 	}
 
 	/**
@@ -116,20 +137,21 @@ public abstract class Actor extends GameObject {
 	 * override this function to replace the movement parts with specialized
 	 * code.
 	 * 
-	 * @param deltaTime: Time between each frame.
+	 * @param deltaTime:
+	 *            Time between each frame.
 	 */
 	public void update(float deltaTime) {
 		updateStats(deltaTime);
 		act(deltaTime);
 		updateMovement(deltaTime);
+		updateAnimations(deltaTime);
 		updateActions(deltaTime);
 		if (currentHealth <= 0) {
 			this.kill();
 		}
-		idle = true;
 	}
-		
-	protected void updateStats(float deltaTime) {		
+
+	protected void updateStats(float deltaTime) {
 		finalizeModifiers();
 		for (TempStatModifier stat : tempStatModifiers) {
 			stat.update(deltaTime);
@@ -137,20 +159,45 @@ public abstract class Actor extends GameObject {
 		setHealth(deltaTime * getStat(Stats.HEALTH_REGEN));
 		setMana(deltaTime * getStat(Stats.MANA_REGEN));
 	}
-	
+
 	protected void updateMovement(float deltaTime) {
 		x += (currentSpeed.x);
 		y += (currentSpeed.y);
-		
+
 		currentSpeed.x *= currentStats[Stats.MOVEMENT_DRAG.ordinal()] * deltaTime;
 		currentSpeed.y *= currentStats[Stats.MOVEMENT_DRAG.ordinal()] * deltaTime;
 		bounds.setPosition(x, y);
-		
-		animation.setIdle(idle);
-		animation.update(deltaTime);
-		animation.setXY((int) x, (int) y);
 	}
 	
+	protected void updateAnimations(float deltaTime) {
+		float angle = Direction.angleDeg(this.getPositionV2(), lookAt);
+		
+		animation_body.setRotation(angle);
+//		animation_feet.setRotation(angle);
+		animation_arms.setRotation(angle);
+		animation_head.setRotation(angle);
+		bounds.setRotation((float) Math.toDegrees(angle));
+		bounds.setRotation(angle);
+		
+		animation_body.setIdle(idle);
+		animation_body.update(deltaTime);
+		animation_body.setXY((int) x, (int) y);
+
+//		animation_feet.setIdle(idle);
+//		animation_feet.update(deltaTime);
+//		animation_feet.setXY((int) x, (int) y);
+
+		animation_arms.setIdle(idle);
+		animation_arms.update(deltaTime);
+		animation_arms.setXY((int) x, (int) y);
+
+		animation_head.setIdle(idle);
+		animation_head.update(deltaTime);
+		animation_head.setXY((int) x, (int) y);
+		idle = true;
+
+	}
+
 	protected void updateActions(float deltaTime) {
 		for (Action a : activeActions) {
 			if (a.isActive()) {
@@ -175,15 +222,19 @@ public abstract class Actor extends GameObject {
 
 	@Override
 	public void render(SpriteBatch batch) {
-		animation.render(batch);
+//		animation_feet.render(batch);
+		animation_body.render(batch);
+		animation_arms.render(batch);
+		animation_head.render(batch);
 
 		// Renders a healthbar
 		batch.setColor(1.0f, 1.0f, 1.0f, 0.5f);
-		batch.draw(debugHealthBarTexture, x - (int) (spriteWidth * 0.5f) - borderWidth, y + spriteHeight - borderWidth,
-				spriteWidth + borderWidth * 2, barHeight * 2 + borderWidth * 2);
+		batch.draw(debugHealthBarTexture, x - (int) (healthbarWidth * 0.5f) - borderWidth, y + healthbarHeight - borderWidth,
+				healthbarWidth + borderWidth * 2, barHeight * 2 + borderWidth * 2);
+		
 		batch.setColor(1.0f, 0f, 0f, 0.5f);
-		batch.draw(debugHealthBarTexture, x - (int) (spriteWidth * 0.5f), y + spriteHeight,
-				spriteWidth * (currentHealth / (currentStats[Stats.HEALTH.ordinal()] + 0.0f)), barHeight * 2);
+		batch.draw(debugHealthBarTexture, x - (int) (healthbarWidth * 0.5f), y + healthbarHeight,
+				healthbarWidth * (currentHealth / (currentStats[Stats.HEALTH.ordinal()] + 0.0f)), barHeight * 2);
 		batch.setColor(Color.WHITE);
 	}
 
@@ -196,7 +247,7 @@ public abstract class Actor extends GameObject {
 	 * 
 	 * @return the name of the Actor.
 	 */
-	// TODO: Added name generator for Actors
+	// TODO: Add a name generator for Actors
 	public String getName() {
 		return name;
 	}
@@ -231,13 +282,14 @@ public abstract class Actor extends GameObject {
 		this.currentHealth += currentHealth;
 		this.currentHealth = Utils.clamp(0, getStat(Stats.HEALTH), this.currentHealth);
 	}
-	
+
 	public float getMana() {
 		return currentMana;
 	}
-	
+
 	/**
 	 * Adds cm to currentMana. Does NOT directly set mana.
+	 * 
 	 * @param currentMana
 	 */
 	public void setMana(float cm) {
@@ -256,7 +308,7 @@ public abstract class Actor extends GameObject {
 	public void setIdle(boolean idle) {
 		this.idle = idle;
 	}
-	
+
 	public void push(float x, float y) {
 		currentSpeed.x += x;
 		currentSpeed.y += y;
@@ -265,15 +317,15 @@ public abstract class Actor extends GameObject {
 	public void move(float deltaTime, Direction direction, boolean updateDirection) {
 		currentSpeed.x += (currentStats[Stats.MOVEMENT_ACCELERATION.ordinal()] * deltaTime) * direction.x;
 		currentSpeed.x = Utils.clamp(-currentStats[Stats.MOVEMENT_SPEED.ordinal()],
-		currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentSpeed.x);
-		
-		
+				currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentSpeed.x);
+
 		currentSpeed.y += (currentStats[Stats.MOVEMENT_ACCELERATION.ordinal()] * deltaTime) * direction.y;
 		currentSpeed.y = Utils.clamp(-currentStats[Stats.MOVEMENT_SPEED.ordinal()],
-		currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentSpeed.y);
+				currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentSpeed.y);
+
+		// if (updateDirection)
+		// animation.rowSelect(Direction.valueOf(direction.name()).ordinal());
 		
-		if (updateDirection)
-			animation.rowSelect(Direction.valueOf(direction.name()).ordinal());
 		setIdle(false);
 	}
 
@@ -300,6 +352,7 @@ public abstract class Actor extends GameObject {
 	}
 
 	public LinkedList<TempStatModifier> modifierChanges = new LinkedList<TempStatModifier>();
+
 	public void removeTempStat(TempStatModifier stat) {
 		stat.remove = true;
 		modifierChanges.add(stat);
@@ -309,20 +362,20 @@ public abstract class Actor extends GameObject {
 		stat.remove = false;
 		modifierChanges.add(stat);
 	}
-	
+
 	public void finalizeModifiers() {
 		for (TempStatModifier stat : modifierChanges) {
-			if (stat.remove) 
+			if (stat.remove)
 				tempStatModifiers.remove(stat);
-			else 
+			else
 				tempStatModifiers.add(stat);
 		}
 		modifierChanges.removeAll(modifierChanges);
 	}
 
-	
 	/**
 	 * Mouse Left action
+	 * 
 	 * @param x
 	 * @param y
 	 */
@@ -331,9 +384,10 @@ public abstract class Actor extends GameObject {
 			primaryAction.act(x, y);
 		}
 	}
-	
+
 	/**
 	 * Mouse Right Action
+	 * 
 	 * @param x
 	 * @param y
 	 */
@@ -342,23 +396,26 @@ public abstract class Actor extends GameObject {
 			secondaryAction.act(x, y);
 		}
 	}
-	
+
 	/**
 	 * 
-	 * @param Hotkey/Toolbar Actions
-	 * @param x - Mouse cursor X world coordinate.
-	 * @param y - Mouse cursor Y world coordinate.
+	 * @param Hotkey/Toolbar
+	 *            Actions
+	 * @param x
+	 *            - Mouse cursor X world coordinate.
+	 * @param y
+	 *            - Mouse cursor Y world coordinate.
 	 */
 	public void doAction(int action, int x, int y) {
 		if (actions.get(action) != null) {
 			actions.get(action).act(x, y);
 		}
 	}
-	
+
 	public void addActiveAction(Action action) {
 		activeActions.add(action);
 	}
-	
+
 	public void addAction(Action action) {
 		actions.add(action);
 	}

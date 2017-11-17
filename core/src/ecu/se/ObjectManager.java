@@ -133,32 +133,30 @@ public class ObjectManager {
         
     }
     
-    ShapeRenderer debugRenderer = new ShapeRenderer();
-    public void debugRender(Matrix4 projection) {
+    public void debugRender(ShapeRenderer renderer) {
 
-        debugRenderer.begin(ShapeType.Line);
-        debugRenderer.setProjectionMatrix(projection);
-        debugRenderer.setColor(Color.BLUE);
-        debugRenderer.polygon(player.getBounds().getTransformedVertices());
-        
+    	renderer.setColor(Color.BLUE);
+    	renderer.polygon(player.getBounds().getTransformedVertices());
+           	
         updater = actors.iterator();
-        debugRenderer.setColor(Color.GREEN);
+        renderer.setColor(Color.GREEN);
         while(updater.hasNext()) 
         {
             object = updater.next();
-            debugRenderer.polygon(object.getBounds().getTransformedVertices());
+            object.debugRender(renderer);
+//            renderer.polygon(object.getBounds().getTransformedVertices());
         }
         
         
         updater = objects.iterator();
-        debugRenderer.setColor(Color.RED);
+        renderer.setColor(Color.RED);
         while(updater.hasNext()) 
         {
             object = updater.next();
-            debugRenderer.polygon(object.getBounds().getTransformedVertices());
+            object.debugRender(renderer);
+//            renderer.polygon(object.getBounds().getTransformedVertices());
         }
 
-        debugRenderer.end();
         
         
     }
@@ -234,6 +232,7 @@ public class ObjectManager {
      */
     public static boolean isColliding(GameObject object, GameObject object2)
     {
+//    	return Intersector.intersectPolygons(object.getBounds(), object2.getBounds(), null);
         return Intersector.overlapConvexPolygons(object.getBounds(), object2.getBounds());
     }
     

@@ -15,7 +15,7 @@ public class Globals {
     
     public static final int CAMERA_SCROLL_SPEED_X_AXIS = 5;
     public static final int CAMERA_SCROLL_SPEED_Y_AXIS = 5;
-    public static final float DEFAULT_CAMERA_ZOOM = 0.75f;
+    public static final float DEFAULT_CAMERA_ZOOM = 1.0f;
     
     
     // Map Gen Settings (probably as a percent)

@@ -54,6 +54,7 @@ public class Utils {
 //        Polygon poly = new Polygon(new float[]{-width, -height, width, -height, width, height, -width, height});
 
         Polygon poly = new Polygon();
+        poly.setOrigin(0, 0);
         
         switch (ALIGN) {
             case ALIGN_CENTERED:
@@ -67,7 +68,12 @@ public class Utils {
             			});
             	break;
             case ALIGN_BOTTOM_LEFT:
-//                poly.setOrigin(0, 0);
+            	poly.setVertices(new float[]{
+            			(int)(0), 0,
+            			(int)(0), height,
+            			(int)(width), (int)(0),
+            			(int)(width), (int)(height)
+            			});
 
             	poly.setVertices(new float[]{0, 0, width, 0, width, height, 0, height});
             	break;
@@ -96,11 +102,51 @@ public class Utils {
             			});
             	break;
         }
-        poly.setOrigin(x, y);
+        
         poly.setPosition(x, y);
         poly.setScale(1, 1);
         
         return poly;
+    }
+    
+    /*
+     * 
+     * float[] verts = new float[resolution*2];
+    	float currentAngle = 0;
+    	float angleDelta = (360.0f / resolution)*2;
+    	for(int i = 0 ; i < 360/resolution; i+=2) {
+    		currentAngle += angleDelta;
+    		verts[i] = (float) (Math.cos(Math.toRadians(currentAngle)) * width);
+    		verts[i+1] = (float) (Math.sin(Math.toRadians(currentAngle)) * height);
+    	}
+    	
+    	Polygon poly = new Polygon(verts);
+    	poly.setOrigin(0, 0);
+    	poly.setPosition(x, y);
+        poly.setScale(1, 10);
+ 
+    	
+    	return poly;
+     */
+    
+    public static Polygon getEllipseBounds(float x, float y, float width, float height, int resolution) {
+    	float[] verts = new float[(int)(360.0f / resolution) * 2];
+    	float currentAngle = 0;
+    	float angleDelta = (360.0f / resolution);
+    	for(int i = 0 ; i < (360/resolution)*2; i+=2) {
+    		currentAngle += angleDelta;
+    		verts[i] = (float) (Math.cos(Math.toRadians(currentAngle)) * width);
+    		verts[i+1] = (float) (Math.sin(Math.toRadians(currentAngle)) * height);
+    	}
+    	
+    	Polygon poly = new Polygon(verts);
+    	poly.setOrigin(0, 0);
+    	poly.setPosition(x, y);
+    	poly.setScale(1, 1);
+    	
+    	
+    	return poly;
+    	
     }
     
     /**
