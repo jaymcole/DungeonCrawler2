@@ -21,14 +21,14 @@ public class Widget_ProgressBar extends Widget {
 //	protected Texture foregroundTexture;
 	protected Texture texture;
 	
-	public Widget_ProgressBar(float x, float y, float width, float height, Window parent) {
+	public Widget_ProgressBar(float x, float y, float width, float height, Window parent, Color bgc, Color fgc) {
 		super(x, y, width, height, parent);
 		texture = AssetManager.getTexture("texture/misc/white.png").getTexture();
 		
 		useText = true;
 		
-		backgroundColor = Color.MAGENTA;
-		foregroundColor = Color.SKY;
+		backgroundColor = bgc;
+		foregroundColor = fgc;
 		
 		progress = 15;
 		max = 100;

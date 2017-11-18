@@ -1,6 +1,6 @@
 package ecu.se.gui;
 
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -17,13 +17,13 @@ public class Widget_Image extends Widget{
 
 	@Override
 	public boolean update(float deltaTime, int mouseX, int mouseY) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void render(SpriteBatch batch) {
 //		batch.setBlendFunction( GL20.GL_SRC_ALPHA,  GL20.GL_SRC_ALPHA);
+		batch.setColor(Color.WHITE);
 		batch.draw(texture, x, y, width, height);
 	}
 

@@ -31,7 +31,6 @@ public abstract class Widget_Button extends Widget{
 	public Widget_Button(float x, float y, float width, float height, Window parent) {
 		super(x, y, width, height, parent);
 		texture = AssetManager.getTexture("texture/misc/white.png").getTexture();
-		
 		defaultColor = Color.MAGENTA;
 		highlightColor = Color.BROWN;
 		activeColor = Color.SKY;
@@ -43,16 +42,18 @@ public abstract class Widget_Button extends Widget{
 
 	@Override
 	public boolean update(float deltaTime, int mouseX, int mouseY) {
+		
 		if (bounds.contains(mouseX, mouseY)) {
 			currentColor = highlightColor;
 			
 			if (Game.leftMouseState == Game.MOUSE_PRESSED) {
 				mousePressed();
 				activeWidget = true;
-			} 
+			}
 			
-			if (!activeWidget)
+			if (!activeWidget) 
 				return true;
+
 			
 			if (Game.leftMouseState == Game.MOUSE_RELEASED) {
 				mouseReleased();
@@ -63,12 +64,18 @@ public abstract class Widget_Button extends Widget{
 		} else {
 			currentColor = defaultColor;
 		}
+		
+		if (Game.leftMouseState == Game.MOUSE_RELEASED) 
+			activeWidget = false;
+		
 		return false;
 	}
 
 	@Override
 	public void render(SpriteBatch batch) {
 		batch.setColor(currentColor);
+		if (activeWidget)
+			batch.setColor(activeColor);
 		batch.draw(texture, x, y, width, height);
 		if (useText) {
 			font.setColor(textColor);

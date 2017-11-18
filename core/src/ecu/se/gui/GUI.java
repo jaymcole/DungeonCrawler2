@@ -15,6 +15,7 @@ import actors.Player;
 import assetManager.AssetManager;
 import assetManager.TextureAsset;
 import ecu.se.Game;
+import ecu.se.Globals;
 
 public class GUI {
 
@@ -42,6 +43,8 @@ public class GUI {
 	public Player player;
 	private Window[] windows;
 
+	private BitmapFont font;
+	
 	public GUI(Player player, int screenWidth, int screenHeight) {
 		this.player = player;
 		halfWidth = (int) (screenWidth * 0.5);
@@ -56,6 +59,7 @@ public class GUI {
 				new Window_Settings()
 		};
 		currentWindow = WINDOW_HUD;
+		font = AssetManager.getFont("font/font_jay.ttf", 50).getFont();
 	}
 
 	private int mouseX;
@@ -63,18 +67,18 @@ public class GUI {
 	boolean inputUsed;
 
 	public void update(float deltaTime) {
-		mouseX = Gdx.input.getX();
-		mouseY = Gdx.input.getY();
-		Vector3 mouse = hudCamera.unproject(new Vector3(mouseX, mouseY, 0));
+		Vector3 mouse = hudCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+		mouseX = (int) mouse.x;
+		mouseY = (int) mouse.y;
 		inputUsed = false;
 		if (windows[currentWindow] != null) {
-			inputUsed = windows[currentWindow].update(deltaTime, (int) mouse.x, (int) mouse.y);
+			inputUsed = windows[currentWindow].update(deltaTime, mouseX, mouseY);
 		}
 	}
 
 	public void render(SpriteBatch batch) {
         oldProjectionMatrix = batch.getProjectionMatrix();
-        batch.setProjectionMatrix(hudCamera.combined);
+        batch.setProjectionMatrix(hudCamera.projection);
         
         windows[WINDOW_HUD].render(batch);
         
@@ -86,6 +90,16 @@ public class GUI {
         
         
         // END RENDER CODE
+        if (Globals.DEBUG) {
+//        	font.draw(batch, (convertX(mouseX) + defaultWidth * 0.5f) + ", " + (convertY(mouseY) + defaultHeight * 0.5f), 100 - 960, 100 - 540);
+//        	font.draw(batch, getProportionalX(mouseX + Gdx.graphics.getWidth() * 0.5f) + ", " + getProportionalY(mouseY + Gdx.graphics.getHeight() * 0.5f), 100 - 960, 100 - 540);
+//        	font.draw(batch, (mouseX + Gdx.graphics.getWidth() * 0.5f) + ", " + (mouseY + Gdx.graphics.getHeight() * 0.5f), mouseX, mouseY);
+        	font.draw(batch, (mouseX + Gdx.graphics.getWidth() * 0.5f) + ", " + (mouseY + Gdx.graphics.getHeight() * 0.5f), 100 - 960, 100 - 540);
+        }
+        
+        
+        
+        
         batch.setProjectionMatrix(oldProjectionMatrix);
         batch.setColor(Color.WHITE);
     }
@@ -99,6 +113,8 @@ public class GUI {
 		if (windows[currentWindow] != null) {
 			windows[currentWindow].debugRender(renderer);
 		}
+		
+		
 	}
 
 	public static int convertX(int x) {

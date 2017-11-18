@@ -46,6 +46,7 @@ public abstract class Actor extends GameObject {
 	protected int spriteHeight;// = 48;
 //	protected TextureRegion textureRegion;
 	protected boolean awake;
+	protected boolean invulnerable;
 
 	/**
 	 * Used for movement modifiers like explosions.
@@ -141,6 +142,7 @@ public abstract class Actor extends GameObject {
 	 *            Time between each frame.
 	 */
 	public void update(float deltaTime) {
+		invulnerable = false;
 		updateStats(deltaTime);
 		act(deltaTime);
 		updateMovement(deltaTime);
@@ -279,6 +281,8 @@ public abstract class Actor extends GameObject {
 	 * @param currentHealth
 	 */
 	public void setHealth(float currentHealth) {
+		if (invulnerable)
+			return;
 		this.currentHealth += currentHealth;
 		this.currentHealth = Utils.clamp(0, getStat(Stats.HEALTH), this.currentHealth);
 	}

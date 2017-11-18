@@ -12,7 +12,7 @@ public class Spell_Fireball extends Spell{
 		
 		baseCastSpeed 	= 0;
 		baseCooldown 	= 0;
-		baseManaCost 	= 0.1f;
+		baseManaCost 	= 1f;
 	}
 
 	@Override

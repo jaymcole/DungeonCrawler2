@@ -27,7 +27,7 @@ public class Player extends Actor {
 		super(x, y, z, map, spriteSheet);
 		currentSpeed = new Vector2(0, 0);
 		Archiver.set(TimeRecords.TIME_IDLE, false);
-		currentHealth = 100;
+		currentHealth = 5;
 		dir = Direction.NORTH;
 		team = Team.PLAYER;
 	

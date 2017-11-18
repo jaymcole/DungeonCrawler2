@@ -37,8 +37,7 @@ public abstract class Widget {
 		useText = false;
 		textColor = Color.WHITE;	
 		glyphLayout = new GlyphLayout();
-		font = AssetManager.getFont("font/font_jay.ttf", 100).getFont();
-//		font.getData().setScale(GUI.conversionX, GUI.conversionY);
+		font = AssetManager.getFont("font/font_jay.ttf", 50).getFont();
 		bounds = Utils.getRectangleBounds(this.x, this.y, this.width, this.height, Utils.ALIGN_BOTTOM_LEFT);
 	}
 		
