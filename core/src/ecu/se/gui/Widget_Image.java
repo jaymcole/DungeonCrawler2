@@ -1,6 +1,5 @@
 package ecu.se.gui;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -23,7 +22,7 @@ public class Widget_Image extends Widget{
 	@Override
 	public void render(SpriteBatch batch) {
 //		batch.setBlendFunction( GL20.GL_SRC_ALPHA,  GL20.GL_SRC_ALPHA);
-		batch.setColor(Color.WHITE);
+		batch.setColor(defaultColor);
 		batch.draw(texture, x, y, width, height);
 	}
 

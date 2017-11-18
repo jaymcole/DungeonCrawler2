@@ -90,7 +90,7 @@ public class Game extends ApplicationAdapter {
 					player));
 		}
 
-		hud = new GUI(player, screenWidth, screenHeight);
+		hud = new GUI(player, screenWidth, screenHeight, this);
 		camera = new OrthographicCamera(screenWidth, screenHeight);
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
@@ -127,6 +127,10 @@ public class Game extends ApplicationAdapter {
 	private float halfHeight;
 	@Override
 	public void render() {
+		if (currentState == GAME_STATE_EXITING)
+			dispose();
+		
+		
 		input(); // JUST MOVED THIS FROM THE BOTTOM TO THE TOP
 
 		update();
@@ -234,8 +238,7 @@ public class Game extends ApplicationAdapter {
 			pauseGame();
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-			//TODO: Close the game without causing it to crash!
-			dispose();
+			hud.closeWindow(GUI.WINDOW_HUD, GUI.WINDOW_MAIN_MENU);;
 		}
 
 		
@@ -297,14 +300,18 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void dispose() {
-		Gdx.app.exit();
-		System.out.println("Disposing everything else");
-		Archiver.dispose();
-		batch.dispose();
+//		System.out.println("Disposing assets");
+//		AssetManager.dispose();
+		System.out.println("Disposing Archiver");
+		Archiver.dispose();		
+		System.out.println("Disposing Objects");
 		ObjectManager.dispose();
+		System.out.println("Disposing Map");
 		Map.dispose();
+		System.out.println("Disposing Lighting");
 		Lighting.dispose();
-		AssetManager.dispose();
+		System.out.println("Exiting");
+		Gdx.app.exit();
 	}
 
 }

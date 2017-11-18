@@ -5,14 +5,49 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public abstract class Window {
 
+	/**
+	 * The name of this window.
+	 * 		- Added automatically
+	 */
+	protected String windowName = "missing_name";
 	
+	/**
+	 * All of the widgets that this windows owns (updates/renders).
+	 */
 	protected Widget[] widgets;
 	
-	public Window() {
-		widgets = new Widget[0];
+	/**
+	 * parentGUI
+	 */
+	protected GUI gui;
+	
+	protected Window parent;
+	
+	public Window(GUI gui, Window parent) {
+		this.gui = gui;
+		this.parent = parent;
+		initWindow();
 		buildWindow();
 	}
 	
+	public Window(GUI gui) {
+		this.gui = gui;
+		this.parent = null;
+		initWindow();
+		buildWindow();
+	}
+	
+	/**
+	 * Initial window setup required for all windows.
+	 */
+	private void initWindow() {
+		widgets = new Widget[0];
+		windowName = this.getClass().getSimpleName();
+	}
+	
+	/**
+	 * All Widgets for this window should initialized and added to widgets here.
+	 */
 	protected abstract void buildWindow();
 	
 	/**
@@ -24,7 +59,14 @@ public abstract class Window {
 	 */
 	public boolean update(float deltaTime, int mouseX, int mouseY) {
 		boolean mouseUsed = false;
+		if (widgets == null) {
+			System.err.println("[" + windowName + "] widgets array was null");
+		}
+		
 		for(Widget w : widgets) {
+			if (w == null) {
+				System.err.println("[" + windowName + "] widget was null: ");
+			}
 			if (w.update(deltaTime, mouseX, mouseY))
 				 mouseUsed = true;
 		}
@@ -32,7 +74,7 @@ public abstract class Window {
 	}
 	
 	/**
-	 * Renders all widgets associated with this window
+	 * Renders all widgets associated with this window.
 	 * @param batch
 	 */
 	public void render(SpriteBatch batch) {
@@ -41,9 +83,28 @@ public abstract class Window {
 		}
 	}
 	
+	/**
+	 * Renders the debug view for this window.
+	 * @param renderer
+	 */
 	public void debugRender(ShapeRenderer renderer) {
 		for(Widget w : widgets) {
 			w.debugRender(renderer);
 		}
 	}
+
+	/**
+	 * The action this window should perform when it loses focus.
+	 */
+	public void onPause() {
+		
+	}
+	
+	/**
+	 * The action this window should perform when it gains focus.
+	 */
+	public void onResume() {
+		
+	}
+	
 }

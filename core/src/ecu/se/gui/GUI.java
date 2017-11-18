@@ -3,81 +3,115 @@ package ecu.se.gui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 import actors.Player;
-import assetManager.AssetManager;
-import assetManager.TextureAsset;
 import ecu.se.Game;
-import ecu.se.Globals;
 
 public class GUI {
 
-	private static int halfWidth, halfHeight;
-	private int x, y;
+	/**
+	 * The Orthographic Camera used to render windows.
+	 */
 	private OrthographicCamera hudCamera;
-	private Matrix4 oldProjectionMatrix;
-
+	
+	/**
+	 * Variables used to convert between varying display resolutions.
+	 */
 	public static final float defaultWidth = 1920.0f;
 	public static final float defaultHeight = 1080.0f;
+	private static int halfWidth, halfHeight;
 	public static float conversionX;
 	public static float conversionY;
 
-	// public static final int MOUSE_PRESSED = 0;
-	// public static final int MOUSE_RELEASED = 0;
-	// public static final int MOUSE_DOWN = 0;
-
-	public static final int WINDOW_PAUSED		= 0;
-	public static final int WINDOW_HUD			= 1;
-	public static final int WINDOW_MAIN_MENU 	= 2;
-	public static final int WINDOW_SETTINGS	 	= 3;
-	public static final int WINDOW_INVENTORY 	= 4;
+	/**
+	 * Windows index location used in windows
+	 * Used for rending and switching to the correct window.
+	 */
+	public static final int WINDOW_PAUSED			= 0;
+	public static final int WINDOW_HUD				= 1;
+	public static final int WINDOW_MAIN_MENU 		= 2;
+	public static final int WINDOW_SETTINGS	 		= 3;
+	public static final int WINDOW_INVENTORY 		= 4;
+	public static final int WINDOW_PLAYER_STATS 	= 5;
 	public static int currentWindow;
 
+	/**
+	 * The player - Used by widgets to update themselves and perform actions.
+	 */
 	public Player player;
-	private Window[] windows;
-
-	private BitmapFont font;
 	
-	public GUI(Player player, int screenWidth, int screenHeight) {
+	/**
+	 * All windows used
+	 */
+	private Window[] windows;
+	
+	public static Game game;
+
+	
+	public GUI(Player player, int screenWidth, int screenHeight, Game game) {
+		this.game = game;
 		this.player = player;
 		halfWidth = (int) (screenWidth * 0.5);
 		conversionX = screenWidth / defaultWidth;
 		halfHeight = (int) (screenHeight * 0.5);
 		conversionY = screenHeight / defaultHeight;
+		
 		hudCamera = new OrthographicCamera(screenWidth, screenHeight);
+		
 		windows = new Window[] { 
-				new Window_PauseScreen(), 
-				new Window_HUD(),
-				new Window_MainMenu(),
-				new Window_Settings()
+				new Window_PauseScreen(this), 
+				new Window_HUD(this),
+				new Window_MainMenu(this),
+				new Window_Settings(this),
+				new Window_Inventory(this),
+				new Window_PlayerStats(this)
 		};
-		currentWindow = WINDOW_HUD;
-		font = AssetManager.getFont("font/font_jay.ttf", 50).getFont();
+		currentWindow = WINDOW_MAIN_MENU;
 	}
 
+	/**
+	 * Mouse coordinates corrected for the screen position
+	 */
 	private int mouseX;
 	private int mouseY;
+	
+	/**
+	 * True if a widget used to mouse input
+	 */
 	boolean inputUsed;
 
+	/**
+	 * Updates the active windows.
+	 * @param deltaTime
+	 */
 	public void update(float deltaTime) {
 		Vector3 mouse = hudCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 		mouseX = (int) mouse.x;
 		mouseY = (int) mouse.y;
 		inputUsed = false;
+		
+		
+		// Updates the currently displayed window.
 		if (windows[currentWindow] != null) {
 			inputUsed = windows[currentWindow].update(deltaTime, mouseX, mouseY);
 		}
+		
+		// Updates the HUD IF it wasn't already updated AND 
+		if (!inputUsed && currentWindow != WINDOW_HUD)
+			if (inputUsed || windows[WINDOW_HUD].update(deltaTime, mouseX, mouseY))
+				inputUsed = true;
 	}
 
+	/**
+	 * Renders the appropriate window(s).
+	 * 		May render more than one at a time. 
+	 * 		Example: The HUD should render behind the Player's inventory.
+	 * @param batch
+	 */
 	public void render(SpriteBatch batch) {
-        oldProjectionMatrix = batch.getProjectionMatrix();
         batch.setProjectionMatrix(hudCamera.projection);
         
         windows[WINDOW_HUD].render(batch);
@@ -87,74 +121,146 @@ public class GUI {
         
         if (currentWindow != WINDOW_HUD)        
         	windows[currentWindow].render(batch);
-        
-        
-        // END RENDER CODE
-        if (Globals.DEBUG) {
-//        	font.draw(batch, (convertX(mouseX) + defaultWidth * 0.5f) + ", " + (convertY(mouseY) + defaultHeight * 0.5f), 100 - 960, 100 - 540);
-//        	font.draw(batch, getProportionalX(mouseX + Gdx.graphics.getWidth() * 0.5f) + ", " + getProportionalY(mouseY + Gdx.graphics.getHeight() * 0.5f), 100 - 960, 100 - 540);
-//        	font.draw(batch, (mouseX + Gdx.graphics.getWidth() * 0.5f) + ", " + (mouseY + Gdx.graphics.getHeight() * 0.5f), mouseX, mouseY);
-        	font.draw(batch, (mouseX + Gdx.graphics.getWidth() * 0.5f) + ", " + (mouseY + Gdx.graphics.getHeight() * 0.5f), 100 - 960, 100 - 540);
-        }
-        
-        
-        
-        
-        batch.setProjectionMatrix(oldProjectionMatrix);
+
         batch.setColor(Color.WHITE);
     }
 
+	/**
+	 * Renders the debug view. 
+	 * 	i.e., widget bounds + widget (x,y)
+	 * @param renderer
+	 */
 	public void debugRender(ShapeRenderer renderer) {
-
-		// Matrix4 projection = hudCamera.projection;
-		// projection.scale(conversionX, conversionY, 1);
 		renderer.setColor(Color.GOLDENROD);
 		renderer.setProjectionMatrix(hudCamera.projection);
 		if (windows[currentWindow] != null) {
 			windows[currentWindow].debugRender(renderer);
 		}
-		
-		
 	}
 
+	/**
+	 * @param x
+	 * @return A corrected x coordinate for the current screen resolution.
+	 */
 	public static int convertX(int x) {
 		return (int) (x * conversionX);
 	}
 
+	/**
+	 * @param y
+	 * @return A corrected y coordinate for the current screen resolution.
+	 */
 	public static int convertY(int y) {
 		return (int) (y * conversionY);
 	}
 
+	/**
+	 * @param x
+	 * @return A corrected x coordinate for the current screen resolution.
+	 */
 	public static float convertX(float x) {
 		return (int) (x * conversionX);
 	}
 
+	/**
+	 * @param y
+	 * @return A corrected y coordinate for the current screen resolution.
+	 */
 	public static float convertY(float y) {
 		return (int) (y * conversionY);
 	}
 
+	/**
+	 * @param x
+	 * @return A corrected x coordinate for the current screen resolution IN screen coordinates.
+	 * 		Note: (0,0) in screen coordinates is the middle of the screen.
+	 */
 	public static int getProportionalX(int x) {
 		return convertX(x) - halfWidth;
 	}
 
+	/**
+	 * @param y
+	 * @return A corrected y coordinate for the current screen resolution IN screen coordinates.
+	 * 		Note: (0,0) in screen coordinates is the middle of the screen.
+	 */
 	public static int getProportionalY(int y) {
 		return convertY(y) - halfHeight;
 	}
 
+	/**
+	 * @param x
+	 * @return A corrected x coordinate for the current screen resolution IN screen coordinates.
+	 * 		Note: (0,0) in screen coordinates is the middle of the screen.
+	 */
 	public static float getProportionalX(float x) {
 		return convertX(x) - halfWidth;
 	}
 
+	/**
+	 * @param y
+	 * @return A corrected y coordinate for the current screen resolution IN screen coordinates.
+	 * 		Note: (0,0) in screen coordinates is the middle of the screen.
+	 */
 	public static float getProportionalY(float y) {
 		return convertY(y) - halfHeight;
 	}
 
+	/**
+	 * 
+	 * @return The Orthographic Camera used by the GUI
+	 */
 	public OrthographicCamera getCamera() {
 		return hudCamera;
 	}
 
+	/**
+	 * Determines whether Game should block input to the player. 
+	 * 	Example: If a button is pressed, the player's character should not perform an action based on that input. 
+	 * @return true if a widget used the mouse action
+	 */
 	public boolean mouseUsed() {
 		return inputUsed;
+	}
+	
+	/**
+	 * Sets the current window.
+	 * @param window - The window to switch to.
+	 * 			window should be one the GUI.WINDOW_* integers.
+	 */
+	public void setWindow(int window) {
+		System.out.println("Switch window from " + currentWindow + " to " + window);
+		if (window == currentWindow) {
+			return;
+		} 
+//		else if (window == WINDOW_HUD) {
+//			currentWindow = window;
+//			return;
+//		}
+
+//		if (window > windows.length && window >= 0) {
+			windows[window].onResume();
+			windows[currentWindow].onPause();
+			currentWindow = window;
+//		}
+	}
+	
+	/**
+	 * Closes the top most window OR sets currentWindow to window if no other windows are open.
+	 * 	Example: 
+	 * 		If WINDOW_SETTINGS is open, calling this method closes it.
+	 * @param window
+	 */
+	public void closeWindow(int closeTo, int openTo) {
+		if (currentWindow == WINDOW_HUD) {
+			setWindow(openTo);
+		} else {
+			setWindow(closeTo);
+		}
+	}
+	
+	public Game getGame() {
+		return game;
 	}
 
 }

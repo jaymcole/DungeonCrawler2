@@ -23,6 +23,8 @@ public abstract class Widget {
 	protected String text;
 	protected Color textColor;
 	
+	protected Color defaultColor;
+	
 	protected GlyphLayout glyphLayout;
 	protected float textX, textY;
 	
@@ -34,6 +36,7 @@ public abstract class Widget {
 		this.height = GUI.convertY(height);
 		this.parent = parent;
 		
+		defaultColor = Color.WHITE;
 		useText = false;
 		textColor = Color.WHITE;	
 		glyphLayout = new GlyphLayout();
@@ -81,5 +84,13 @@ public abstract class Widget {
 	 */
 	public void setFont(BitmapFont font) {
 		this.font = font;
+	}
+	
+	/**
+	 * Sets defaultColor to c
+	 * @param c
+	 */
+	public void setDefaultColor(Color c) {
+		defaultColor = c;
 	}
 }

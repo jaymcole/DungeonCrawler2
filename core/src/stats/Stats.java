@@ -1,6 +1,8 @@
 package stats;
 
 public enum Stats {
+	//TODO: Add nice presentation text for all stats
+	
 	// Base Player Stats
 	STRENGTH,
 	HEALTH,

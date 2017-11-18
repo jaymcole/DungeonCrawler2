@@ -1,6 +1,5 @@
 package ecu.se.gui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,15 +7,32 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import assetManager.AssetManager;
 import ecu.se.Game;
 
-public abstract class Widget_Button extends Widget{
-	
-	protected Color defaultColor;
+public abstract class Widget_Button extends Widget{	
+	/**
+	 * The color/tint to use when button is highlighted
+	 */
 	protected Color highlightColor;
+	
+	/**
+	 * The color/tint to use when button is active
+	 */
 	protected Color activeColor;
-	protected Color currentColor;
+	
+	/**
+	 * The texture render this button with
+	 */
 	protected Texture texture;
-	protected Window parent;
+	
+	/**
+	 * True when the mouse is over this button AND clicking
+	 */
 	protected boolean activeWidget;
+	
+	/**
+	 * True when the mouse is over this button
+	 */
+	protected boolean highlight;
+	
 
 	public Widget_Button(float x, float y, float width, float height, Window parent, String text) {
 		super(x, y, width, height, parent);
@@ -36,15 +52,26 @@ public abstract class Widget_Button extends Widget{
 		activeColor = Color.SKY;
 	}
 	
+	/**
+	 * The action this button performs WHEN the left mouse button is pressed AND over this button.
+	 */
 	public void mousePressed(){};
+	
+	/**
+	 * The action this button performs while the left mouse button is down AND over this button.
+	 */
 	public void mouseDown(){};
+	
+	/**
+	 * The action this button performs WHEN the left mouse button is releases AND over this button.
+	 */
 	public void mouseReleased(){};
 
 	@Override
 	public boolean update(float deltaTime, int mouseX, int mouseY) {
 		
 		if (bounds.contains(mouseX, mouseY)) {
-			currentColor = highlightColor;
+			highlight = true;
 			
 			if (Game.leftMouseState == Game.MOUSE_PRESSED) {
 				mousePressed();
@@ -62,7 +89,7 @@ public abstract class Widget_Button extends Widget{
 				mouseDown();
 			return true;
 		} else {
-			currentColor = defaultColor;
+			highlight = false;
 		}
 		
 		if (Game.leftMouseState == Game.MOUSE_RELEASED) 
@@ -73,13 +100,37 @@ public abstract class Widget_Button extends Widget{
 
 	@Override
 	public void render(SpriteBatch batch) {
-		batch.setColor(currentColor);
+		batch.setColor(defaultColor);
+	
+		if (highlight)
+			batch.setColor(highlightColor);
+		
 		if (activeWidget)
 			batch.setColor(activeColor);
+		
 		batch.draw(texture, x, y, width, height);
+		
 		if (useText) {
 			font.setColor(textColor);
 			font.draw(batch, text, textX, textY);
 		}
 	}	
+	
+
+	
+	/**
+	 * Sets activeColor to c
+	 * @param c
+	 */
+	public void setActiveColor(Color c) {
+		activeColor= c;
+	}
+
+	/**
+	 * Sets highlightColor to c
+	 * @param c
+	 */
+	public void setHighlightColor(Color c) {
+		highlightColor = c;
+	}
 }
