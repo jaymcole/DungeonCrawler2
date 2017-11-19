@@ -84,10 +84,12 @@ public class Game extends ApplicationAdapter {
 		objectManager = new ObjectManager();
 		map = new Map();
 		Map.setScreenResolution(screenWidth, screenHeight);
-		player = new Player(Map.getFloorIn(0, 0).x, Map.getFloorIn(0, 0).y, 0, map, camera,
+		player = new Player(Map.getFloorUp(0, 0).x, Map.getFloorUp(0, 0).y, 0, map, camera,
 				"texture/spritesheet/player.png");
 		ObjectManager.setPlayer(player);
+		
 		ObjectManager.add(new ItemObject(player.getX(), player.getY(), "Sprite LOL", "texture/test/spritePlaceholder.png"));
+		
 		Random random = new Random();
 		for (int i = 0; i < 50; i++) {
 			ObjectManager.add(new RangedBadGuy(random.nextInt(Globals.MAP_TILE_WIDTH * 128),

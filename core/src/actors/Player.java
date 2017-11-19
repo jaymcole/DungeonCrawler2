@@ -45,7 +45,7 @@ public class Player extends Actor {
 		currentSpeed.x *= currentStats[Stats.MOVEMENT_DRAG.ordinal()] * deltaTime;
 		currentSpeed.y *= currentStats[Stats.MOVEMENT_DRAG.ordinal()] * deltaTime;
 
-		if (map.currentTile((int) x, (int) y) == null || map.currentTile((int) x, (int) y).getWall()) {
+		if (map.getTile((int) x, (int) y) == null || map.getTile((int) x, (int) y).getWall()) {
 			x = oldx;
 			y = oldy;
 		}

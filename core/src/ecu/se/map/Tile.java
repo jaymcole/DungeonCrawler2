@@ -1,21 +1,26 @@
 package ecu.se.map;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import ecu.se.GameObject;
 import ecu.se.Utils;
+import ecu.se.objects.ItemObject;
 
 public class Tile extends GameObject{
     private int x, y, width, height;
-    private Texture texture;
+    private TextureRegion texture;
 //    private TextureRegion textureRegion;
     
     private boolean isWall;
     
-    private ArrayList<GameObject> objects;
+    private LinkedList<GameObject> objects;
+    private LinkedList<GameObject> decals;
         
     public Tile(int x, int y,  int width, int height) {
         super(x, y);
@@ -23,38 +28,53 @@ public class Tile extends GameObject{
         this.y = y;
         this.width = width;
         this.height = height;
-        objects = new ArrayList<GameObject>();
+        decals = new LinkedList<GameObject> ();
+        objects = new LinkedList<GameObject>();
         bounds = Utils.getRectangleBounds(x, y, width, height, Utils.ALIGN_BOTTOM_LEFT);
     }
     
     @Override
     public void update(float deltaTime) {
+    	for(GameObject object : decals) {
+    		if (!object.isIdle())
+    			object.update(deltaTime);
+        }
         
+        
+        for(GameObject object : objects) {
+        	if (!object.isIdle())
+        		object.update(deltaTime);
+        }
     }
 
     public void render(SpriteBatch batch) {
         if(texture != null) {
             batch.draw(texture, x, y, width, height);
         }
+        for(GameObject g : decals) {
+        	g.render(batch);
+        }
+        
         
         for(GameObject object : objects) {
             object.render(batch);
         }
     }
-
-    public void dispose() {
-        if(texture!= null)
-            texture.dispose();
+    
+    public void debugRender(ShapeRenderer renderer) {
+    	renderer.polygon(bounds.getTransformedVertices());
+    	
+    	for(GameObject g : decals) {
+        	g.debugRender(renderer);
+    	}
         
         for(GameObject object : objects) {
-            object.dispose();
-        } 
+            object.debugRender(renderer);
+        }
     }
     
-    public void setTexture(Texture texture) {
-        this.texture = texture;
-//        this.textureRegion = new TextureRegion(texture);
-        
+    public void setTexture(TextureRegion texture) {
+        this.texture = texture;        
     }
     
     public void setX (int x) { 
@@ -72,4 +92,27 @@ public class Tile extends GameObject{
     public boolean getWall() {
         return isWall;
     }
+    
+    public void addObject(GameObject object) {
+    	if (object instanceof ItemObject) {
+    		objects.add(object);
+    	}
+    }
+    
+    public void remove(GameObject object) {
+    	if (object instanceof ItemObject) {
+    		objects.remove(object);
+    	}
+    }
+    
+    public void dispose() {
+        for(GameObject object : objects) {
+            object.dispose();
+        }
+        
+        for(GameObject object : decals) {
+            object.dispose();
+        } 
+    }
+
 }

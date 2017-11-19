@@ -2,12 +2,10 @@ package ecu.se.objects;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector3;
 
 import assetManager.AssetManager;
-import assetManager.TextureAsset;
 import ecu.se.GameObject;
-import ecu.se.ObjectManager;
+import ecu.se.Utils;
 
 public class ItemObject extends GameObject {
 
@@ -20,6 +18,7 @@ public class ItemObject extends GameObject {
 		super(x, y);
 		this.name = name;
 		this.texture = AssetManager.getTexture(path).getTexture();
+		bounds = Utils.getRectangleBounds(x, y, texture.getWidth(), texture.getHeight(), Utils.ALIGN_BOTTOM_LEFT);
 	}
 
 	public void update(float deltaTime) {

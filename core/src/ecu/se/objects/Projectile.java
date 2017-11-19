@@ -71,7 +71,7 @@ public class Projectile extends GameObject {
 		animation.update(deltaTime);
 		animation.setXY((int) x, (int) y);
 		
-		if(Map.currentTile((int)x, (int)y) == null) {
+		if(Map.getTile((int)x, (int)y) == null) {
 			kill();
 		}
 		

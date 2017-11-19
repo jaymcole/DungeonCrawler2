@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import assetManager.AssetManager;
 import ecu.se.Globals;
 import ecu.se.Utils;
 import ecu.se.objects.Light;
@@ -67,8 +68,6 @@ public class Generate {
 			generatePath(remainingNodes.getFirst());
 		}
 
-		// Minimize map;
-		// printFloor();
 		map = minimizeMap();
 		finalizeFloor(map, random, floor);
 		floor.generatedMap(tiles, lights, up, down, mapWidth, mapHeight);
@@ -125,7 +124,7 @@ public class Generate {
 	}
 
 	private static void genRoom(BuildNode node, int width, int length, boolean extend, boolean intersect) {
-		setMapInt(node, SPAWN, true);
+//		setMapInt(node, SPAWN, true);
 		width = Utils.clamp(3, 100, width);
 		length = Utils.clamp(3, 100, length);
 
@@ -336,7 +335,7 @@ public class Generate {
 	private static void makeTileWalkable(int x, int y) {
 		if (tiles[x][y] == null) {
 			tiles[x][y] = new Tile(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
-			tiles[x][y].setTexture(Utils.loadTexture("texture/floor/castle_tile.jpg"));
+			tiles[x][y].setTexture(AssetManager.getTexture("texture/floor/castle_tile.jpg").getTextureRegion());
 			tiles[x][y].setWall(false);
 		}
 	}

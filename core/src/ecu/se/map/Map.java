@@ -66,7 +66,7 @@ public class Map {
         for(int i = 0; i < tilesHorizontal; i++) {
             for(int j = 0; j < tilesVertical; j++) {
                 if(visibleTiles[i][j] != null) {
-                	renderer.polygon(visibleTiles[i][j].getBounds().getTransformedVertices());
+                	visibleTiles[i][j].debugRender(renderer);
                 }
             }
         }
@@ -79,15 +79,33 @@ public class Map {
         }
     }
     
-    public static Tile currentTile(int x, int y) {
+    /**
+     * 
+     * @param x - x world coordinate
+     * @param y - y world coordinate
+     * @return the tile that contains position (x, y)
+     */
+    public static Tile getTile(int x, int y) {
         return currentFloor.getTile(x, y);
     }
     
-    public static Vector2 getFloorIn(int x, int y) {
+    /**
+     * 
+     * @param x - x world coordinate
+     * @param y - y world coordinate
+     * @return The tile with the staircase to move one floor up.
+     */
+    public static Vector2 getFloorUp(int x, int y) {
         return currentFloor.getFloorIn(x,y);
     }
     
-    public static Vector2 getFloorOut(int x, int y) {
+    /**
+     * 
+     * @param x - x world coordinate
+     * @param y - y world coordinate
+     * @return The tile containing the staircase to move one floor down.
+     */
+    public static Vector2 getFloorDown(int x, int y) {
         return currentFloor.getFloorOut(x,y);
     }
     

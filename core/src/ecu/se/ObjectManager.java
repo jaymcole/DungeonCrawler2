@@ -12,6 +12,8 @@ import com.badlogic.gdx.math.Intersector;
 import actors.Actor;
 import actors.Player;
 import ecu.se.map.Direction;
+import ecu.se.map.Map;
+import ecu.se.objects.ItemObject;
 
 public class ObjectManager {
 	
@@ -171,13 +173,23 @@ public class ObjectManager {
             if(object.alive) {
             	if(object instanceof Actor) {
             		actors.add(object);
-            	} else
-            		objects.add(object);
+            	} else {
+//            		if (object instanceof ItemObject) {
+//            			Map.getTile((int)object.x, (int)object.y).addObject(object);
+//            		} else {
+            			objects.add(object);
+//            		}
+            	}
             } else {
             	if(object instanceof Actor) {
             		actors.remove(object);
-            	} else
-            		objects.remove(object);
+            	} else {
+//            		if (object instanceof ItemObject) {
+//                			Map.getTile((int)object.x, (int)object.y).addObject(object);           			
+//                		} else {
+                			objects.remove(object);
+//                		}
+            	}
             }
         }
         waitList.clear();

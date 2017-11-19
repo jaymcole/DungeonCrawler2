@@ -35,12 +35,12 @@ public abstract class GameObject implements Comparable<GameObject> {
 		bounds = Utils.getRectangleBounds(x, y, 5, 5, Utils.ALIGN_CENTERED);
 		team = Team.NEUTRAL;
 	}
-	
+
 	public void setPosition(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
-	
+
 	public void setPosition(Vector2 pos) {
 		x = pos.x;
 		y = pos.y;
@@ -52,10 +52,16 @@ public abstract class GameObject implements Comparable<GameObject> {
 
 	public abstract void dispose();
 
-	 public void debugRender(ShapeRenderer render) {
-		 render.polygon(bounds.getTransformedVertices());
-		 render.ellipse(bounds.getOriginX(), bounds.getOriginY(), 10, 10);
-	 }
+	public void debugRender(ShapeRenderer render) {
+		render.polygon(bounds.getTransformedVertices());
+		render.ellipse(bounds.getOriginX(), bounds.getOriginY(), 10, 10);
+		Vector2 center = new Vector2();
+		bounds.getBoundingRectangle().getCenter(center);
+		float hHeight = bounds.getBoundingRectangle().height * 0.5f;
+		float hWidth = bounds.getBoundingRectangle().width * 0.5f;
+		render.line(center.x - hWidth, center.y - hHeight, center.x + hWidth, center.y + hHeight);
+		render.line(center.x - hWidth, center.y + hHeight, center.x + hWidth, center.y - hHeight);
+	}
 
 	/**
 	 * Should be implements by subclassses.
@@ -113,5 +119,9 @@ public abstract class GameObject implements Comparable<GameObject> {
 
 	public boolean isAlive() {
 		return alive;
+	}
+
+	public boolean isIdle() {
+		return idle;
 	}
 }
