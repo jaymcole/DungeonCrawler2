@@ -57,7 +57,7 @@ public class Generate {
 		Generate.random = random;
 		remainingNodes = new LinkedList<BuildNode>();
 		map = new int[mapWidth][mapWidth];
-		down = new Staircase(0, 0, "Down Staircase");
+		down = new Staircase(0, 0, "Down Staircase", "texture/test/staircase.png");
 
 		generateSpawnRoom(new BuildNode(random.nextInt((int) (mapWidth * 0.5f)) + (int) (mapWidth * 0.25f),
 				random.nextInt((int) (mapHeight * 0.5f)) + (int) (mapHeight * 0.25f),
@@ -297,7 +297,7 @@ public class Generate {
 					totalLights++;
 					makeTileWalkable(i, j);
 					up = new Staircase(i * tileWidth + (tileWidth * 0.5f), j * tileHeight + (tileHeight * 0.5f),
-							"Up Staircase");
+							"Up Staircase", "texture/test/staircase.png");
 					break;
 				}
 			}

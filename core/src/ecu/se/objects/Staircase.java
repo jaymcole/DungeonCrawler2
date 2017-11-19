@@ -1,11 +1,14 @@
 package ecu.se.objects;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import assetManager.TextureAsset;
 
 public class Staircase extends InteractableItem {
 
-	public Staircase(float x, float y, String name) {
-		super(x, y, name);
+	public Staircase(float x, float y, String name, String path) {
+		super(x, y, name, path);
 		// TODO Auto-generated constructor stub
 	}
 

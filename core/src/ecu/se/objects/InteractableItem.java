@@ -1,20 +1,29 @@
 package ecu.se.objects;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
-public abstract class InteractableItem extends ItemObject {
+import assetManager.TextureAsset;
 
-	public InteractableItem(float x, float y, String name) {
-		super(x, y, name);
+public class InteractableItem extends ItemObject {
+
+	public InteractableItem(float x, float y, String name, String path) {
+		super(x, y, name, path);
 		
 	}
 
-	public abstract void update(float deltaTime);
+	public void update(float deltaTime) {
+		
+	}
 
-	public abstract void render(SpriteBatch batch);
+	public void render(SpriteBatch batch) {
+		
+	}
 
-	public abstract void dispose();
+	public void dispose() {
+		
+	}
 
 	public String getName() {
 		return name;
