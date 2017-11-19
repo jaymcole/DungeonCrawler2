@@ -24,7 +24,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 		this.z = z;
 		alive = true;
 		bounds = Utils.getRectangleBounds(x, y, 20, 20, Utils.ALIGN_CENTERED);
-		team = team.NEUTRAL;
+		team = Team.NEUTRAL;
 	}
 
 	public GameObject(float x, float y) {
@@ -33,7 +33,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 		this.z = Globals.Z_LEVEL_FLOOR;
 		alive = true;
 		bounds = Utils.getRectangleBounds(x, y, 5, 5, Utils.ALIGN_CENTERED);
-		team = team.NEUTRAL;
+		team = Team.NEUTRAL;
 	}
 	
 	public void setPosition(int x, int y) {

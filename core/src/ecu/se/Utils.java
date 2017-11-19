@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import assetManager.AssetManager;
@@ -40,25 +39,21 @@ public class Utils {
     }
     
     
-    public static final int ALIGN_CENTERED = 0;
-    public static final int ALIGN_BOTTOM_LEFT = 1;
-    public static final int ALIGN_BOTTOM_RIGHT = 2;
-    public static final int ALIGN_TOP_RIGHT = 3;
-    public static final int ALIGN_TOP_LEFT = 4;
+    public static final int ALIGN_CENTERED 		= 0;
+    public static final int ALIGN_BOTTOM_LEFT 	= 1;
+    public static final int ALIGN_BOTTOM_RIGHT 	= 2;
+    public static final int ALIGN_TOP_RIGHT 	= 3;
+    public static final int ALIGN_TOP_LEFT		= 4;
     public static final int ALIGN_BOTTOM_CENTER = 5;
     
     
     public static Polygon getRectangleBounds(float x, float y, float width, float height, int ALIGN) {
-//        height *= 0.5f;
-//        width *= 0.5f;
-//        Polygon poly = new Polygon(new float[]{-width, -height, width, -height, width, height, -width, height});
 
         Polygon poly = new Polygon();
         poly.setOrigin(0, 0);
         
         switch (ALIGN) {
             case ALIGN_CENTERED:
-//                poly.setOrigin(width *0.5f, height*0.5f);
 
             	poly.setVertices(new float[]{
             			-(int)(width*0.5), -(int)(height*0.5),
@@ -108,26 +103,6 @@ public class Utils {
         
         return poly;
     }
-    
-    /*
-     * 
-     * float[] verts = new float[resolution*2];
-    	float currentAngle = 0;
-    	float angleDelta = (360.0f / resolution)*2;
-    	for(int i = 0 ; i < 360/resolution; i+=2) {
-    		currentAngle += angleDelta;
-    		verts[i] = (float) (Math.cos(Math.toRadians(currentAngle)) * width);
-    		verts[i+1] = (float) (Math.sin(Math.toRadians(currentAngle)) * height);
-    	}
-    	
-    	Polygon poly = new Polygon(verts);
-    	poly.setOrigin(0, 0);
-    	poly.setPosition(x, y);
-        poly.setScale(1, 10);
- 
-    	
-    	return poly;
-     */
     
     public static Polygon getEllipseBounds(float x, float y, float width, float height, int resolution) {
     	float[] verts = new float[(int)(360.0f / resolution) * 2];

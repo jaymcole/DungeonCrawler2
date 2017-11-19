@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
 
+import archive.Archiver;
+import archive.TimeRecords;
 import stats.Stats;
 
 public class Window_PlayerStats extends Window {
@@ -20,6 +22,8 @@ public class Window_PlayerStats extends Window {
 
 	@Override
 	public void onResume() {
+		Archiver.set(TimeRecords.TIME_IN_MENU, false);
+		
 		ArrayList<Widget> widgetList = new ArrayList<Widget>();
 
 		int halfwayX = (int) (GUI.defaultWidth * 0.5f);
@@ -47,7 +51,7 @@ public class Window_PlayerStats extends Window {
 		
 		
 		int fontSize = 35;
-		float labelXChange = 0, labelYChange = fontSize * 0.5f;
+		float labelYChange = fontSize * 0.5f;
 		float startLabelX = halfwayX - halfwayX * 0.5f, startLabelY = halfwayY - labelYChange + backgroundY;
 		float currentY = 40;
 		float currentX = 10;
@@ -56,7 +60,6 @@ public class Window_PlayerStats extends Window {
 		for(int i = 0 ; i < Stats.values().length; i++) {
 			widgetList.add(new Widget_Label(currentX + startLabelX, startLabelY - currentY, 0, 0, this, Stats.values()[i].name(), fontSize, Color.BLACK, Color.WHITE));
 			widgetList.add(new Widget_Label(currentX + startLabelX + 300, startLabelY - currentY, 0, 0, this, "" + gui.player.getStat(Stats.values()[i]), fontSize, Color.BLACK, Color.WHITE));
-//			widgetList.add(new Widget_Label(currentX + startLabelX + 300, startLabelY - currentY, 0, 0, this, (startLabelX + 400) + "  " + (startLabelY - currentY), fontSize, Color.BLACK, Color.WHITE));
 			currentY += labelYChange;
 			
 			if (startLabelY - currentY < halfwayY - backgroundY) {

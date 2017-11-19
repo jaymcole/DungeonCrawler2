@@ -2,15 +2,12 @@ package ecu.se.gui;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.Glyph;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
 
 import assetManager.AssetManager;
-import assetManager.FontAsset;
 import ecu.se.Utils;
 
 public abstract class Widget {
@@ -44,7 +41,20 @@ public abstract class Widget {
 		bounds = Utils.getRectangleBounds(this.x, this.y, this.width, this.height, Utils.ALIGN_BOTTOM_LEFT);
 	}
 		
+	
+	/**
+	 * Updates this widget
+	 * @param deltaTime
+	 * @param mouseX
+	 * @param mouseY
+	 * @return
+	 */
 	public abstract boolean update (float deltaTime, int mouseX, int mouseY);
+	
+	/**
+	 * Renders this widget.
+	 * @param batch
+	 */
 	public abstract void render(SpriteBatch batch);
 	
 	/**

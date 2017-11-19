@@ -72,7 +72,11 @@ public class Game extends ApplicationAdapter {
 	public void create() {
 		// RECORDS
 		Archiver.startArchiver();
+		Archiver.set(TimeRecords.TOTAL_TIME_PLAYED, false);
 		Archiver.set(TotalRecords.TIMES_STARTING_GAME, 1);
+		Archiver.set(TimeRecords.TIME_IN_MENU, false);
+		Archiver.set(TimeRecords.TIME_IDLE, false);
+
 		deltaTime = TimeUtils.millis();
 		screenHeight = Gdx.graphics.getHeight();
 		screenWidth = Gdx.graphics.getWidth();
@@ -127,8 +131,11 @@ public class Game extends ApplicationAdapter {
 	private float halfHeight;
 	@Override
 	public void render() {
-		if (currentState == GAME_STATE_EXITING)
-			dispose();
+		if (currentState == GAME_STATE_EXITING) {
+			close();
+			return;
+		}	
+		
 		
 		
 		input(); // JUST MOVED THIS FROM THE BOTTOM TO THE TOP
@@ -297,9 +304,8 @@ public class Game extends ApplicationAdapter {
 			Archiver.set(TimeRecords.TIME_PAUSED, false);
 		}
 	}
-
-	@Override
-	public void dispose() {
+	
+	public void close() {
 //		System.out.println("Disposing assets");
 //		AssetManager.dispose();
 		System.out.println("Disposing Archiver");

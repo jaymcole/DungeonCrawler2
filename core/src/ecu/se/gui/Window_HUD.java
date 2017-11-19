@@ -6,8 +6,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import archive.Archiver;
+import archive.TimeRecords;
 import assetManager.AssetManager;
-import assetManager.TextureAsset;
 import ecu.se.Game;
 import stats.Stats;
 
@@ -25,21 +26,6 @@ public class Window_HUD extends Window {
 	
 	private Widget_Button btn_primaryAction;
 	private Widget_Button btn_secondaryAction;
-	
-//	private Widget_Button_Image hotkey1;
-//	private Widget_Button_Image hotkey2;
-//	private Widget_Button_Image hotkey3;
-//	private Widget_Button_Image hotkey4;
-//	private Widget_Button_Image hotkey5;
-//	private Widget_Button_Image hotkey6;
-//	private Widget_Button_Image hotkey7;
-//	private Widget_Button_Image hotkey8;
-//	private Widget_Button_Image hotkey9;
-//	private Widget_Button_Image hotkey10;
-//	private Widget_Button_Image hotkey11;
-//	private Widget_Button_Image hotkey12;
-//	private Widget_Button_Image hotkey13;
-	
 	
 	@Override
 	protected void buildWindow() {
@@ -175,6 +161,15 @@ public class Window_HUD extends Window {
 
 	}
 
+	@Override
+	public void onPause() {
+		Archiver.set(TimeRecords.TIME_IN_GAME, false);
+	}
+	
+	@Override
+	public void onResume() {
+		Archiver.set(TimeRecords.TIME_IN_GAME, false);
+	}
 //		widgets = new Widget[] { 
 //				prgbar_health,
 //				prgbar_mana,

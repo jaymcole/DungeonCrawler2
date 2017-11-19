@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 public class PathNode {
 	
-	private int x, y;
+	public int x, y;
 	private LinkedList<Edge> edges;
 	
 	public PathNode(int x, int y) {

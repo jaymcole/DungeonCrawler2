@@ -52,7 +52,7 @@ public class GUI {
 
 	
 	public GUI(Player player, int screenWidth, int screenHeight, Game game) {
-		this.game = game;
+		GUI.game = game;
 		this.player = player;
 		halfWidth = (int) (screenWidth * 0.5);
 		conversionX = screenWidth / defaultWidth;
@@ -69,7 +69,7 @@ public class GUI {
 				new Window_Inventory(this),
 				new Window_PlayerStats(this)
 		};
-		currentWindow = WINDOW_MAIN_MENU;
+		setWindow(WINDOW_MAIN_MENU);
 	}
 
 	/**
@@ -225,24 +225,26 @@ public class GUI {
 	
 	/**
 	 * Sets the current window.
-	 * @param window - The window to switch to.
+	 * @param changeTo - The window to switch to.
 	 * 			window should be one the GUI.WINDOW_* integers.
+	 * Warning: Does not check if window is valid. 
 	 */
-	public void setWindow(int window) {
-		System.out.println("Switch window from " + currentWindow + " to " + window);
-		if (window == currentWindow) {
+	public void setWindow(int changeTo) {
+		if (changeTo < 0 || changeTo >= windows.length) {
+			System.err.println("An invalid window integer was passed to setWindow() in GUI.java.");
+			System.err.println("Int passed: " + changeTo);
+			return;
+		}
+		
+		System.out.println("Switch window from " + currentWindow + " to " + changeTo);
+		
+		if (changeTo == currentWindow) {
 			return;
 		} 
-//		else if (window == WINDOW_HUD) {
-//			currentWindow = window;
-//			return;
-//		}
-
-//		if (window > windows.length && window >= 0) {
-			windows[window].onResume();
-			windows[currentWindow].onPause();
-			currentWindow = window;
-//		}
+		
+		windows[changeTo].onResume();
+		windows[currentWindow].onPause();
+		currentWindow = changeTo;
 	}
 	
 	/**
@@ -259,6 +261,10 @@ public class GUI {
 		}
 	}
 	
+	/**
+	 * 
+	 * @return the core game object.
+	 */
 	public Game getGame() {
 		return game;
 	}

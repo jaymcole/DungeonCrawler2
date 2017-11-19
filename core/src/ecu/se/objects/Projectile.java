@@ -12,7 +12,6 @@ import ecu.se.GameObject;
 import ecu.se.Lighting;
 import ecu.se.ObjectManager;
 import ecu.se.Utils;
-import ecu.se.map.Direction;
 import ecu.se.map.Map;
 
 public class Projectile extends GameObject {

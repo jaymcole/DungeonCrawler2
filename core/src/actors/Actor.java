@@ -4,15 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 
 import actions.Action;
@@ -20,7 +14,6 @@ import assetManager.Animation;
 import assetManager.AssetManager;
 import assetManager.SpriteAsset;
 import ecu.se.GameObject;
-import ecu.se.ObjectManager;
 import ecu.se.Utils;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
@@ -101,7 +94,7 @@ public abstract class Actor extends GameObject {
 	public Actor(float x, float y, float z, Map map, String spriteSheet) {
 		super(x, y, z);
 		this.map = map;
-		SpriteAsset asset = AssetManager.getSpriteSheet(spriteSheet);
+//		SpriteAsset asset = AssetManager.getSpriteSheet(spriteSheet);
 //		animation_body = new Animation(0, 0, 0, asset);
 //		spriteWidth = asset.getSpriteWidth();
 //		spriteHeight = asset.getSpriteHeight();

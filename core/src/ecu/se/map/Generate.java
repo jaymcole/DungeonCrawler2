@@ -209,24 +209,24 @@ public class Generate {
 		}
 	}
 
-	private static void genStraightPath(BuildNode node, int length, Direction direction, boolean intersect,
-			boolean continueForward) {
-		for (int i = 0; i < length; i++) {
-			if (random.nextInt(100) > 90) {
-				BuildNode outNode = node.copy();
-				outNode.direction = direction;
-				outNode.forward();
-				addNewNode(outNode);
-			}
-			setMapInt(node, FLOOR, false);
-			node.add(node.direction);
-		}
-		if (continueForward) {
-			addNewNode(node);
-		} else {
-			genRoom(node, random.nextInt(2) + 2, random.nextInt(2) + 2, false, false);
-		}
-	}
+//	private static void genStraightPath(BuildNode node, int length, Direction direction, boolean intersect,
+//			boolean continueForward) {
+//		for (int i = 0; i < length; i++) {
+//			if (random.nextInt(100) > 90) {
+//				BuildNode outNode = node.copy();
+//				outNode.direction = direction;
+//				outNode.forward();
+//				addNewNode(outNode);
+//			}
+//			setMapInt(node, FLOOR, false);
+//			node.add(node.direction);
+//		}
+//		if (continueForward) {
+//			addNewNode(node);
+//		} else {
+//			genRoom(node, random.nextInt(2) + 2, random.nextInt(2) + 2, false, false);
+//		}
+//	}
 
 	private static void setMapInt(BuildNode node, int floorType, boolean override) {
 		setMapInt(node.x, node.y, floorType, override);
@@ -239,7 +239,6 @@ public class Generate {
 
 			if (map[x][y] == EMPTY || override) {
 				map[x][y] = floorType;
-				BuildNode temp = new BuildNode(x, y, Direction.NORTH);
 				if (x < minMapNode.x)
 					minMapNode.x = x;
 				if (x > maxMapNode.x)
@@ -307,11 +306,6 @@ public class Generate {
 	}
 
 	public static void printFloor() {
-		String bar = "";
-		for (int i = 0; i < (maxTile.x - minTile.x) + 11; i++) {
-			bar += "-";
-		}
-
 		System.out.println("minTile=" + minTile.toString());
 		System.out.println("maxTile=" + maxTile.toString());
 		System.out.println("\n");

@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import ecu.se.Game;
 import ecu.se.GameObject;
 import ecu.se.Lighting;
 

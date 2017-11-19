@@ -4,16 +4,14 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import ecu.se.GameObject;
-import ecu.se.ObjectManager;
 import ecu.se.Utils;
 
 public class Tile extends GameObject{
     private int x, y, width, height;
     private Texture texture;
-    private TextureRegion textureRegion;
+//    private TextureRegion textureRegion;
     
     private boolean isWall;
     
@@ -55,7 +53,7 @@ public class Tile extends GameObject{
     
     public void setTexture(Texture texture) {
         this.texture = texture;
-        this.textureRegion = new TextureRegion(texture);
+//        this.textureRegion = new TextureRegion(texture);
         
     }
     

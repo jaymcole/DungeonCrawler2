@@ -1,7 +1,5 @@
 package ecu.se;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -21,8 +19,8 @@ public class Lighting {
 	private static ShaderProgram shader;
 	private static OrthographicCamera camera;
 
-	private static LinkedList<Light> lights = new LinkedList<Light>();
-	private static LinkedList<Light> waitlist = new LinkedList<Light>();
+	private static LinkedList<Light> lights;
+	private static LinkedList<Light> waitlist;
 	private static Iterator<Light> updater;
 	private static Light light;
 	private static int counter = 0;
@@ -35,6 +33,8 @@ public class Lighting {
 		camera = cam;
 		ShaderProgram.pedantic = false;
 		// renderTarget = rt;
+		lights = new LinkedList<Light>();
+		waitlist = new LinkedList<Light>();
 		shader = new ShaderProgram(Gdx.files.internal("shader/light1.vert").readString(),
 				Gdx.files.internal("shader/light1.frag").readString());
 		if (!shader.isCompiled()) {

@@ -58,14 +58,17 @@ public class Archiver {
 	private static void init() {
 		updateDIR();
 		load();
-		set(TimeRecords.TIME_IN_GAME, false);
-		set(TimeRecords.TOTAL_TIME_PLAYED, false);
 	}
 	
 	/**
 	 * save() - Saves all 
 	 */
 	private static void save() {
+		for(TimeRecords tr : TimeRecords.values()) {
+			set(tr, false);
+		}
+		
+		
 		System.out.println("[Archiver] Saving to: " + DIR);
 		File file = new File(DIR);
 		try {

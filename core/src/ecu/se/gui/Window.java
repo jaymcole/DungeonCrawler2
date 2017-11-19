@@ -3,6 +3,9 @@ package ecu.se.gui;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import archive.Archiver;
+import archive.TimeRecords;
+
 public abstract class Window {
 
 	/**
@@ -95,16 +98,18 @@ public abstract class Window {
 
 	/**
 	 * The action this window should perform when it loses focus.
+	 * 		Should call Archiver.set with the appropriate TimeRecord
 	 */
 	public void onPause() {
-		
+		Archiver.set(TimeRecords.TIME_IN_MENU, false);
 	}
 	
 	/**
 	 * The action this window should perform when it gains focus.
+	 * 		Should call Archiver.set with the appropriate TimeRecord
 	 */
 	public void onResume() {
-		
+		Archiver.set(TimeRecords.TIME_IN_MENU, false);
 	}
 	
 }

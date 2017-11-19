@@ -2,8 +2,6 @@ package ecu.se.gui;
 
 import com.badlogic.gdx.graphics.Color;
 
-import ecu.se.Game;
-
 public class Window_Settings extends Window{
 
 	public Window_Settings(GUI gui) {
@@ -18,7 +16,6 @@ public class Window_Settings extends Window{
 		int backgroundX = (int)(halfwayX * 0.5f);
 		int backgroundY = (int)(halfwayY * 0.5f);
 		int bufferX = 50;
-		int bufferY = 50;
 		
 		
 		Widget_Image img_background = new Widget_Image(backgroundX, backgroundY, halfwayX, halfwayY, this, "texture/misc/white.png");

@@ -1,15 +1,10 @@
 package ecu.se.map;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.Globals;
@@ -21,12 +16,12 @@ public class Map {
     private static Tile[][] visibleTiles;
     private static ArrayList<Floor> floors;
     private static Floor currentFloor;
-    private static TextureRegion background;
-    private static int currentLevel = 0;
+    private static int currentLevel;
     
     
     public Map() {
         floors = new ArrayList<Floor>(200);
+        currentLevel = 0;
         setFloor(currentLevel); 
     }
     
