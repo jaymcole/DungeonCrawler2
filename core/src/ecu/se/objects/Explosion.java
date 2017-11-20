@@ -11,8 +11,8 @@ import ecu.se.map.Direction;
 import stats.Stats;
 import stats.TempStatExplosion;
 
-public class Explosion extends GameObject{
-	
+public class Explosion extends GameObject {
+
 	protected float force;
 	protected float damage;
 	protected Actor caster;
@@ -30,16 +30,18 @@ public class Explosion extends GameObject{
 		float distance;
 		float tempForce;
 		float angle;
-		for(GameObject a : ObjectManager.getActors()) {
-			distance = Vector2.dst(this.getPositionV2().x, this.getPositionV2().y, a.getPositionV2().x, a.getPositionV2().y);
+		for (GameObject a : ObjectManager.getActors()) {
+			distance = Vector2.dst(this.getPositionV2().x, this.getPositionV2().y, a.getPositionV2().x,
+					a.getPositionV2().y);
 			if (distance < 1)
 				distance = 1f;
-			
+
 			if (distance <= force * 2) {
 				tempForce = 10 + (force / distance);
 				angle = Direction.angleRad(this.getPositionV2(), a.getPositionV2());
-				if (!Team.isFriendly(((Actor)a).team, this.team) )
-				((Actor)a).addTempStat(new TempStatExplosion(Stats.MOVEMENT_SPEED, force, (Actor)a, (float)(Math.cos(angle) * tempForce), (float)(Math.sin(angle) * tempForce)));
+				if (!Team.isFriendly(((Actor) a).team, this.team))
+					((Actor) a).addTempStat(new TempStatExplosion(Stats.MOVEMENT_SPEED, force, (Actor) a,
+							(float) (Math.cos(angle) * tempForce), (float) (Math.sin(angle) * tempForce)));
 			}
 		}
 		this.kill();
@@ -50,7 +52,7 @@ public class Explosion extends GameObject{
 	}
 
 	@Override
-	public void dispose() {		
+	public void dispose() {
 	}
 
 }

@@ -93,9 +93,6 @@ public class Window_HUD extends Window {
 				System.out.println("Bitch please");
 			}
 			@Override
-			public void mouseDown() {
-			}
-			@Override
 			public void mouseReleased() {
 				System.out.println("maaaan");
 			}
@@ -109,9 +106,6 @@ public class Window_HUD extends Window {
 			@Override
 			public void mousePressed() {
 				System.out.println("Secondary WOW");
-			}
-			@Override
-			public void mouseDown() {
 			}
 			@Override
 			public void mouseReleased() {
@@ -136,11 +130,7 @@ public class Window_HUD extends Window {
 			buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
 			Widget_Button_Image hotkey = new Widget_Button_Image(595 + (55 * i) + i + (int)(i * 0.3), 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive) {
 				@Override
-				public void mousePressed() {
-					System.out.println(":( 1");
-				}
-				@Override
-				public void mouseDown() {
+				public void mouseDown(int mouseX, int mouseY) {
 					System.out.println("mouseDown");
 				}
 				@Override
@@ -155,7 +145,7 @@ public class Window_HUD extends Window {
 			widgetsList.add(hotkey);
 		}
 		widgetsList.add(new Widget_Image(0, 0, GUI.defaultWidth, GUI.defaultHeight, this, "texture/gui/hud.png"));
-
+		
 		widgets = widgetsList.toArray(widgets);
 		
 

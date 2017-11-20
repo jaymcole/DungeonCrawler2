@@ -14,9 +14,13 @@ public abstract class Widget {
 	
 	protected float x, y, width, height;
 	protected Polygon bounds;
-	protected Window parent;
+	protected Window parentWindow;
+	protected Widget parentWidget;
 	protected BitmapFont font;
+	
 	protected boolean useText;
+	protected boolean useBackground;
+	
 	protected String text;
 	protected Color textColor;
 	
@@ -26,13 +30,13 @@ public abstract class Widget {
 	protected float textX, textY;
 	
 	
-	public Widget (float x, float y, float width, float height, Window parent) {
+	public Widget (float x, float y, float width, float height, Window parentWindow) {
 		this.x = GUI.getProportionalX(x);
 		this.y = GUI.getProportionalY(y);
 		this.width = GUI.convertX(width);
 		this.height = GUI.convertY(height);
-		this.parent = parent;
-		
+		this.parentWindow = parentWindow;
+		useBackground = true;
 		defaultColor = Color.WHITE;
 		useText = false;
 		textColor = Color.WHITE;	
@@ -70,8 +74,25 @@ public abstract class Widget {
 	 * 
 	 * @return The window holding this widget.
 	 */
-	public Window getParent() {
-		return parent;
+	public Window getParentWindow() {
+		return parentWindow;
+	}
+	
+	/**
+	 * 
+	 * @return The parent widget 
+	 * Warning - this may be null.
+	 */
+	public Widget getParentWidget() {
+		return parentWidget;
+	}
+	
+	/**
+	 * Sets parentWidget to parent.
+	 * @param parent
+	 */
+	public void setParentWidget(Widget parent) {
+		this.parentWidget = parent;
 	}
 	
 	
@@ -102,5 +123,15 @@ public abstract class Widget {
 	 */
 	public void setDefaultColor(Color c) {
 		defaultColor = c;
+	}
+	
+	public void setPosition(float x, float y) {
+		this.x = x;
+		this.y = y;
+		this.bounds.setPosition(x, y);
+	}
+	
+	public void toggleBackground() {
+		useBackground ^= true;
 	}
 }

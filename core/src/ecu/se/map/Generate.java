@@ -117,12 +117,10 @@ public class Generate {
 					Direction right = Direction.nextExpandedDirectionCW(dir);
 					
 					if(tiles[x + left.x][y + left.y].isWall && tiles[x + right.x][y + right.y].isWall) {
-						System.out.println("Oh! very good");
 					}else if (!tiles[x + left.x][y + left.y].isWall && !tiles[x + right.x][y + right.y].isWall) {
 						insideCorner = true;
 					} else {
 						ok = false;
-						System.out.println("No good");
 					}
 				}
 				
@@ -153,10 +151,8 @@ public class Generate {
 					Direction left = Direction.nextExpandedDirectionCCW(dir);
 					Direction right = Direction.nextExpandedDirectionCW(dir);
 					if(tiles[x + left.x][y + left.y].isWall && tiles[x + right.x][y + right.y].isWall) {
-						System.out.println("Oh! very good");
 					} else {
 						ok = false;
-						System.out.println("No good");
 					}
 				}
 				
@@ -174,11 +170,7 @@ public class Generate {
 		}
 	}
 
-	private static void setTileWallTexture(Tile tile, Direction direction, boolean insideCorner) {
-		if(direction == null) {
-			System.out.println("aiudhaoisddhuihda");
-		}
-		
+	private static void setTileWallTexture(Tile tile, Direction direction, boolean insideCorner) {		
 		if (direction == Direction.NORTH || direction == Direction.SOUTH)
 			direction = Direction.oppositeDirection(direction);
 		else if (direction == Direction.NORTHWEST)
@@ -205,10 +197,6 @@ public class Generate {
 		tr.setRegion(tex);
 		tr.setRegion(startX, startY, endX, endY);
 		tile.addObject(new Decal(tile.getX(), tile.getY(), "WallBoi", tr, tileWidth, tileHeight));
-		
-//		TextureRegion tr2 = new TextureRegion();
-//		tr2.setRegion(AssetManager.getTexture("texture/misc/white.png").getTexture());
-//		tile.setTexture(tr2);
 	}
 
 	private static void generateSpawnRoom(BuildNode node) {
@@ -228,9 +216,7 @@ public class Generate {
 			return;
 		}
 
-		int something = random.nextInt(5);
-		System.out.println("Random: " + something);
-		switch (something) {
+		switch (random.nextInt(5)) {
 		case 0:
 			genRoom(node, random.nextInt(5) + 2, random.nextInt(5) + 2, random.nextBoolean(), false);
 			break;
@@ -404,13 +390,6 @@ public class Generate {
 
 		for (int i = 0; i < mapWidth - buffer * 2; i++) {
 			for (int j = 0; j < mapHeight - buffer * 2; j++) {
-
-				// System.out.println(""
-				// + "temp(" + (i + buffer) +", " + (j+buffer) + ")\n"
-				// + "mapDim(" + mapWidth + ", " + mapHeight + ")\n"
-				// + "map(" + (i+minMapNode.x) + ", " + (j+minMapNode.y) + ")"
-				// + "oldDem(" + (oldMapW) + ", " + (oldMapH) + ")\n\n\n");
-
 				temp[i + buffer][j + buffer] = map[i + minMapNode.x][j + minMapNode.y];
 			}
 		}
@@ -455,8 +434,6 @@ public class Generate {
 	}
 
 	public static void printFloor() {
-		// System.out.println("minTile=" + minTile.toString());
-		// System.out.println("maxTile=" + maxTile.toString());
 		System.out.println("\n");
 		for (int j = mapHeight - 1; j >= 0; j--) {
 			System.out.printf("%4s", "" + j);

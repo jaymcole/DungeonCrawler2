@@ -28,6 +28,9 @@ public class Lighting {
 	private static Vector3 position;
 	private static boolean lightsOn;
 	// private static GameObject renderTarget;
+	
+	private static float attenuationA = 10f;
+	private static float attenuationB = 0.4351f;
 
 	public static void init(OrthographicCamera cam, GameObject rt) {
 		camera = cam;
@@ -40,7 +43,6 @@ public class Lighting {
 		if (!shader.isCompiled()) {
 			Gdx.app.log("[Lighting] Problem loading shader:", shader.getLog());
 		}
-
 	}
 
 	/**
@@ -71,13 +73,19 @@ public class Lighting {
 			if (light != null && light.on) {
 				color = light.getColor();
 				position = light.getPos();
+				shader.setUniformi("lights[" + counter + "].type", light.type);
 				shader.setUniformf("lights[" + counter + "].color", color.r, color.g, color.b, color.a);
 				shader.setUniformf("lights[" + counter + "].position", position.x, position.y);
-				shader.setUniformf("lights[" + counter + "].intensity", light.getIntensity());
+				shader.setUniformf("lights[" + counter + "].intensity", light.intensity);
+//				if (light.getType() == 1 || light.getType() == 2) {
+//					System.err.println("Great! =" + light.getType());
+//				} else
+//					System.err.println("Wrong light type =" + light.getType());
 				counter++;
 			}
 		}
-
+		shader.setUniformf("a", attenuationA);
+		shader.setUniformf("b", attenuationB);
 		shader.setUniformMatrix("view_matrix", camera.view);
 		shader.setUniformi("totalLights", counter);
 		shader.setUniformf("worldPos", camera.position.x, camera.position.y);
@@ -152,6 +160,22 @@ public class Lighting {
 	 */
 	public static void dispose() {
 		shader.dispose();
+	}
+	
+	public static float getAttnA() {
+		return attenuationA;
+	}
+	
+	public static float getAttnB() {
+		return attenuationB;
+	}
+	
+	public static void setAttnA(float val) {
+		attenuationA = val;
+	}
+	
+	public static void setAttnB(float val) {
+		attenuationB = val;
 	}
 
 }

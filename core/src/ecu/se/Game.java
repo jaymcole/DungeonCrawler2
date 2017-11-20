@@ -25,6 +25,7 @@ import actors.RangedBadGuy;
 import archive.Archiver;
 import archive.TimeRecords;
 import archive.TotalRecords;
+import assetManager.Animation;
 import assetManager.AssetManager;
 import ecu.se.gui.GUI;
 import ecu.se.map.Map;
@@ -85,17 +86,23 @@ public class Game extends ApplicationAdapter {
 		objectManager = new ObjectManager();
 		map = new Map();
 		Map.setScreenResolution(screenWidth, screenHeight);
-		player = new Player(Map.getFloorUp(0, 0).x, Map.getFloorUp(0, 0).y, 0, map, camera,
-				"texture/spritesheet/player.png");
+		player = new Player(Map.getFloorUp(0, 0).x, Map.getFloorUp(0, 0).y, 0, map, camera, 
+				new String[]{
+						"texture/spritesheet/bleh.png",
+						"texture/spritesheet/bleh.png",
+						"texture/spritesheet/bleh.png"}, 
+				new int[]{3,2,1});
 		ObjectManager.setPlayer(player);
 		
+		Animation a = new Animation(player.x, player.y,0, AssetManager.getSpriteSheet("texture/spritesheet/fire_spritesheet.png"));
+		
+		ObjectManager.add(a);
 		ObjectManager.add(new ItemObject(player.getX(), player.getY(), "Sprite LOL", "texture/test/spritePlaceholder.png"));
 		
 		Random random = new Random();
 		for (int i = 0; i < 50; i++) {
-			ObjectManager.add(new RangedBadGuy(random.nextInt(Globals.MAP_TILE_WIDTH * 128),
-					random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0, map, "texture/spritesheet/goblin_sprites.png",
-					player));
+//			ObjectManager.add(new RangedBadGuy(random.nextInt(Globals.MAP_TILE_WIDTH * 128), random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0, map, new String[]{"texture/spritesheet/zombie_spritesheet.png"}, new int[]{random.nextInt(5)}, player));
+			ObjectManager.add(new RangedBadGuy(random.nextInt(Globals.MAP_TILE_WIDTH * 128), random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0, map, new String[]{"texture/spritesheet/grayguys.png"}, new int[]{0}, player));
 		}
 		
 		Map.getTile((int)player.getX(), (int)player.getY()).addObject(new Decal(player.x, player.y, "ass", AssetManager.getTexture("texture/decals/decal_lava.png").getTextureRegion()));
@@ -130,6 +137,7 @@ public class Game extends ApplicationAdapter {
 			Lighting.updateLights(deltaTime, player.getPositionV2());
 			camera.zoom = zoom;
 		}
+		Map.update(deltaTime, (int) player.x, (int) player.y);
 	}
 
 	private static Random rand = new Random();
@@ -163,7 +171,7 @@ public class Game extends ApplicationAdapter {
 		batch.draw(backgroundTexture, camera.position.x - Gdx.graphics.getWidth() * 0.5f,
 				camera.position.y - Gdx.graphics.getHeight() * 0.5f, Gdx.graphics.getWidth(),
 				(int) (Gdx.graphics.getHeight()));
-		Map.render(batch, (int) player.x, (int) player.y);
+		Map.render(batch);
 		ObjectManager.render(deltaTime, batch);
 		batch.end();
 		frameBuffer.end();

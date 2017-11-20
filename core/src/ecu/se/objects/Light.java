@@ -40,24 +40,29 @@ public class Light implements Comparable<Light> {
 
 	public boolean on;
 	public boolean delete = false;
+	public float intensity;
+	public int type;
+
 	protected boolean hasParent;
 	protected GameObject parent;
 	protected float[] flickerTest = { m, m, n, m, m, o, m, m, o, m, m, n, o, n, m, m, o, n, q, n, m, m, o };
 	protected Color color;
 	protected float offsetX, offsetY;
 	
+
 	protected Vector3 position;
-	protected float intensity;
 	protected float baseIntensity;
 	protected float time;
 	protected float distance;
 	protected static Random rand = new Random();
 	protected int intensityPosition = rand.nextInt(flickerTest.length);
-
+	
+	
 	public Light(Vector3 position) {
 		this.parent = null;
 		this.hasParent = false;
 		this.position = position;
+		this.type = 1;
 		on = true;
 	}
 
@@ -65,6 +70,7 @@ public class Light implements Comparable<Light> {
 		this.parent = parent;
 		this.hasParent = true;
 		this.position = parent.getPosition();
+		this.type = 1;
 		on = true;
 	}
 	
@@ -74,6 +80,17 @@ public class Light implements Comparable<Light> {
 		this.parent = parent;
 		this.hasParent = true;
 		this.position = parent.getPosition();
+		this.type = 1;
+		on = true;
+	}
+	
+	public Light (GameObject parent, Color color, float intensity, int type) {
+		this.color = color;
+		this.intensity = intensity;
+		this.parent = parent;
+		this.hasParent = true;
+		this.position = parent.getPosition();
+		this.type = type;
 		on = true;
 	}
 
@@ -142,6 +159,14 @@ public class Light implements Comparable<Light> {
 
 	public float getDistance() {
 		return distance;
+	}
+	
+	public void setType(int type) {
+		this.type = type;
+	}
+	
+	public int getType() {
+		return type;
 	}
 
 

@@ -23,8 +23,8 @@ import stats.Stats;
 public class Player extends Actor {
 	private Direction dir;
 	
-	public Player(float x, float y, float z, Map map, OrthographicCamera camera, String spriteSheet) {
-		super(x, y, z, map, spriteSheet);
+	public Player(float x, float y, float z, Map map, OrthographicCamera camera, String[] spriteSheet, int[] row) {
+		super(x, y, z, map, spriteSheet, row);
 		currentSpeed = new Vector2(0, 0);
 		Archiver.set(TimeRecords.TIME_IDLE, false);
 		currentHealth = 5;
@@ -32,7 +32,7 @@ public class Player extends Actor {
 		team = Team.PLAYER;
 	
 		primaryAction = new Spell_Fireball(this);
-		secondaryAction = new Spell_Fireball(this);
+		secondaryAction = new Spell_Teleport(this);
 	}
 	
 	@Override

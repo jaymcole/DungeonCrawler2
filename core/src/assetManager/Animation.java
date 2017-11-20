@@ -3,12 +3,13 @@ package assetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import ecu.se.GameObject;
 import ecu.se.map.Direction;
 
 
-public class Animation {
+public class Animation extends GameObject{
 	private boolean hold = true;
-	private int spriteHeight, spriteWidth, spriteX, spriteY, tRow, tColumn, frame,sRow, selectedRow;
+	private int spriteHeight, spriteWidth, spriteX, spriteY, totalRows, totalCol, currentCol, currentRow;
 	private TextureRegion textureRegion;
 	private float rotation = 0;
 	private int offsetX;
@@ -16,22 +17,24 @@ public class Animation {
 	private float x, y;
 	private float scaleX, scaleY;
 	
-	private float speed = 0.1f;
+	private float speed = 0.05f;
 	private float time = 0;
 	
 	public Animation (float x, float y, float z) {
-		frame = 0;
+		super(x, y, z);
+		currentCol = 0;
 		offsetX = 0;
 		offsetY = 0;
 	}
 
 	public Animation(float x, float y, float z,SpriteAsset spriteAsset) {		
-		tRow = spriteAsset.getSpriteRows();
-		tColumn = spriteAsset.getSpriteColumns();
+		super(x, y, z);
+		totalRows = spriteAsset.getSpriteRows();
+		totalCol = spriteAsset.getSpriteColumns();
 		spriteHeight = spriteAsset.getSpriteHeight();
 		spriteWidth = spriteAsset.getSpriteWidth();
 		textureRegion = new TextureRegion(spriteAsset.getTexture().getTexture());
-		frame = 0;
+		currentCol = 0;
 
 		offsetX = 0;
 		offsetY = 0;
@@ -58,10 +61,11 @@ public class Animation {
 			spriteX = 0;
 			time = 0;
 		} else if(time >= speed) {
-	        frame++;
-	        frame %= tRow-1;
+			currentCol++;
+			currentCol %= totalCol-1;
+	        
 	        time -= speed;
-	        spriteX = frame * spriteWidth;
+	        spriteX = currentCol * spriteWidth;
 	    }		
 		textureRegion.setRegion(spriteX, spriteY, spriteWidth, spriteHeight);
 	}
@@ -94,11 +98,12 @@ public class Animation {
 	
 	
 	public void setNumRows(int r) {
-		tRow = r;
+		if (r <= totalRows && r > 0)
+			currentRow = r;
 	}
 	
 	public void setNumColumns(int c) {
-		this.tColumn = c;
+		this.totalCol = c;
 	}
 	
 	public void setSpriteH(int h) {
@@ -128,5 +133,11 @@ public class Animation {
 	public void setScale(float x, float y) {
 		scaleX = x;
 		scaleY = y;
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
 	}
 }

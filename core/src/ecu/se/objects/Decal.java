@@ -15,7 +15,7 @@ public class Decal extends ItemObject{
 		this.height = textureRegion.getRegionHeight();
 		this.x -= width * 0.5f;
 		this.y -= height * 0.5f;
-		bounds = Utils.getRectangleBounds(x, y, width, height, Utils.ALIGN_BOTTOM_LEFT);
+		bounds = Utils.getRectangleBounds(this.x, this.y, width, height, Utils.ALIGN_BOTTOM_LEFT);
 	}
 	
 	public Decal(float x, float y, String name, TextureRegion textureRegion, float width, float height) {

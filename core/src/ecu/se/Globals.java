@@ -34,7 +34,7 @@ public class Globals {
     public static final String SPRITE_INFORMATION_EXTENSION = "spriteInfo";
     
     //LIGHTING
-    public static int MAX_LIGHTS = 50; //Must also be changed in the shader
+    public static int MAX_LIGHTS = 150; //Must also be changed in the shader
     public static float DEFAULT_LIGHT_INTENSITY = 300;
     
     // DEBUG Settings

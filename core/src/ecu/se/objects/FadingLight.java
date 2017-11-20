@@ -11,16 +11,18 @@ public class FadingLight extends Light{
 
 	private float decay;
 
-	public FadingLight(Vector3 position, Color color, float intensity, float decay) {
+	public FadingLight(Vector3 position, Color color, float intensity, float decay, int type) {
 		super(position);
 		this.color = color;
 		this.baseIntensity = intensity;
 		this.decay = decay;
+		this.type = type;
 	}
 
-	public FadingLight(GameObject parent, Color color, float intensity, float decay) {
+	public FadingLight(GameObject parent, Color color, float intensity, float decay, int type) {
 		super(parent, color, intensity);
 		this.decay = decay;
+		this.type = type;
 	}
 
 	public void update(float deltaTime, Vector2 targetVector) {

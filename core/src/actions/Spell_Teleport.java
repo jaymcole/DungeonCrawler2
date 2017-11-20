@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import actors.Actor;
 import ecu.se.Lighting;
+import ecu.se.map.Map;
 import ecu.se.objects.FadingLight;
 import ecu.se.objects.Light;
 
@@ -29,10 +30,13 @@ public class Spell_Teleport extends Spell{
 		//TODO: Make a teleport animation
 		//TODO: Check that teleport location is valid (on walkable tile)
 		
-		Lighting.addLight(new FadingLight(caster.getPosition(), Color.SKY, 5000, 0.6f) );
-		Lighting.addLight(new FadingLight(new Vector3(targetX, targetY, 0), Color.BLUE, 5000, 0.6f) );
 		
-		caster.setPosition((int)targetX, (int)targetY);
+		if (!Map.getTile((int)targetX, (int)targetY).isWall) {
+			Lighting.addLight(new FadingLight(caster.getPosition(), Color.SKY, 5000, 0.8f, 2) );
+			Lighting.addLight(new FadingLight(new Vector3(targetX, targetY, 0), Color.BLUE, 5000, 0.8f, 2) );	
+			
+			caster.setPosition((int)targetX, (int)targetY);
+		}
 		currentStage++;
 	}
 

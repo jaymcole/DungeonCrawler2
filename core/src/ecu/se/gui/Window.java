@@ -26,9 +26,14 @@ public abstract class Window {
 	
 	protected Window parent;
 	
+	protected boolean useBackground;
+	
+	protected Widget_Image background;
+	
 	public Window(GUI gui, Window parent) {
 		this.gui = gui;
 		this.parent = parent;
+		useBackground = false;
 		initWindow();
 		buildWindow();
 	}
@@ -36,6 +41,7 @@ public abstract class Window {
 	public Window(GUI gui) {
 		this.gui = gui;
 		this.parent = null;
+		useBackground = false;
 		initWindow();
 		buildWindow();
 	}
@@ -81,6 +87,9 @@ public abstract class Window {
 	 * @param batch
 	 */
 	public void render(SpriteBatch batch) {
+		if (useBackground)
+			background.render(batch);
+		
 		for(Widget w : widgets) {
 			w.render(batch);
 		}
@@ -91,6 +100,9 @@ public abstract class Window {
 	 * @param renderer
 	 */
 	public void debugRender(ShapeRenderer renderer) {
+		if (useBackground)
+			background.debugRender(renderer);
+		
 		for(Widget w : widgets) {
 			w.debugRender(renderer);
 		}
@@ -110,6 +122,21 @@ public abstract class Window {
 	 */
 	public void onResume() {
 		Archiver.set(TimeRecords.TIME_IN_MENU, false);
+	}
+	
+	public void setBackground(Widget_Image background) {
+		this.background = background;
+		if (background != null)
+			useBackground = true;
+	}
+	
+	public void toggleBackground() {
+		this.useBackground ^= true;
+		System.out.println("Toggle background");
+		if (this.background == null) {
+			this.useBackground = false;
+			System.err.println("[FAILED] " + windowName + " does not have a background to display." );
+		}
 	}
 	
 }

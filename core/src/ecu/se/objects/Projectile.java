@@ -47,6 +47,7 @@ public class Projectile extends GameObject {
 		
 		light.setIntensity(500);
 		light.setParent(this);
+		light.type = 2;
 		Lighting.addLight(light);
 		setSpeed(speed);
 	}
@@ -89,7 +90,7 @@ public class Projectile extends GameObject {
 	
 	protected void kill() {
 		ObjectManager.add(new Explosion(this.x, this.y, knockback, 0, parent));
-		Lighting.addLight(new FadingLight(this.getPosition(), Color.CHARTREUSE, light.intensity * 20, 0.7f) );
+		Lighting.addLight(new FadingLight(this.getPosition(), Color.CHARTREUSE, light.intensity * 20, 0.7f, 2) );
 		this.alive = false;
 		ObjectManager.remove(this);
 		dispose();

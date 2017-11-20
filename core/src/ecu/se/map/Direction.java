@@ -48,9 +48,9 @@ public enum Direction {
      */
     public static Direction nextExpandedDirectionCW (Direction dir) {
     	Direction newboi = Direction.values()[(directionValues + dir.ordinal()+1)%directionValues];
-    	System.out.print(dir.name );
-    	System.out.print(" --> ");
-    	System.out.println(newboi.name);
+//    	System.out.print(dir.name );
+//    	System.out.print(" --> ");
+//    	System.out.println(newboi.name);
     	return newboi;
     }
     
@@ -62,9 +62,9 @@ public enum Direction {
      */
     public static Direction nextExpandedDirectionCCW (Direction dir) {
     	Direction newboi = Direction.values()[(directionValues + dir.ordinal()-1)%directionValues];
-    	System.out.print(dir.name );
-    	System.out.print(" --> ");
-    	System.out.println(newboi.name);
+//    	System.out.print(dir.name );
+//    	System.out.print(" --> ");
+//    	System.out.println(newboi.name);
     	return newboi;
     }
     

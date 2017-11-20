@@ -13,8 +13,8 @@ public class RangedBadGuy extends Actor {
 	
 	private int maxDist = 115, minDist = 100;
 	
-	public RangedBadGuy(float x, float y, float z, Map map, String spriteSheet, Player player) {
-		super(x, y, z, map, spriteSheet);
+	public RangedBadGuy(float x, float y, float z, Map map, String[] spriteSheet, int[] row, Player player) {
+		super(x, y, z, map, spriteSheet, row);
 		this.player = player;
 		 currentSpeed = new Vector2(0, 0);
 		 setDefaults();

@@ -43,39 +43,53 @@ public class Map {
         }    
         
     }
+
     
     private static LinkedList<Tile> wallsToRender;
-    private static LinkedList<Tile> decalsToRender;
-    public static void render(SpriteBatch batch, int cameraX, int cameraY) { 
+//    private static LinkedList<Tile> decalsToRender;
+    private static LinkedList<Tile> floorsToRender;
+    public static void update(float deltaTime, int cameraX, int cameraY) {
+    	wallsToRender = new LinkedList<Tile>();
+    	floorsToRender = new LinkedList<Tile>();
+    	 visibleTiles = currentFloor.getAdjacent(cameraX, cameraY, tilesHorizontal, tilesVertical);
+         for(int i = 0; i < tilesHorizontal; i++) {
+             for(int j = 0; j < tilesVertical; j++) {
+                 if(visibleTiles[i][j] != null) {
+                	visibleTiles[i][j].update(deltaTime);
+                	 
+                 	if (visibleTiles[i][j].isWall) {
+                 		wallsToRender.add(visibleTiles[i][j]);
+                 	} else {
+                 		floorsToRender.add(visibleTiles[i][j]);
+                 	}
+                 }
+             }
+         }
+    	
+    }
+    
+    
+    
+    public static void render(SpriteBatch batch) { 
         if(Globals.RENDER_ALL_TILES) {
             currentFloor.renderAll(batch);
             return;
         }
 
-        wallsToRender = new LinkedList<Tile>();
-        decalsToRender = new LinkedList<Tile>();
-        visibleTiles = currentFloor.getAdjacent(cameraX, cameraY, tilesHorizontal, tilesVertical);
-        for(int i = 0; i < tilesHorizontal; i++) {
-            for(int j = 0; j < tilesVertical; j++) {
-                if(visibleTiles[i][j] != null) {
-                	if (visibleTiles[i][j].isWall) {
-                		wallsToRender.add(visibleTiles[i][j]);
-                	} else {
-                		visibleTiles[i][j].render(batch);
-                		decalsToRender.add(visibleTiles[i][j]);
-                	}
-                }
-            }
+        for(Tile t : floorsToRender) {
+        	t.render(batch);
         }
         
-        for(Tile t : decalsToRender) {
-        	t.renderDecals(batch);;
+        for(Tile t : floorsToRender) {
+        	t.renderDecals(batch);
         }
-        
+
         for(Tile t : wallsToRender) {
         	t.render(batch);
         	t.renderDecals(batch);
         }
+        
+
         
         
     }

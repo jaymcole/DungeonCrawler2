@@ -33,7 +33,8 @@ public abstract class Widget_Button extends Widget{
 	 */
 	protected boolean highlight;
 	
-
+	protected int mouseOffsetX, mouseOffsetY;
+	
 	public Widget_Button(float x, float y, float width, float height, Window parent, String text) {
 		super(x, y, width, height, parent);
 		texture = AssetManager.getTexture("texture/misc/white.png").getTexture();
@@ -60,7 +61,7 @@ public abstract class Widget_Button extends Widget{
 	/**
 	 * The action this button performs while the left mouse button is down AND over this button.
 	 */
-	public void mouseDown(){};
+	public void mouseDown(int mouseX, int mouseY){};
 	
 	/**
 	 * The action this button performs WHEN the left mouse button is releases AND over this button.
@@ -70,23 +71,25 @@ public abstract class Widget_Button extends Widget{
 	@Override
 	public boolean update(float deltaTime, int mouseX, int mouseY) {
 		
-		if (bounds.contains(mouseX, mouseY)) {
+		if (bounds.contains(mouseX, mouseY) || activeWidget) {
 			highlight = true;
 			
 			if (Game.leftMouseState == Game.MOUSE_PRESSED) {
+				mouseOffsetX = (int) (x - mouseX);
+				mouseOffsetY = (int) (y - mouseY);
 				mousePressed();
 				activeWidget = true;
 			}
 			
 			if (!activeWidget) 
 				return true;
-
 			
 			if (Game.leftMouseState == Game.MOUSE_RELEASED) {
 				mouseReleased();
 				activeWidget = false;
+				
 			} else if (Game.leftMouseState == Game.MOUSE_DOWN)
-				mouseDown();
+				mouseDown(mouseX, mouseY);
 			return true;
 		} else {
 			highlight = false;

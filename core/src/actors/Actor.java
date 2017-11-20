@@ -13,10 +13,12 @@ import actions.Action;
 import assetManager.Animation;
 import assetManager.AssetManager;
 import assetManager.SpriteAsset;
+import ecu.se.DecalPicker;
 import ecu.se.GameObject;
 import ecu.se.Utils;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
+import ecu.se.objects.Decal;
 import stats.Stats;
 import stats.TempStatModifier;
 
@@ -40,7 +42,8 @@ public abstract class Actor extends GameObject {
 //	protected TextureRegion textureRegion;
 	protected boolean awake;
 	protected boolean invulnerable;
-
+	protected boolean invisible;
+	
 	/**
 	 * Used for movement modifiers like explosions.
 	 */
@@ -78,6 +81,7 @@ public abstract class Actor extends GameObject {
 	protected Action secondaryAction;
 	protected ArrayList<Action> actions = new ArrayList<Action>();
 	protected LinkedList<Action> activeActions = new LinkedList<Action>();
+	protected LinkedList<Animation> animations = new LinkedList<Animation>();
 
 	protected Vector2 currentSpeed;
 	protected float currentHealth;
@@ -91,26 +95,17 @@ public abstract class Actor extends GameObject {
 	protected float scaleX, scaleY;
 	public Vector2 lookAt;
 
-	public Actor(float x, float y, float z, Map map, String spriteSheet) {
+	public Actor(float x, float y, float z, Map map, String[] spriteSheets, int[] row) {
 		super(x, y, z);
 		this.map = map;
-//		SpriteAsset asset = AssetManager.getSpriteSheet(spriteSheet);
-//		animation_body = new Animation(0, 0, 0, asset);
-//		spriteWidth = asset.getSpriteWidth();
-//		spriteHeight = asset.getSpriteHeight();
-//		textureRegion = asset.getTexture().getTextureRegion();
-		// texture = asset.getTexture().getTexture();]
 		
+		for(int i = 0; i < Math.min(spriteSheets.length, row.length); i++) {
+			Animation animation = new Animation(0, 0, 0, AssetManager.getSpriteSheet(spriteSheets[i]));
+			animation.setRow(row[i]);
+			animations.add(animation);
+		}
 
-//		animation_feet = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/default_character.png"));
-//		animation_feet.setRow(aRow);
-		animation_head = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/bleh.png"));
-		animation_head.setRow(1);
-		animation_body = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/bleh.png"));
-		animation_body.setRow(2);
-		animation_arms = new Animation(0, 0, 0, AssetManager.getSpriteSheet("texture/spritesheet/bleh.png"));
-		animation_arms.setRow(3);
-
+		invisible = false;
 		debugHealthBarTexture = AssetManager.getTexture("texture/misc/white.png").getTexture();
 		bounds = Utils.getRectangleBounds(x, y, 40, 80, Utils.ALIGN_CENTERED);
 		bounds = Utils.getEllipseBounds(x, y, 25, 25, 20);
@@ -143,6 +138,8 @@ public abstract class Actor extends GameObject {
 		updateActions(deltaTime);
 		if (currentHealth <= 0) {
 			this.kill();
+			
+			Map.getTile((int)x, (int)y).addObject(new Decal(x,y, "ass", AssetManager.getTexture(DecalPicker.getActorCorpse()).getTextureRegion()));
 		}
 	}
 
@@ -167,28 +164,37 @@ public abstract class Actor extends GameObject {
 	protected void updateAnimations(float deltaTime) {
 		float angle = Direction.angleDeg(this.getPositionV2(), lookAt);
 		
-		animation_body.setRotation(angle);
-//		animation_feet.setRotation(angle);
-		animation_arms.setRotation(angle);
-		animation_head.setRotation(angle);
+		if (!invisible) {
+			for(Animation a : animations) {
+				a.setRotation(angle);
+				a.setIdle(idle);
+				a.update(deltaTime);
+				a.setXY((int) x, (int) y);
+			}
+		}
 		bounds.setRotation((float) Math.toDegrees(angle));
 		bounds.setRotation(angle);
-		
-		animation_body.setIdle(idle);
-		animation_body.update(deltaTime);
-		animation_body.setXY((int) x, (int) y);
 
-//		animation_feet.setIdle(idle);
-//		animation_feet.update(deltaTime);
-//		animation_feet.setXY((int) x, (int) y);
-
-		animation_arms.setIdle(idle);
-		animation_arms.update(deltaTime);
-		animation_arms.setXY((int) x, (int) y);
-
-		animation_head.setIdle(idle);
-		animation_head.update(deltaTime);
-		animation_head.setXY((int) x, (int) y);
+//		animation_body.setRotation(angle);
+////		animation_feet.setRotation(angle);
+//		animation_arms.setRotation(angle);
+//		animation_head.setRotation(angle);
+//		
+//		animation_body.setIdle(idle);
+//		animation_body.update(deltaTime);
+//		animation_body.setXY((int) x, (int) y);
+//
+////		animation_feet.setIdle(idle);
+////		animation_feet.update(deltaTime);
+////		animation_feet.setXY((int) x, (int) y);
+//
+//		animation_arms.setIdle(idle);
+//		animation_arms.update(deltaTime);
+//		animation_arms.setXY((int) x, (int) y);
+//
+//		animation_head.setIdle(idle);
+//		animation_head.update(deltaTime);
+//		animation_head.setXY((int) x, (int) y);
 		idle = true;
 
 	}
@@ -218,10 +224,16 @@ public abstract class Actor extends GameObject {
 	@Override
 	public void render(SpriteBatch batch) {
 //		animation_feet.render(batch);
-		animation_body.render(batch);
-		animation_arms.render(batch);
-		animation_head.render(batch);
+//		animation_body.render(batch);
+//		animation_arms.render(batch);
+//		animation_head.render(batch);
 
+		for(Animation a : animations) {
+			a.render(batch);	
+		}
+		
+		
+		
 		// Renders a healthbar
 		batch.setColor(1.0f, 1.0f, 1.0f, 0.5f);
 		batch.draw(debugHealthBarTexture, x - (int) (healthbarWidth * 0.5f) - borderWidth, y + healthbarHeight - borderWidth,
