@@ -1,6 +1,7 @@
 package ecu.se.map;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -43,20 +44,40 @@ public class Map {
         
     }
     
+    private static LinkedList<Tile> wallsToRender;
+    private static LinkedList<Tile> decalsToRender;
     public static void render(SpriteBatch batch, int cameraX, int cameraY) { 
         if(Globals.RENDER_ALL_TILES) {
             currentFloor.renderAll(batch);
             return;
         }
 
+        wallsToRender = new LinkedList<Tile>();
+        decalsToRender = new LinkedList<Tile>();
         visibleTiles = currentFloor.getAdjacent(cameraX, cameraY, tilesHorizontal, tilesVertical);
         for(int i = 0; i < tilesHorizontal; i++) {
             for(int j = 0; j < tilesVertical; j++) {
                 if(visibleTiles[i][j] != null) {
-                    visibleTiles[i][j].render(batch);
+                	if (visibleTiles[i][j].isWall) {
+                		wallsToRender.add(visibleTiles[i][j]);
+                	} else {
+                		visibleTiles[i][j].render(batch);
+                		decalsToRender.add(visibleTiles[i][j]);
+                	}
                 }
             }
         }
+        
+        for(Tile t : decalsToRender) {
+        	t.renderDecals(batch);;
+        }
+        
+        for(Tile t : wallsToRender) {
+        	t.render(batch);
+        	t.renderDecals(batch);
+        }
+        
+        
     }
     
     public static void debugRender(ShapeRenderer renderer, int cameraX, int cameraY) { 

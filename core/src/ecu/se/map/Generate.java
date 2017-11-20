@@ -3,13 +3,19 @@ package ecu.se.map;
 import java.util.LinkedList;
 import java.util.Random;
 
+import javax.sql.rowset.spi.TransactionalWriter;
+
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import assetManager.AssetManager;
 import ecu.se.Globals;
 import ecu.se.Utils;
+import ecu.se.objects.Decal;
+import ecu.se.objects.ItemObject;
 import ecu.se.objects.Light;
 import ecu.se.objects.Staircase;
 
@@ -70,8 +76,139 @@ public class Generate {
 
 		map = minimizeMap();
 		finalizeFloor(map, random, floor);
+		finalizeTiles();
+
+		// DONE BUILDING
 		floor.generatedMap(tiles, lights, up, down, mapWidth, mapHeight);
 		printFloor();
+	}
+
+	private static void finalizeTiles() {
+		for (int i = 0; i < mapWidth; i++) {
+			for (int j = 0; j < mapHeight; j++) {
+				if (inBounds(i, j) && !tiles[i][j].isWall) {
+					createWalls(i, j);
+				}
+			}
+		}
+		
+		for (int i = 0; i < mapWidth; i++) {
+			for (int j = 0; j < mapHeight; j++) {
+				if (inBounds(i, j) && !tiles[i][j].isWall)
+					createCorners(i, j);
+			}
+		}
+	}
+
+	private static void createCorners(int x, int y) {
+		int xCoord = 0;
+		int yCoord = 0;
+		boolean insideCorner;
+		Tile tile;
+		if (inBounds(x, y)) {
+			for (int i = 1; i < Direction.values().length; i+=2) {
+				boolean ok = true;
+				insideCorner = false;
+
+				Direction dir = Direction.oppositeDirection(Direction.values()[i]);
+				
+				if (Direction.isExpanded(dir)) {
+					Direction left = Direction.nextExpandedDirectionCCW(dir);
+					Direction right = Direction.nextExpandedDirectionCW(dir);
+					
+					if(tiles[x + left.x][y + left.y].isWall && tiles[x + right.x][y + right.y].isWall) {
+						System.out.println("Oh! very good");
+					}else if (!tiles[x + left.x][y + left.y].isWall && !tiles[x + right.x][y + right.y].isWall) {
+						insideCorner = true;
+					} else {
+						ok = false;
+						System.out.println("No good");
+					}
+				}
+				
+				if (ok) {
+					xCoord = x + dir.x;
+					yCoord = y + dir.y;
+					if (inBounds(xCoord, yCoord)) {
+						tile = tiles[xCoord][yCoord];
+						if (tile.isWall) {
+							setTileWallTexture(tile, dir, insideCorner);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	private static void createWalls(int x, int y) {
+		int xCoord = 0;
+		int yCoord = 0;
+		Tile tile;
+		if (inBounds(x, y)) {
+			for (int i = 0; i < Direction.values().length; i+=2) {
+				boolean ok = true;
+				Direction dir = Direction.oppositeDirection(Direction.values()[i]);
+				
+				if (Direction.isExpanded(dir)) {
+					Direction left = Direction.nextExpandedDirectionCCW(dir);
+					Direction right = Direction.nextExpandedDirectionCW(dir);
+					if(tiles[x + left.x][y + left.y].isWall && tiles[x + right.x][y + right.y].isWall) {
+						System.out.println("Oh! very good");
+					} else {
+						ok = false;
+						System.out.println("No good");
+					}
+				}
+				
+				if (ok) {
+					xCoord = x + dir.x;
+					yCoord = y + dir.y;
+					if (inBounds(xCoord, yCoord)) {
+						tile = tiles[xCoord][yCoord];
+						if (tile.isWall) {
+							setTileWallTexture(tile, dir, false);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private static void setTileWallTexture(Tile tile, Direction direction, boolean insideCorner) {
+		if(direction == null) {
+			System.out.println("aiudhaoisddhuihda");
+		}
+		
+		if (direction == Direction.NORTH || direction == Direction.SOUTH)
+			direction = Direction.oppositeDirection(direction);
+		else if (direction == Direction.NORTHWEST)
+			direction = Direction.nextExpandedDirectionCCW(Direction.nextExpandedDirectionCCW(direction));
+		else if (direction == Direction.NORTHEAST)
+			direction = Direction.nextExpandedDirectionCW(Direction.nextExpandedDirectionCW(direction));
+		else if (direction == Direction.SOUTHEAST)
+			direction = Direction.nextExpandedDirectionCCW(Direction.nextExpandedDirectionCCW(direction));
+		else if (direction == Direction.SOUTHWEST)
+			direction = Direction.nextExpandedDirectionCW(Direction.nextExpandedDirectionCW(direction));
+
+		Texture tex = AssetManager.getTexture("texture/wall/walltest3.png").getTexture();
+		float totalW = tex.getWidth();
+		float totalH = tex.getHeight();
+		float trWidth = totalW / 3.0f;
+		float trHeight = totalH / 3.0f;
+
+		float startX = (trWidth * (1 + direction.x)) / totalW;
+		float startY = (trHeight * (1 + direction.y)) / totalH;
+		float endX = startX + (trWidth / totalW);
+
+		float endY = startY + (trHeight / totalH);
+		TextureRegion tr = new TextureRegion(tex);
+		tr.setRegion(tex);
+		tr.setRegion(startX, startY, endX, endY);
+		tile.addObject(new Decal(tile.getX(), tile.getY(), "WallBoi", tr, tileWidth, tileHeight));
+		
+//		TextureRegion tr2 = new TextureRegion();
+//		tr2.setRegion(AssetManager.getTexture("texture/misc/white.png").getTexture());
+//		tile.setTexture(tr2);
 	}
 
 	private static void generateSpawnRoom(BuildNode node) {
@@ -82,8 +219,8 @@ public class Generate {
 	}
 
 	private static int totalTiles = mapWidth * mapHeight;
-	private final static int minTiles = (int)(totalTiles * 0.25);
-	
+	private final static int minTiles = (int) (totalTiles * 0.25);
+
 	private static void generatePath(BuildNode node) {
 		remainingNodes.remove(node);
 		if (totalWalkable >= minTiles && random.nextInt(100) > totalTiles / (totalWalkable / 2.0f)) {
@@ -110,10 +247,10 @@ public class Generate {
 			break;
 		case 3:
 			genStraightPath(node.copy(), random.nextInt(6) + 2, false, true, random.nextBoolean());
-			
+
 			node.turnLeft();
 			genStraightPath(node.copy(), random.nextInt(6) + 2, false, true, random.nextBoolean());
-			
+
 			node.turnRight();
 			node.turnRight();
 			genStraightPath(node.copy(), random.nextInt(6) + 2, false, true, random.nextBoolean());
@@ -124,7 +261,7 @@ public class Generate {
 	}
 
 	private static void genRoom(BuildNode node, int width, int length, boolean extend, boolean intersect) {
-//		setMapInt(node, SPAWN, true);
+		// setMapInt(node, SPAWN, true);
 		width = Utils.clamp(3, 100, width);
 		length = Utils.clamp(3, 100, length);
 
@@ -208,24 +345,26 @@ public class Generate {
 		}
 	}
 
-//	private static void genStraightPath(BuildNode node, int length, Direction direction, boolean intersect,
-//			boolean continueForward) {
-//		for (int i = 0; i < length; i++) {
-//			if (random.nextInt(100) > 90) {
-//				BuildNode outNode = node.copy();
-//				outNode.direction = direction;
-//				outNode.forward();
-//				addNewNode(outNode);
-//			}
-//			setMapInt(node, FLOOR, false);
-//			node.add(node.direction);
-//		}
-//		if (continueForward) {
-//			addNewNode(node);
-//		} else {
-//			genRoom(node, random.nextInt(2) + 2, random.nextInt(2) + 2, false, false);
-//		}
-//	}
+	// private static void genStraightPath(BuildNode node, int length, Direction
+	// direction, boolean intersect,
+	// boolean continueForward) {
+	// for (int i = 0; i < length; i++) {
+	// if (random.nextInt(100) > 90) {
+	// BuildNode outNode = node.copy();
+	// outNode.direction = direction;
+	// outNode.forward();
+	// addNewNode(outNode);
+	// }
+	// setMapInt(node, FLOOR, false);
+	// node.add(node.direction);
+	// }
+	// if (continueForward) {
+	// addNewNode(node);
+	// } else {
+	// genRoom(node, random.nextInt(2) + 2, random.nextInt(2) + 2, false,
+	// false);
+	// }
+	// }
 
 	private static void setMapInt(BuildNode node, int floorType, boolean override) {
 		setMapInt(node.x, node.y, floorType, override);
@@ -233,6 +372,7 @@ public class Generate {
 
 	private static void setMapInt(int x, int y, int floorType, boolean override) {
 		if (inBounds(x, y)) {
+
 			if (map[x][y] == SPAWN)
 				return;
 
@@ -252,15 +392,26 @@ public class Generate {
 	}
 
 	private static int[][] minimizeMap() {
+		// int oldMapW = mapWidth;
+		// int oldMapH = mapHeight;
+
+		int buffer = 2;
 		mapWidth = maxMapNode.x - minMapNode.x;
-		mapWidth++;
+		mapWidth += buffer * 2;
 		mapHeight = maxMapNode.y - minMapNode.y;
-		mapHeight++;
+		mapHeight += buffer * 2;
 		int[][] temp = new int[mapWidth][mapHeight];
 
-		for (int i = 0; i < mapWidth; i++) {
-			for (int j = 0; j < mapHeight; j++) {
-				temp[i][j] = map[i + minMapNode.x][j + minMapNode.y];
+		for (int i = 0; i < mapWidth - buffer * 2; i++) {
+			for (int j = 0; j < mapHeight - buffer * 2; j++) {
+
+				// System.out.println(""
+				// + "temp(" + (i + buffer) +", " + (j+buffer) + ")\n"
+				// + "mapDim(" + mapWidth + ", " + mapHeight + ")\n"
+				// + "map(" + (i+minMapNode.x) + ", " + (j+minMapNode.y) + ")"
+				// + "oldDem(" + (oldMapW) + ", " + (oldMapH) + ")\n\n\n");
+
+				temp[i + buffer][j + buffer] = map[i + minMapNode.x][j + minMapNode.y];
 			}
 		}
 		return temp;
@@ -277,10 +428,6 @@ public class Generate {
 				temp = map[i][j];
 
 				switch (temp) {
-				case EMPTY:
-					break;
-				case WALL:
-					break;
 				case FLOOR:
 				case ROOM:
 					if (random.nextInt(100) > 95) {
@@ -298,6 +445,9 @@ public class Generate {
 					up = new Staircase(i * tileWidth + (tileWidth * 0.5f), j * tileHeight + (tileHeight * 0.5f),
 							"Up Staircase", "texture/test/staircase.png");
 					break;
+				default:
+					makeTileWall(i, j);
+					break;
 				}
 			}
 		}
@@ -305,8 +455,8 @@ public class Generate {
 	}
 
 	public static void printFloor() {
-		System.out.println("minTile=" + minTile.toString());
-		System.out.println("maxTile=" + maxTile.toString());
+		// System.out.println("minTile=" + minTile.toString());
+		// System.out.println("maxTile=" + maxTile.toString());
 		System.out.println("\n");
 		for (int j = mapHeight - 1; j >= 0; j--) {
 			System.out.printf("%4s", "" + j);
@@ -330,6 +480,11 @@ public class Generate {
 			System.out.println("");
 		}
 		System.out.println("\n");
+	}
+
+	private static void makeTileWall(int x, int y) {
+		tiles[x][y] = new Tile(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+		tiles[x][y].setWall(true);
 	}
 
 	private static void makeTileWalkable(int x, int y) {

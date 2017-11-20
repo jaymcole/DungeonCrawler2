@@ -141,9 +141,10 @@ public class Floor {
 			for (int j = 0; j < height; j++) {
 				if (inBounds(i + x, j + y) && tiles[i+x][j+y] != null) {
 					tilesToRender[i][j] = tiles[i + x][j + y];
-				} else {
-					tilesToRender[i][j] = null;
-				}
+				} 
+//				else {
+//					tilesToRender[i][j] = null;
+//				}
 			}
 		}
 
@@ -192,6 +193,10 @@ public class Floor {
 	public Vector2 getFloorIn(int x, int y) {
 //		return new Vector2((floorInX * tileWidth) + (tileWidth * 0.5f),
 //				(floorInY * tileHeight) + (tileHeight * 0.5f));
+		if (up == null) {
+			System.err.println("Floor returned something ti should not have. (getFloorIn())");
+			return new Vector2(); 
+		}
 		return up.getPositionV2();
 	}
 

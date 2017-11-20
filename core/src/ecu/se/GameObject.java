@@ -1,5 +1,6 @@
 package ecu.se;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import actors.Team;
+import ecu.se.objects.ItemObject;
 import stats.Stats;
 
 public abstract class GameObject implements Comparable<GameObject> {
@@ -53,6 +55,11 @@ public abstract class GameObject implements Comparable<GameObject> {
 	public abstract void dispose();
 
 	public void debugRender(ShapeRenderer render) {
+		if (this instanceof ItemObject)
+			render.setColor(Color.CYAN);
+		
+		
+		
 		render.polygon(bounds.getTransformedVertices());
 		render.ellipse(bounds.getOriginX(), bounds.getOriginY(), 10, 10);
 		Vector2 center = new Vector2();

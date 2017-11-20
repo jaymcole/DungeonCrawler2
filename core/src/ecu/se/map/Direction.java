@@ -47,7 +47,11 @@ public enum Direction {
      * 			Includes NE, NW, SE, SW
      */
     public static Direction nextExpandedDirectionCW (Direction dir) {
-    	return Direction.values()[(getIndexValue(dir)+1)%directionValues];
+    	Direction newboi = Direction.values()[(directionValues + dir.ordinal()+1)%directionValues];
+    	System.out.print(dir.name );
+    	System.out.print(" --> ");
+    	System.out.println(newboi.name);
+    	return newboi;
     }
     
     /**
@@ -57,7 +61,11 @@ public enum Direction {
      * 			Includes NE, NW, SE, SW
      */
     public static Direction nextExpandedDirectionCCW (Direction dir) {
-    	return Direction.values()[(getIndexValue(dir)-1)%directionValues];
+    	Direction newboi = Direction.values()[(directionValues + dir.ordinal()-1)%directionValues];
+    	System.out.print(dir.name );
+    	System.out.print(" --> ");
+    	System.out.println(newboi.name);
+    	return newboi;
     }
     
     /**
@@ -218,14 +226,6 @@ public enum Direction {
     }
     
     public static Direction getExpandedDirection(double rads) {
-//    	int degree = (int) Math.toDegrees(rads);
-//    	degree %= 360;
-//    	System.out.println("Returnning " + Direction.values()[(int) ((degree-22.5) / 45) -1].name);
-//    	return Direction.NORTH;
-    	
-    	
-    	
-    	
     	int degree = (int) Math.toDegrees(rads);
     	degree %= 360;
     	degree = Math.abs(((int)((degree-22.5-90) / 45) % Direction.directionValues));
@@ -307,5 +307,17 @@ public enum Direction {
      */
     public static float angleDeg(Vector2 p1, Vector2 p2) {
     	return (float)Math.toDegrees(angleRad(p1, p2));
+    }
+    
+    public static boolean isExpanded(Direction dir) {
+    	switch (dir) {
+    		case NORTHEAST:
+    		case NORTHWEST:
+    		case SOUTHEAST:
+    		case SOUTHWEST:
+    			return true;
+    		default:
+    			return false;
+    	}
     }
 }

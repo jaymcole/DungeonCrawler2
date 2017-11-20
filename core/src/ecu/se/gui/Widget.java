@@ -63,7 +63,7 @@ public abstract class Widget {
 	 */
 	public void debugRender (ShapeRenderer renderer) {
 		renderer.polygon(bounds.getTransformedVertices());
-		renderer.line(0, 0, x, y);
+//		renderer.line(0, 0, x, y);
 	}
 	
 	/**

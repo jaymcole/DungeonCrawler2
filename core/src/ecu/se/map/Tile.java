@@ -1,13 +1,13 @@
 package ecu.se.map;
 
-import java.util.Collection;
 import java.util.LinkedList;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import assetManager.AssetManager;
 import ecu.se.GameObject;
 import ecu.se.Utils;
 import ecu.se.objects.ItemObject;
@@ -15,9 +15,8 @@ import ecu.se.objects.ItemObject;
 public class Tile extends GameObject{
     private int x, y, width, height;
     private TextureRegion texture;
-//    private TextureRegion textureRegion;
     
-    private boolean isWall;
+    public boolean isWall;
     
     private LinkedList<GameObject> objects;
     private LinkedList<GameObject> decals;
@@ -31,6 +30,10 @@ public class Tile extends GameObject{
         decals = new LinkedList<GameObject> ();
         objects = new LinkedList<GameObject>();
         bounds = Utils.getRectangleBounds(x, y, width, height, Utils.ALIGN_BOTTOM_LEFT);
+        
+        texture = new TextureRegion();	
+        texture.setRegion(AssetManager.getTexture("texture/misc/black.jpg").getTexture());
+//		this.setTexture(texture);
     }
     
     @Override
@@ -49,9 +52,14 @@ public class Tile extends GameObject{
 
     public void render(SpriteBatch batch) {
         if(texture != null) {
+        	batch.setColor(Color.WHITE);
             batch.draw(texture, x, y, width, height);
         }
-        for(GameObject g : decals) {
+        
+    }
+    
+    public void renderDecals(SpriteBatch batch) {
+    	for(GameObject g : decals) {
         	g.render(batch);
         }
         
@@ -62,6 +70,12 @@ public class Tile extends GameObject{
     }
     
     public void debugRender(ShapeRenderer renderer) {
+    	if (isWall)
+    		renderer.setColor(Color.RED);
+    	else
+    		renderer.setColor(Color.FOREST);
+    	
+    	
     	renderer.polygon(bounds.getTransformedVertices());
     	
     	for(GameObject g : decals) {

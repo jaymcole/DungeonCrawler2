@@ -28,6 +28,7 @@ import archive.TotalRecords;
 import assetManager.AssetManager;
 import ecu.se.gui.GUI;
 import ecu.se.map.Map;
+import ecu.se.objects.Decal;
 import ecu.se.objects.ItemObject;
 import ecu.se.objects.Light;
 
@@ -96,6 +97,8 @@ public class Game extends ApplicationAdapter {
 					random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0, map, "texture/spritesheet/goblin_sprites.png",
 					player));
 		}
+		
+		Map.getTile((int)player.getX(), (int)player.getY()).addObject(new Decal(player.x, player.y, "ass", AssetManager.getTexture("texture/decals/decal_lava.png").getTextureRegion()));
 
 		hud = new GUI(player, screenWidth, screenHeight, this);
 		camera = new OrthographicCamera(screenWidth, screenHeight);
@@ -107,7 +110,7 @@ public class Game extends ApplicationAdapter {
 
 		light = new Light(player);
 		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
-		light.setIntensity(600);
+		light.setIntensity(1800);
 		Lighting.addLight(light);
 
 		backgroundTexture = AssetManager.getTexture(backgroundTextureName).getTexture();
@@ -241,14 +244,17 @@ public class Game extends ApplicationAdapter {
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			Lighting.toggleLights();
-			;
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P))
 			pauseGame();
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-			hud.closeWindow(GUI.WINDOW_HUD, GUI.WINDOW_MAIN_MENU);;
+			hud.closeWindow(GUI.WINDOW_HUD, GUI.WINDOW_MAIN_MENU);
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
+			Globals.DEBUG ^= true;
 		}
 
 		
