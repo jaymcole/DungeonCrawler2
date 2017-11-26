@@ -30,6 +30,7 @@ public abstract class Window {
 	
 	protected Widget_Image background;
 	
+	
 	public Window(GUI gui, Window parent) {
 		this.gui = gui;
 		this.parent = parent;
@@ -67,6 +68,7 @@ public abstract class Window {
 	 * @return True if a widget uses the mouse input. 
 	 */
 	public boolean update(float deltaTime, int mouseX, int mouseY) {
+		act(deltaTime);
 		boolean mouseUsed = false;
 		if (widgets == null) {
 			System.err.println("[" + windowName + "] widgets array was null");
@@ -81,6 +83,8 @@ public abstract class Window {
 		}
 		return mouseUsed;
 	}
+	
+	public void act(float deltaTime) {};
 	
 	/**
 	 * Renders all widgets associated with this window.
@@ -137,6 +141,14 @@ public abstract class Window {
 			this.useBackground = false;
 			System.err.println("[FAILED] " + windowName + " does not have a background to display." );
 		}
+	}
+	
+	/**
+	 * 
+	 * @return All child widgets of this Window.
+	 */
+	public Widget[] getChildren() {
+		return widgets;
 	}
 	
 }

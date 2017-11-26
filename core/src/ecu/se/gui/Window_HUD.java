@@ -10,6 +10,7 @@ import archive.Archiver;
 import archive.TimeRecords;
 import assetManager.AssetManager;
 import ecu.se.Game;
+import ecu.se.objects.ItemObject;
 import stats.Stats;
 
 public class Window_HUD extends Window {
@@ -58,7 +59,7 @@ public class Window_HUD extends Window {
 		TextureRegion buttonActive =    new TextureRegion(buttonTexture, 0, 222, 193, 44);
 		btn_playerWindow = new Widget_Button_Image(1355, GUI.defaultHeight - 46, 197, 46, this, buttonDefault, buttonHighlight, buttonActive) {
 			@Override
-			public void mouseReleased() {
+			public void mouseReleased(int mouseX, int mouseY) {
 				gui.setWindow(GUI.WINDOW_PLAYER_STATS);
 			}
 		};
@@ -68,7 +69,7 @@ public class Window_HUD extends Window {
 		buttonActive =    new TextureRegion(buttonTexture, 193, 222, 180, 45);
 		btn_playerInventory = new Widget_Button_Image(1550, GUI.defaultHeight - 46, 182, 46, this, buttonDefault, buttonHighlight, buttonActive) {
 			@Override
-			public void mouseReleased() {
+			public void mouseReleased(int mouseX, int mouseY) {
 				gui.setWindow(GUI.WINDOW_INVENTORY);
 			}
 		};
@@ -78,7 +79,7 @@ public class Window_HUD extends Window {
 		buttonActive =    new TextureRegion(buttonTexture, 373, 222, 185, 109);
 		btn_mainMenu = new Widget_Button_Image(1730, GUI.defaultHeight - 113, 186, 113, this, buttonDefault, buttonHighlight, buttonActive) {
 			@Override
-			public void mouseReleased() {
+			public void mouseReleased(int mouseX, int mouseY) {
 				gui.setWindow(GUI.WINDOW_MAIN_MENU);
 			}
 		};
@@ -89,11 +90,11 @@ public class Window_HUD extends Window {
 		buttonActive =    new TextureRegion(buttonTexture, 373, 222, 185, 109);
 		btn_primaryAction= new Widget_Button_Image(1859, 535, 60, 55, this, buttonDefault, buttonHighlight, buttonActive) {
 			@Override
-			public void mousePressed() {
+			public void mousePressed(int mouseX, int mouseY) {
 				System.out.println("Bitch please");
 			}
 			@Override
-			public void mouseReleased() {
+			public void mouseReleased(int mouseX, int mouseY) {
 				System.out.println("maaaan");
 			}
 		};
@@ -104,11 +105,11 @@ public class Window_HUD extends Window {
 		buttonActive =    new TextureRegion(buttonTexture, 373, 222, 185, 109);
 		btn_secondaryAction = new Widget_Button_Image(1859, 478, 60, 55, this, buttonDefault, buttonHighlight, buttonActive) {
 			@Override
-			public void mousePressed() {
+			public void mousePressed(int mouseX, int mouseY) {
 				System.out.println("Secondary WOW");
 			}
 			@Override
-			public void mouseReleased() {
+			public void mouseReleased(int mouseX, int mouseY) {
 				System.out.println("unfortunate");
 			}
 		};
@@ -123,25 +124,17 @@ public class Window_HUD extends Window {
 		widgetsList.add(new Widget_Label(800, 80, 10, 10, this, "Wash The Queen", 50, Color.BLUE, Color.WHITE));
 
 		buttonTexture = AssetManager.getTexture("texture/gui/hotkey.png").getTexture();
-		Widget_Button_Image[] hotkeys = new Widget_Button_Image[13];
-		for(int i = 0; i < hotkeys.length; i++) {
+//		Widget_Button_Image[] hotkeys = new Widget_Button_Image[13];
+		for(int i = 0; i < 13; i++) {
 			buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
 			buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
 			buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
-			Widget_Button_Image hotkey = new Widget_Button_Image(595 + (55 * i) + i + (int)(i * 0.3), 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive) {
-				@Override
-				public void mouseDown(int mouseX, int mouseY) {
-					System.out.println("mouseDown");
-				}
-				@Override
-				public void mouseReleased() {
-					System.out.println("mouseReleased");
-				}
-			};
+			Widget_ItemSlot hotkey = new Widget_ItemSlot(595 + (55 * i) + i + (int)(i * 0.3), 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive);
 			
 			hotkey.setDefaultColor( Color.RED);
 			hotkey.setActiveColor(Color.CYAN);
 			hotkey.setHighlightColor(Color.CYAN);
+			hotkey.setItem(new ItemObject(0,0, "Sprite LOL", "texture/test/spritePlaceholder.png"));
 			widgetsList.add(hotkey);
 		}
 		widgetsList.add(new Widget_Image(0, 0, GUI.defaultWidth, GUI.defaultHeight, this, "texture/gui/hud.png"));

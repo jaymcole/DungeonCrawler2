@@ -35,6 +35,11 @@ public abstract class Widget_Button extends Widget{
 	
 	protected int mouseOffsetX, mouseOffsetY;
 	
+	/**
+	 * Multi-use variable to be used with new buttons.
+	 */
+	protected int variableOne;
+	
 	public Widget_Button(float x, float y, float width, float height, Window parent, String text) {
 		super(x, y, width, height, parent);
 		texture = AssetManager.getTexture("texture/misc/white.png").getTexture();
@@ -56,7 +61,7 @@ public abstract class Widget_Button extends Widget{
 	/**
 	 * The action this button performs WHEN the left mouse button is pressed AND over this button.
 	 */
-	public void mousePressed(){};
+	public void mousePressed(int mouseX, int mouseY){};
 	
 	/**
 	 * The action this button performs while the left mouse button is down AND over this button.
@@ -66,7 +71,7 @@ public abstract class Widget_Button extends Widget{
 	/**
 	 * The action this button performs WHEN the left mouse button is releases AND over this button.
 	 */
-	public void mouseReleased(){};
+	public void mouseReleased(int mouseX, int mouseY){};
 
 	@Override
 	public boolean update(float deltaTime, int mouseX, int mouseY) {
@@ -77,19 +82,21 @@ public abstract class Widget_Button extends Widget{
 			if (Game.leftMouseState == Game.MOUSE_PRESSED) {
 				mouseOffsetX = (int) (x - mouseX);
 				mouseOffsetY = (int) (y - mouseY);
-				mousePressed();
+				mousePressed(mouseX, mouseY);
 				activeWidget = true;
 			}
 			
-			if (!activeWidget) 
-				return true;
+//			if (!activeWidget) 
+//				return true;
 			
 			if (Game.leftMouseState == Game.MOUSE_RELEASED) {
-				mouseReleased();
+				mouseReleased(mouseX, mouseY);
 				activeWidget = false;
 				
 			} else if (Game.leftMouseState == Game.MOUSE_DOWN)
 				mouseDown(mouseX, mouseY);
+			
+			
 			return true;
 		} else {
 			highlight = false;
@@ -135,5 +142,9 @@ public abstract class Widget_Button extends Widget{
 	 */
 	public void setHighlightColor(Color c) {
 		highlightColor = c;
+	}
+	
+	public void setMultiVariableOne(int var) {
+		variableOne = var;
 	}
 }

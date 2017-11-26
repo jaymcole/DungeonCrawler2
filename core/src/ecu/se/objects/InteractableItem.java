@@ -1,27 +1,27 @@
 package ecu.se.objects;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
-import assetManager.TextureAsset;
+import ecu.se.GameObject;
+
 
 public class InteractableItem extends ItemObject {
 
+	public InteractableItem(float x, float y, float width, float height, String name, String path) {
+		super(x, y, width, height, name, path);
+		
+	}
+	
 	public InteractableItem(float x, float y, String name, String path) {
 		super(x, y, name, path);
 		
 	}
-
-	public void update(float deltaTime) {
-		
+	
+	@Override
+	public void onCollision(GameObject otherObject) {
 	}
-
-	public void render(SpriteBatch batch) {
-		
-	}
-
-	public void dispose() {
+	
+	public void onClick(GameObject otherObject) {
 		
 	}
 
@@ -34,7 +34,6 @@ public class InteractableItem extends ItemObject {
     }
 	
 	public boolean itemUsed() {
-		// Item is in use
 		return true;
 	}
 	

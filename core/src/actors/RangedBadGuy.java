@@ -1,42 +1,38 @@
 package actors;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import java.util.Random;
+
 import com.badlogic.gdx.math.Vector2;
 
-import ecu.se.map.Map;
-import ecu.se.ObjectManager;
+import ecu.se.Game;
 import ecu.se.map.Direction;
+import stats.Stats;
 
 public class RangedBadGuy extends Actor {
-
-	private Player player;
 	
 	private int maxDist = 115, minDist = 100;
 	
-	public RangedBadGuy(float x, float y, float z, Map map, String[] spriteSheet, int[] row, Player player) {
-		super(x, y, z, map, spriteSheet, row);
-		this.player = player;
+	public RangedBadGuy(float x, float y, float z, String[] spriteSheet, int[] row) {
+		super(x, y, z, spriteSheet, row);
 		 currentSpeed = new Vector2(0, 0);
-		 setDefaults();
-	     updateStats();
 	     team = Team.MOB;
+	     
+	     Random random = new Random();
+	     this.baseStats[Stats.SIZE.ordinal()] += (random.nextFloat() - 0.5f) / 2;
+	     calculateStats();
 	}
 	
 	public void act(float deltaTime) {
-		float deltaX = player.getPosition().x - x;
-		float deltaY = player.getPosition().y - y;
-		
-		
-		float dist = Math.abs(player.getPosition().x-x) + Math.abs(player.getPosition().y-y);
+		float dist = Math.abs(Game.player.getPosition().x-x) + Math.abs(Game.player.getPosition().y-y);
 		
 		if(dist > maxDist)
 		{
-			move(deltaTime, Direction.directionTo(x, y, player.getPosition().x, player.getPosition().y), true);
+			move(deltaTime, Direction.directionTo(x, y, Game.player.getPosition().x, Game.player.getPosition().y), true);
 		} else if(dist < minDist)
 		{
-			move(deltaTime, Direction.directionTo(player.getPosition().x, player.getPosition().y, x, y), true);
+			move(deltaTime, Direction.directionTo(Game.player.getPosition().x, Game.player.getPosition().y, x, y), true);
 		}
 		
-		lookAt = player.getPositionV2();
+		lookAt = Game.player.getPositionV2();
     }
 }

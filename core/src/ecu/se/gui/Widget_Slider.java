@@ -10,9 +10,6 @@ public class Widget_Slider extends Widget {
 	private float newProgress;
 	private float min, max;
 	private Widget_Button btn;
-	private float correctedStart;
-	private float correctedEnd;
-	private float progress;
 	public Widget_Slider(float x, float y, float width, float height, Window parent, float min, float max,
 			float initialValue) {
 		super(x, y, width, height, parent);
@@ -20,8 +17,6 @@ public class Widget_Slider extends Widget {
 		this.newProgress = initialValue;
 		this.min = min;
 		this.max = max;
-		progress = 15;
-		correctedStart = this.x + GUI.defaultWidth;
 		setText(initialValue + "");
 		btn = new Widget_Button(x, y, 15, 15, this.parentWindow, "" + initialValue) {
 			@Override
@@ -39,7 +34,7 @@ public class Widget_Slider extends Widget {
 	public boolean update(float deltaTime, int mouseX, int mouseY) {
 		boolean used = btn.update(deltaTime, mouseX, mouseY);
 		float percent = (btn.x - this.x) / (width - btn.width);
-		newProgress = max * percent;
+		newProgress = ((Math.abs(max) + Math.abs(min)) * percent) + min;
 		
 		if (used && oldProgress != newProgress) {
 			onValueChange();

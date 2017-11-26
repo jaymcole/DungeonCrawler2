@@ -12,9 +12,17 @@ public class DecalPicker {
 			"texture/decals/decal_corpse_4.png",
 	};
 	
+	private static String[] moss = new String[] {
+			"texture/decals/moss_1.png",
+			"texture/decals/moss_2.png",
+	};
 	
 	
 	public static String getActorCorpse() {
 		return actorCorpse[random.nextInt(actorCorpse.length)];
+	}
+	
+	public static String getMossDecal() {
+		return moss[random.nextInt(moss.length)];
 	}
 }

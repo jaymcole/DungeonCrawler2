@@ -10,14 +10,17 @@ import com.badlogic.gdx.math.Vector3;
 
 import actors.Team;
 import ecu.se.objects.ItemObject;
+import ecu.se.objects.Light;
 import stats.Stats;
 
 public abstract class GameObject implements Comparable<GameObject> {
 	protected float x, y, z;
+	protected float width, height;
 	protected Texture texture;
-	protected boolean alive;
+	private boolean alive;
 	protected Polygon bounds;
 	protected boolean idle;
+	protected Light light;
 	public Team team;
 
 	public GameObject(float x, float y, float z) {
@@ -41,11 +44,11 @@ public abstract class GameObject implements Comparable<GameObject> {
 	public void setPosition(int x, int y) {
 		this.x = x;
 		this.y = y;
+		bounds.setPosition(x, y);
 	}
 
 	public void setPosition(Vector2 pos) {
-		x = pos.x;
-		y = pos.y;
+		setPosition((int)pos.x, (int)pos.y);
 	}
 
 	public abstract void update(float deltaTime);
@@ -55,11 +58,13 @@ public abstract class GameObject implements Comparable<GameObject> {
 	public abstract void dispose();
 
 	public void debugRender(ShapeRenderer render) {
+		render.setColor(Color.WHITE);
 		if (this instanceof ItemObject)
 			render.setColor(Color.CYAN);
 		
-		
-		
+		if (this != Game.player && ObjectManager.isColliding(Game.player, this))
+			render.setColor(Color.YELLOW);
+			
 		render.polygon(bounds.getTransformedVertices());
 		render.ellipse(bounds.getOriginX(), bounds.getOriginY(), 10, 10);
 		Vector2 center = new Vector2();
@@ -76,14 +81,18 @@ public abstract class GameObject implements Comparable<GameObject> {
 	 * @param otherObject
 	 *            - The object that's colliding with this object.
 	 */
-	public void collision(GameObject otherObject) {
+	public void onCollision(GameObject otherObject) {
 
 	}
-
-	public void attack() {
-
+	
+	public Light getLight() {
+		return light;
 	}
 
+	public void setLight (Light light) {
+		this.light = light;
+	}
+	
 	public float defend(Stats type, float damage) {
 		return 0;
 	}
@@ -98,7 +107,14 @@ public abstract class GameObject implements Comparable<GameObject> {
 			return 0;
 	}
 
-	protected void kill() {
+	protected void setAlive(boolean alive){
+		this.alive = alive;
+	}
+	
+	protected void die() {}
+	
+	public void kill() {
+		die();
 		this.alive = false;
 		ObjectManager.remove(this);
 		dispose();

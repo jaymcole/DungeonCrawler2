@@ -1,5 +1,7 @@
 package ecu.se;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,6 +16,15 @@ import assetManager.AssetManager;
 public class Utils {
     
     private static ShapeRenderer debugRenderer = new ShapeRenderer();
+    private static Random random = new Random();
+    
+    public static int getRandomInt() {
+    	return random.nextInt();
+    }
+    
+    public static int getRandomInt(int bound) {
+    	return random.nextInt(bound);
+    }
     
     public static void DrawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix)
     {
@@ -191,6 +202,15 @@ public class Utils {
      */
     public static void print(String string ) {
         System.out.print(string);
+    }
+    
+    /**
+     * 
+     * @param currentLevel
+     * @return The xp required to reach the next level.
+     */
+    public int xpRequiredToLevel(int currentLevel) {
+    	return (int) Math.pow(currentLevel / Globals.XP_REQUIREMENT_CONSTANT, 2);
     }
     
     /**

@@ -67,7 +67,6 @@ public abstract class Widget {
 	 */
 	public void debugRender (ShapeRenderer renderer) {
 		renderer.polygon(bounds.getTransformedVertices());
-//		renderer.line(0, 0, x, y);
 	}
 	
 	/**
@@ -104,8 +103,10 @@ public abstract class Widget {
 	public void setText(String text) {
 		this.text = text;
 		glyphLayout.setText(font, this.text);
-		textX = (int)(x + ((width - glyphLayout.width) * 0.5));
-		textY = (int)(y + ((height + glyphLayout.height) * 0.5));
+		textX = (int)(x + ((width - glyphLayout.width) * 0.5f));
+		textY = (int)(y + ((height + glyphLayout.height) * 0.5f));
+//		bounds.setPosition(x, y);
+		bounds = Utils.getRectangleBounds(this.x, this.y, this.width, this.height, Utils.ALIGN_BOTTOM_LEFT);
 		useText = true;
 	}
 	
@@ -133,5 +134,9 @@ public abstract class Widget {
 	
 	public void toggleBackground() {
 		useBackground ^= true;
+	}
+	
+	public boolean contains(int x, int y) {
+		return bounds.contains(x, y);
 	}
 }

@@ -25,20 +25,21 @@ public class Window_Settings extends Window{
 		
 		Widget_Label lbl_title = new Widget_Label(backgroundX + bufferX, backgroundY + halfwayY - 25, 0, 0, parent, this.windowName, 50, Color.CLEAR, Color.BLACK);
 		Widget_Button btn_play = new Widget_Button(backgroundX + bufferX, backgroundY + halfwayY - 100, halfwayX - bufferX * 2, 50, this, "Some setting") {
-			public void mouseReleased() {
+			@Override
+			public void mouseReleased(int mouseX, int mouseY) {
 				//TODO: Settings options
 			}
 		};
 		
 		
-		Widget_Slider sld_attn_a = new Widget_Slider(backgroundX + bufferX, backgroundY + halfwayY - 200, halfwayX - bufferX * 2, 50, this, 0, 10, Lighting.getAttnA()) {
+		Widget_Slider sld_attn_a = new Widget_Slider(backgroundX + bufferX, backgroundY + halfwayY - 200, halfwayX - bufferX * 2, 50, this, -10, 10, Lighting.getAttnA()) {
 			@Override
 			public void onValueChange() {
 				Lighting.setAttnA(this.getProgress());
 			}
 		};
 		
-		Widget_Slider sld_attn_b = new Widget_Slider(backgroundX + bufferX, backgroundY + halfwayY - 300, halfwayX - bufferX * 2, 50, this, 0, 10, Lighting.getAttnB()) {
+		Widget_Slider sld_attn_b = new Widget_Slider(backgroundX + bufferX, backgroundY + halfwayY - 300, halfwayX - bufferX * 2, 50, this, -10, 10, Lighting.getAttnB()) {
 			@Override
 			public void onValueChange() {
 				Lighting.setAttnB(this.getProgress());
@@ -47,14 +48,14 @@ public class Window_Settings extends Window{
 		
 		Widget_Button btn_back = new Widget_Button(backgroundX + bufferX, backgroundY + halfwayY - 400, (halfwayX - bufferX * 2) * 0.25f, 50, this, "Back") {
 			@Override
-			public void mouseReleased() {
+			public void mouseReleased(int mouseX, int mouseY) {
 				gui.closeWindow(GUI.WINDOW_MAIN_MENU, GUI.WINDOW_PAUSED);
 			}
 		};
 		
 		Widget_Button btn_toggleBackground = new Widget_Button(backgroundX + bufferX +  btn_back.width, backgroundY + halfwayY - 400, (halfwayX - bufferX * 2) * 0.25f, 50, this, "Toggle Background") {
 			@Override
-			public void mouseReleased() {
+			public void mouseReleased(int mouseX, int mouseY) {
 				parentWindow.toggleBackground();
 			}
 		};

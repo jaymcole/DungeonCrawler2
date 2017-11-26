@@ -22,15 +22,7 @@ public class Spell_Teleport extends Spell{
 
 	@Override
 	protected void cast(float deltaTime) {
-//		light = new FadingLight(caster.getPosition());
-//		light.setColor(Color.BLUE);
-//		light.setIntensity(500);
-//		light.setParent(caster);
-//		Lighting.addLight(light);
 		//TODO: Make a teleport animation
-		//TODO: Check that teleport location is valid (on walkable tile)
-		
-		
 		if (!Map.getTile((int)targetX, (int)targetY).isWall) {
 			Lighting.addLight(new FadingLight(caster.getPosition(), Color.SKY, 5000, 0.8f, 2) );
 			Lighting.addLight(new FadingLight(new Vector3(targetX, targetY, 0), Color.BLUE, 5000, 0.8f, 2) );	

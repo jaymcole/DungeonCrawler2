@@ -8,17 +8,23 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import actions.Action;
 import assetManager.Animation;
 import assetManager.AssetManager;
-import assetManager.SpriteAsset;
 import ecu.se.DecalPicker;
+import ecu.se.Game;
 import ecu.se.GameObject;
+import ecu.se.Lighting;
+import ecu.se.ObjectMaker;
+import ecu.se.ObjectManager;
 import ecu.se.Utils;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
 import ecu.se.objects.Decal;
+import ecu.se.objects.InteractableItem;
+import ecu.se.objects.Light;
 import stats.Stats;
 import stats.TempStatModifier;
 
@@ -27,7 +33,6 @@ public abstract class Actor extends GameObject {
 	protected String name;
 	protected String spriteSheet;
 	// protected Texture texture;
-	protected Map map;
 	protected float oldx = 0;
 	protected float oldy = 0;
 	protected Direction direction;
@@ -39,11 +44,11 @@ public abstract class Actor extends GameObject {
 
 	protected int spriteWidth;// = 40;
 	protected int spriteHeight;// = 48;
-//	protected TextureRegion textureRegion;
+	// protected TextureRegion textureRegion;
 	protected boolean awake;
 	protected boolean invulnerable;
 	protected boolean invisible;
-	
+
 	/**
 	 * Used for movement modifiers like explosions.
 	 */
@@ -76,7 +81,7 @@ public abstract class Actor extends GameObject {
 
 	protected int healthbarWidth = 50;
 	protected int healthbarHeight = 40;
-	
+
 	protected Action primaryAction;
 	protected Action secondaryAction;
 	protected ArrayList<Action> actions = new ArrayList<Action>();
@@ -88,32 +93,35 @@ public abstract class Actor extends GameObject {
 	protected float currentMana;
 
 	// TDOD: Implement this level poop!
-	protected int currentLevel;
-	protected int currentXP;
+	protected int characterLevel;
+	protected int characterXP;
+	protected int xpToLevel;
+	protected int attributePoints;
 
 	private Texture debugHealthBarTexture;
 	protected float scaleX, scaleY;
 	public Vector2 lookAt;
 
-	public Actor(float x, float y, float z, Map map, String[] spriteSheets, int[] row) {
+	public Actor(float x, float y, float z, String[] spriteSheets, int[] row) {
 		super(x, y, z);
-		this.map = map;
-		
-		for(int i = 0; i < Math.min(spriteSheets.length, row.length); i++) {
+		for (int i = 0; i < Math.min(spriteSheets.length, row.length); i++) {
 			Animation animation = new Animation(0, 0, 0, AssetManager.getSpriteSheet(spriteSheets[i]));
 			animation.setRow(row[i]);
 			animations.add(animation);
 		}
-
+		light = null;
+		attributePoints = 0;
 		invisible = false;
 		debugHealthBarTexture = AssetManager.getTexture("texture/misc/white.png").getTexture();
 		bounds = Utils.getRectangleBounds(x, y, 40, 80, Utils.ALIGN_CENTERED);
 		bounds = Utils.getEllipseBounds(x, y, 25, 25, 20);
 		tempStatModifiers = new LinkedList<TempStatModifier>();
 		setDefaults();
-		updateStats();
+		calculateStats();
+		
 		currentHealth = getStat(Stats.HEALTH);
 		currentMana = getStat(Stats.MANA);
+		
 		Random random = new Random();
 		currentHealth = random.nextInt(100);
 		this.awake = false;
@@ -136,11 +144,8 @@ public abstract class Actor extends GameObject {
 		updateMovement(deltaTime);
 		updateAnimations(deltaTime);
 		updateActions(deltaTime);
-		if (currentHealth <= 0) {
-			this.kill();
-			
-			Map.getTile((int)x, (int)y).addObject(new Decal(x,y, "ass", AssetManager.getTexture(DecalPicker.getActorCorpse()).getTextureRegion()));
-		}
+		if (currentHealth <= 0)
+			kill();
 	}
 
 	protected void updateStats(float deltaTime) {
@@ -159,13 +164,15 @@ public abstract class Actor extends GameObject {
 		currentSpeed.x *= currentStats[Stats.MOVEMENT_DRAG.ordinal()] * deltaTime;
 		currentSpeed.y *= currentStats[Stats.MOVEMENT_DRAG.ordinal()] * deltaTime;
 		bounds.setPosition(x, y);
+		bounds.setScale(getStat(Stats.SIZE), getStat(Stats.SIZE));
 	}
-	
+
 	protected void updateAnimations(float deltaTime) {
 		float angle = Direction.angleDeg(this.getPositionV2(), lookAt);
-		
+
 		if (!invisible) {
-			for(Animation a : animations) {
+			for (Animation a : animations) {
+				a.setScale(getStat(Stats.SIZE), getStat(Stats.SIZE));
 				a.setRotation(angle);
 				a.setIdle(idle);
 				a.update(deltaTime);
@@ -174,29 +181,7 @@ public abstract class Actor extends GameObject {
 		}
 		bounds.setRotation((float) Math.toDegrees(angle));
 		bounds.setRotation(angle);
-
-//		animation_body.setRotation(angle);
-////		animation_feet.setRotation(angle);
-//		animation_arms.setRotation(angle);
-//		animation_head.setRotation(angle);
-//		
-//		animation_body.setIdle(idle);
-//		animation_body.update(deltaTime);
-//		animation_body.setXY((int) x, (int) y);
-//
-////		animation_feet.setIdle(idle);
-////		animation_feet.update(deltaTime);
-////		animation_feet.setXY((int) x, (int) y);
-//
-//		animation_arms.setIdle(idle);
-//		animation_arms.update(deltaTime);
-//		animation_arms.setXY((int) x, (int) y);
-//
-//		animation_head.setIdle(idle);
-//		animation_head.update(deltaTime);
-//		animation_head.setXY((int) x, (int) y);
 		idle = true;
-
 	}
 
 	protected void updateActions(float deltaTime) {
@@ -223,22 +208,15 @@ public abstract class Actor extends GameObject {
 
 	@Override
 	public void render(SpriteBatch batch) {
-//		animation_feet.render(batch);
-//		animation_body.render(batch);
-//		animation_arms.render(batch);
-//		animation_head.render(batch);
-
-		for(Animation a : animations) {
-			a.render(batch);	
+		for (Animation a : animations) {
+			a.render(batch);
 		}
-		
-		
-		
+
 		// Renders a healthbar
 		batch.setColor(1.0f, 1.0f, 1.0f, 0.5f);
-		batch.draw(debugHealthBarTexture, x - (int) (healthbarWidth * 0.5f) - borderWidth, y + healthbarHeight - borderWidth,
-				healthbarWidth + borderWidth * 2, barHeight * 2 + borderWidth * 2);
-		
+		batch.draw(debugHealthBarTexture, x - (int) (healthbarWidth * 0.5f) - borderWidth,
+				y + healthbarHeight - borderWidth, healthbarWidth + borderWidth * 2, barHeight * 2 + borderWidth * 2);
+
 		batch.setColor(1.0f, 0f, 0f, 0.5f);
 		batch.draw(debugHealthBarTexture, x - (int) (healthbarWidth * 0.5f), y + healthbarHeight,
 				healthbarWidth * (currentHealth / (currentStats[Stats.HEALTH.ordinal()] + 0.0f)), barHeight * 2);
@@ -281,14 +259,14 @@ public abstract class Actor extends GameObject {
 	}
 
 	/**
-	 * Sets the HP of this Actor Caps the max based on the Actors Health stat.
+	 * Adds amount to this Actors health. Caps the max based on the Actors Health stat.
 	 * 
 	 * @param currentHealth
 	 */
-	public void setHealth(float currentHealth) {
+	public void setHealth(float amount) {
 		if (invulnerable)
 			return;
-		this.currentHealth += currentHealth;
+		this.currentHealth += amount;
 		this.currentHealth = Utils.clamp(0, getStat(Stats.HEALTH), this.currentHealth);
 	}
 
@@ -313,6 +291,16 @@ public abstract class Actor extends GameObject {
 	public float getStat(Stats stat) {
 		return currentStats[stat.ordinal()];
 	}
+	
+	public void setBaseStat(Stats stat, float value) {
+		baseStats[stat.ordinal()] = value;
+		calculateStats();
+	}
+	
+	public void setModifierStat(Stats stat, float value) {
+		modifierStats[stat.ordinal()] = value;
+		calculateStats();
+	}
 
 	public void setIdle(boolean idle) {
 		this.idle = idle;
@@ -331,10 +319,6 @@ public abstract class Actor extends GameObject {
 		currentSpeed.y += (currentStats[Stats.MOVEMENT_ACCELERATION.ordinal()] * deltaTime) * direction.y;
 		currentSpeed.y = Utils.clamp(-currentStats[Stats.MOVEMENT_SPEED.ordinal()],
 				currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentSpeed.y);
-
-		// if (updateDirection)
-		// animation.rowSelect(Direction.valueOf(direction.name()).ordinal());
-		
 		setIdle(false);
 	}
 
@@ -351,12 +335,24 @@ public abstract class Actor extends GameObject {
 		baseStats[Stats.MOVEMENT_DRAG.ordinal()] = 0.3f;
 		baseStats[Stats.MOVEMENT_SPEED.ordinal()] = 50f;
 		baseStats[Stats.MOVEMENT_ACCELERATION.ordinal()] = 200f;
+		baseStats[Stats.SIZE.ordinal()] = 1f;
 	}
 
 	// TODO: Calculate stats based on equipped items / other modifiers
-	public void updateStats() {
+	public void calculateStats() {
 		for (int i = 0; i < Stats.values().length; i++) {
-			currentStats[i] = baseStats[i] + modifierStats[i];
+			if (Stats.values()[i].upgradeable)
+				if (Stats.values()[i] != Stats.SIZE)
+					currentStats[i] = baseStats[i] + modifierStats[i] + currentStats[Stats.SIZE.ordinal()];
+				else
+					currentStats[i] = baseStats[i] + modifierStats[i];
+			else {
+				currentStats[i] = baseStats[i] + modifierStats[i];
+				for(Stats s : Stats.values()[i].grouping) {
+					currentStats[i] += getStat(Stats.values()[s.ordinal()]);
+				}
+			}
+			currentStats[i] *= Stats.values()[i].multiplier;
 		}
 	}
 
@@ -429,9 +425,25 @@ public abstract class Actor extends GameObject {
 		actions.add(action);
 	}
 
-	// TODO: Place corpse texture (needs to fade eventually)
-	// Drop Loot.
-	public void die() {
+	public void setLevel(int level) {
+		if (level < 0)
+			level = 0;
+		else
+			characterLevel = level;
+	}
+
+	@Override
+	protected void die() {
+		Map.getTile((int) x, (int) y).addObject(new Decal(x, y, "ass", AssetManager.getTexture(DecalPicker.getActorCorpse()).getTextureRegion()));
+
+		if (Utils.getRandomInt(100) > 50) {
+			GameObject hOrb = ObjectMaker.createHealthOrb(x + Utils.getRandomInt(50) - 25, y + Utils.getRandomInt(50) - 25); 
+			Map.getTile((int)hOrb.getX(), (int)hOrb.getY()).addObject(hOrb);
+		}
+		if (Utils.getRandomInt(100) > 50) {
+			GameObject mOrb = ObjectMaker.createManaOrb(x + Utils.getRandomInt(50) - 25, y + Utils.getRandomInt(50) - 25); 
+			Map.getTile((int)mOrb.getX(), (int)mOrb.getY()).addObject(mOrb);
+		}
 		// Drop loot
 		// Set Boolean to dead
 
@@ -441,6 +453,14 @@ public abstract class Actor extends GameObject {
 
 		// Change render() to do the following
 		// Render corpse instead of alive actor.
+	}
+	
+	public int getRemainingAttributePoints() {
+		return attributePoints;
+	}
+	
+	public void addAttributePoints(int points) {
+		attributePoints += points;
 	}
 
 	@Override

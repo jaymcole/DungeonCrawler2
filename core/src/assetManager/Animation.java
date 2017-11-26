@@ -136,8 +136,5 @@ public class Animation extends GameObject{
 	}
 
 	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void dispose() {}
 }

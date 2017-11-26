@@ -3,7 +3,7 @@ package ecu.se;
 public class Globals {
     public static final String VERSION = " MISSING";
     
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
     
     // Render Levels.
     public static final float Z_LEVEL_FLOOR =    0.0f;
@@ -32,10 +32,14 @@ public class Globals {
     public static final int TILE_PIXEL_HEIGHT= 128;
     
     public static final String SPRITE_INFORMATION_EXTENSION = "spriteInfo";
+
+    
+    public static final float XP_REQUIREMENT_CONSTANT = 0.05f;
+    
     
     //LIGHTING
-    public static int MAX_LIGHTS = 150; //Must also be changed in the shader
-    public static float DEFAULT_LIGHT_INTENSITY = 300;
+    public static int MAX_LIGHTS = 200; //Must also be changed in the shader
+    public static float DEFAULT_LIGHT_INTENSITY = 900;
     
     // DEBUG Settings
     // All of these will probably have to be cleaned up (removed along with whatever functions use them) later.

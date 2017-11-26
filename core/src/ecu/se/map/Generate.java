@@ -3,8 +3,6 @@ package ecu.se.map;
 import java.util.LinkedList;
 import java.util.Random;
 
-import javax.sql.rowset.spi.TransactionalWriter;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,12 +10,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import assetManager.AssetManager;
+import ecu.se.DecalPicker;
+import ecu.se.Game;
+import ecu.se.GameObject;
 import ecu.se.Globals;
 import ecu.se.Utils;
 import ecu.se.objects.Decal;
-import ecu.se.objects.ItemObject;
+import ecu.se.objects.InteractableItem;
 import ecu.se.objects.Light;
-import ecu.se.objects.Staircase;
 
 public class Generate {
 	private static int mapWidth = Globals.MAP_TILE_WIDTH;
@@ -44,8 +44,8 @@ public class Generate {
 	private static int[][] map;
 	private static Tile[][] tiles;
 
-	private static Vector2 maxTile = new Vector2(mapWidth, mapHeight), minTile = new Vector2(0, 0);
-	private static Staircase up, down;
+//	private static Vector2 maxTile = new Vector2(mapWidth, mapHeight), minTile = new Vector2(0, 0);
+	private static InteractableItem up, down;
 
 	private static Random random;
 
@@ -55,6 +55,11 @@ public class Generate {
 	private static BuildNode maxMapNode;
 
 	public static void generate(Random random, Floor floor) {
+		lights = new LinkedList<Light>();
+		
+		
+		
+		Generate.random = random;
 		mapWidth = Globals.MAP_TILE_WIDTH;
 		mapHeight = Globals.MAP_TILE_HEIGHT;
 		minMapNode = new BuildNode(mapWidth, mapHeight, Direction.NORTH);
@@ -64,7 +69,21 @@ public class Generate {
 		Generate.random = random;
 		remainingNodes = new LinkedList<BuildNode>();
 		map = new int[mapWidth][mapWidth];
-		down = new Staircase(0, 0, "Down Staircase", "texture/test/staircase.png");
+		down = new InteractableItem(0, 0, tileWidth, tileHeight, "Down Staircase", "texture/floor/staircase_down.png") {
+			@Override
+			public void onClick(GameObject otherObject) {
+				if (otherObject == Game.player)
+					Map.setFloor(Map.getCurrentLevel() + 1);
+			}
+		};
+		
+		up = new InteractableItem(0, 0, tileWidth, tileHeight, "Down Staircase", "texture/floor/staircase_up.png") {
+			@Override
+			public void onClick(GameObject otherObject) {
+				if (otherObject == Game.player)
+					Map.setFloor(Map.getCurrentLevel() - 1);
+			}
+		};
 
 		generateSpawnRoom(new BuildNode(random.nextInt((int) (mapWidth * 0.5f)) + (int) (mapWidth * 0.25f),
 				random.nextInt((int) (mapHeight * 0.5f)) + (int) (mapHeight * 0.25f),
@@ -77,8 +96,19 @@ public class Generate {
 		map = minimizeMap();
 		finalizeFloor(map, random, floor);
 		finalizeTiles();
+		
+		boolean downStaircasePlace = false;
+		while (!downStaircasePlace) {
+			int x = random.nextInt(mapWidth);
+			int y = random.nextInt(mapHeight);
+			if (!tiles[x][y].isWall && (x != up.getX() && y != up.getY())) {
+				downStaircasePlace = true;
+				down.setPosition(x * tileWidth, y * tileHeight);
+			}
+		}
 
 		// DONE BUILDING
+	System.err.println("Lights from generator: " + lights.size());
 		floor.generatedMap(tiles, lights, up, down, mapWidth, mapHeight);
 		printFloor();
 	}
@@ -91,7 +121,7 @@ public class Generate {
 				}
 			}
 		}
-		
+
 		for (int i = 0; i < mapWidth; i++) {
 			for (int j = 0; j < mapHeight; j++) {
 				if (inBounds(i, j) && !tiles[i][j].isWall)
@@ -106,24 +136,24 @@ public class Generate {
 		boolean insideCorner;
 		Tile tile;
 		if (inBounds(x, y)) {
-			for (int i = 1; i < Direction.values().length; i+=2) {
+			for (int i = 1; i < Direction.values().length; i += 2) {
 				boolean ok = true;
 				insideCorner = false;
 
 				Direction dir = Direction.oppositeDirection(Direction.values()[i]);
-				
+
 				if (Direction.isExpanded(dir)) {
 					Direction left = Direction.nextExpandedDirectionCCW(dir);
 					Direction right = Direction.nextExpandedDirectionCW(dir);
 					
-					if(tiles[x + left.x][y + left.y].isWall && tiles[x + right.x][y + right.y].isWall) {
-					}else if (!tiles[x + left.x][y + left.y].isWall && !tiles[x + right.x][y + right.y].isWall) {
+					if (tiles[x + left.x][y + left.y].isWall && tiles[x + right.x][y + right.y].isWall) {
+					} else if (!tiles[x + left.x][y + left.y].isWall && !tiles[x + right.x][y + right.y].isWall) {
 						insideCorner = true;
 					} else {
 						ok = false;
 					}
 				}
-				
+
 				if (ok) {
 					xCoord = x + dir.x;
 					yCoord = y + dir.y;
@@ -137,25 +167,25 @@ public class Generate {
 			}
 		}
 	}
-	
+
 	private static void createWalls(int x, int y) {
 		int xCoord = 0;
 		int yCoord = 0;
 		Tile tile;
 		if (inBounds(x, y)) {
-			for (int i = 0; i < Direction.values().length; i+=2) {
+			for (int i = 0; i < Direction.values().length; i += 2) {
 				boolean ok = true;
 				Direction dir = Direction.oppositeDirection(Direction.values()[i]);
-				
+
 				if (Direction.isExpanded(dir)) {
 					Direction left = Direction.nextExpandedDirectionCCW(dir);
 					Direction right = Direction.nextExpandedDirectionCW(dir);
-					if(tiles[x + left.x][y + left.y].isWall && tiles[x + right.x][y + right.y].isWall) {
+					if (tiles[x + left.x][y + left.y].isWall && tiles[x + right.x][y + right.y].isWall) {
 					} else {
 						ok = false;
 					}
 				}
-				
+
 				if (ok) {
 					xCoord = x + dir.x;
 					yCoord = y + dir.y;
@@ -170,7 +200,7 @@ public class Generate {
 		}
 	}
 
-	private static void setTileWallTexture(Tile tile, Direction direction, boolean insideCorner) {		
+	private static void setTileWallTexture(Tile tile, Direction direction, boolean insideCorner) {
 		if (direction == Direction.NORTH || direction == Direction.SOUTH)
 			direction = Direction.oppositeDirection(direction);
 		else if (direction == Direction.NORTHWEST)
@@ -331,34 +361,12 @@ public class Generate {
 		}
 	}
 
-	// private static void genStraightPath(BuildNode node, int length, Direction
-	// direction, boolean intersect,
-	// boolean continueForward) {
-	// for (int i = 0; i < length; i++) {
-	// if (random.nextInt(100) > 90) {
-	// BuildNode outNode = node.copy();
-	// outNode.direction = direction;
-	// outNode.forward();
-	// addNewNode(outNode);
-	// }
-	// setMapInt(node, FLOOR, false);
-	// node.add(node.direction);
-	// }
-	// if (continueForward) {
-	// addNewNode(node);
-	// } else {
-	// genRoom(node, random.nextInt(2) + 2, random.nextInt(2) + 2, false,
-	// false);
-	// }
-	// }
-
 	private static void setMapInt(BuildNode node, int floorType, boolean override) {
 		setMapInt(node.x, node.y, floorType, override);
 	}
 
 	private static void setMapInt(int x, int y, int floorType, boolean override) {
 		if (inBounds(x, y)) {
-
 			if (map[x][y] == SPAWN)
 				return;
 
@@ -378,13 +386,10 @@ public class Generate {
 	}
 
 	private static int[][] minimizeMap() {
-		// int oldMapW = mapWidth;
-		// int oldMapH = mapHeight;
-
 		int buffer = 2;
-		mapWidth = maxMapNode.x - minMapNode.x;
+		mapWidth = maxMapNode.x - minMapNode.x + 1;
 		mapWidth += buffer * 2;
-		mapHeight = maxMapNode.y - minMapNode.y;
+		mapHeight = maxMapNode.y - minMapNode.y + 1;
 		mapHeight += buffer * 2;
 		int[][] temp = new int[mapWidth][mapHeight];
 
@@ -398,7 +403,6 @@ public class Generate {
 
 	private static void finalizeFloor(int[][] map, Random random, Floor floor) {
 		tiles = new Tile[mapWidth][mapHeight];
-		lights = new LinkedList<Light>();
 
 		int temp = 0;
 		int totalLights = 0;
@@ -409,7 +413,7 @@ public class Generate {
 				switch (temp) {
 				case FLOOR:
 				case ROOM:
-					if (random.nextInt(100) > 95) {
+					if (random.nextInt(100) > 99) {
 						createLight((int) (i * tileWidth + (tileWidth * 0.5f)),
 								(int) (j * tileHeight + (tileHeight * 0.5f)));
 						totalLights++;
@@ -417,12 +421,12 @@ public class Generate {
 					makeTileWalkable(i, j);
 					break;
 				case SPAWN:
+					makeTileWalkable(i, j);
 					createLight((int) (i * tileWidth + (tileWidth * 0.5f)),
 							(int) (j * tileHeight + (tileHeight * 0.5f)));
 					totalLights++;
-					makeTileWalkable(i, j);
-					up = new Staircase(i * tileWidth + (tileWidth * 0.5f), j * tileHeight + (tileHeight * 0.5f),
-							"Up Staircase", "texture/test/staircase.png");
+					up.setPosition((int)(i * tileWidth), (int)(j * tileHeight));
+
 					break;
 				default:
 					makeTileWall(i, j);
@@ -465,9 +469,24 @@ public class Generate {
 	}
 
 	private static void makeTileWalkable(int x, int y) {
+		if (!inBounds(x, y)) {
+			System.err.println("Can't make tile walkable: x=" + x + ", y=" + y);
+			return;
+		}
+		
 		if (tiles[x][y] == null) {
 			tiles[x][y] = new Tile(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
 			tiles[x][y].setTexture(AssetManager.getTexture("texture/floor/castle_tile.jpg").getTextureRegion());
+			
+			if (random.nextInt(100) > 75) {
+				Decal floorDecal = new Decal(x * tileWidth + random.nextInt(tileWidth), y * tileHeight + random.nextInt(tileHeight), "", AssetManager.getTexture(DecalPicker.getMossDecal()).getTextureRegion(), tileWidth, tileHeight);
+				floorDecal.setRotation(random.nextInt(360));
+				floorDecal.setAlpha(((random.nextInt(4)) / 10.0f) + 0.1f + (random.nextFloat() / 10.0f));
+				tiles[x][y].addObject(floorDecal);
+			}
+				
+			
+			
 			tiles[x][y].setWall(false);
 		}
 	}

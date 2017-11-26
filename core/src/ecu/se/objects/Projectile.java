@@ -53,8 +53,8 @@ public class Projectile extends GameObject {
 	}
 	
 	@Override 
-	public void collision(GameObject otherObject) {
-		if (!alive) {
+	public void onCollision(GameObject otherObject) {
+		if (!isAlive()) {
 			return;
 		}
 		
@@ -88,12 +88,10 @@ public class Projectile extends GameObject {
 		moveY += Math.sin(angle) * speed;
 	}
 	
-	protected void kill() {
+	@Override
+	protected void die() {
 		ObjectManager.add(new Explosion(this.x, this.y, knockback, 0, parent));
 		Lighting.addLight(new FadingLight(this.getPosition(), Color.CHARTREUSE, light.intensity * 20, 0.7f, 2) );
-		this.alive = false;
-		ObjectManager.remove(this);
-		dispose();
 	}
 
 	@Override

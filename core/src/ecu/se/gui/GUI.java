@@ -46,7 +46,7 @@ public class GUI {
 	/**
 	 * All windows used
 	 */
-	private Window[] windows;
+	private static Window[] windows;
 	
 	public static Game game;
 
@@ -95,13 +95,14 @@ public class GUI {
 		
 		
 		// Updates the currently displayed window.
-		if (windows[currentWindow] != null) {
-			inputUsed = windows[currentWindow].update(deltaTime, mouseX, mouseY);
-		}
+		inputUsed = windows[currentWindow].update(deltaTime, mouseX, mouseY);
+		
+		if (Game.currentState == Game.GAME_STATE_PAUSED)
+        	windows[WINDOW_PAUSED].update(deltaTime, mouseX, mouseY);
 		
 		// Updates the HUD IF it wasn't already updated AND 
-		if (!inputUsed && currentWindow != WINDOW_HUD)
-			if (inputUsed || windows[WINDOW_HUD].update(deltaTime, mouseX, mouseY))
+		if (currentWindow != WINDOW_HUD)
+			if (windows[WINDOW_HUD].update(deltaTime, mouseX, mouseY) || inputUsed)
 				inputUsed = true;
 	}
 
@@ -114,10 +115,11 @@ public class GUI {
 	public void render(SpriteBatch batch) {
         batch.setProjectionMatrix(hudCamera.projection);
         
-        windows[WINDOW_HUD].render(batch);
-        
         if (Game.currentState == Game.GAME_STATE_PAUSED)
         	windows[WINDOW_PAUSED].render(batch);
+
+        windows[WINDOW_HUD].render(batch);
+        
         
         if (currentWindow != WINDOW_HUD)        
         	windows[currentWindow].render(batch);
@@ -136,6 +138,9 @@ public class GUI {
 		if (windows[currentWindow] != null) {
 			windows[currentWindow].debugRender(renderer);
 		}
+		
+		if (Game.currentState == Game.GAME_STATE_PAUSED)
+        	windows[WINDOW_PAUSED].debugRender(renderer);
 	}
 
 	/**
@@ -267,6 +272,17 @@ public class GUI {
 	 */
 	public Game getGame() {
 		return game;
+	}
+	
+	/**
+	 * 
+	 * @return All visible windows
+	 * Note: Window_HUD is always returned last.
+	 */
+	public static Window[] getActiveWindows() {
+		if (currentWindow == WINDOW_HUD)
+			return new Window[]{windows[WINDOW_HUD]};
+		return new Window[]{windows[WINDOW_HUD], windows[currentWindow]};
 	}
 
 }

@@ -25,27 +25,29 @@ public class Window_MainMenu extends Window{
 		Widget_Label lbl_title = new Widget_Label(backgroundX + bufferX, backgroundY + halfwayY - 25, 0, 0, parent, this.windowName, 50, Color.CLEAR, Color.BLACK);
 		
 		Widget_Button btn_play = new Widget_Button(backgroundX + bufferX, backgroundY + halfwayY - 100, halfwayX - bufferX * 2, 50, this, "Play") {
-			public void mouseReleased() {
+			@Override
+			public void mouseReleased(int mouseX, int mouseY) {
 				gui.setWindow(GUI.WINDOW_HUD);
 			}
 		};
 		
 		Widget_Button btn_newGame = new Widget_Button(backgroundX + bufferX, backgroundY + halfwayY - 200, halfwayX - bufferX * 2, 50, this, "New Game") {
-			public void mouseReleased() {
+			@Override
+			public void mouseReleased(int mouseX, int mouseY) {
 				gui.getGame().create();
 			}
 		};
 		
 		Widget_Button btn_settings = new Widget_Button(backgroundX + bufferX, backgroundY + halfwayY - 300, halfwayX - bufferX * 2, 50, this, "Settings") {
 			@Override
-			public void mouseReleased() {
+			public void mouseReleased(int mouseX, int mouseY) {
 				gui.setWindow(GUI.WINDOW_SETTINGS);
 			}
 		};
 		
 		Widget_Button btn_exit = new Widget_Button(backgroundX + bufferX, backgroundY + halfwayY - 400, halfwayX - bufferX * 2, 50, this, "Exit") {
 			@Override
-			public void mouseReleased() {
+			public void mouseReleased(int mouseX, int mouseY) {
 				Game.currentState = Game.GAME_STATE_EXITING;
 			}
 		};

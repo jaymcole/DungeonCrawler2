@@ -26,7 +26,7 @@ public class Widget_Label extends Widget{
 		this.width = glyphLayout.width;
 		this.height = glyphLayout.height;
 		setText(text);
-		bounds = Utils.getRectangleBounds(this.x, this.y, this.width, this.height, Utils.ALIGN_BOTTOM_LEFT);
+		
 
 	}
 

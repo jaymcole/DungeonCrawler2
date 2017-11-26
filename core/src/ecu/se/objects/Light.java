@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import ecu.se.GameObject;
+import ecu.se.Globals;
 import ecu.se.Lighting;
 
 public class Light implements Comparable<Light> {
@@ -62,6 +63,8 @@ public class Light implements Comparable<Light> {
 		this.parent = null;
 		this.hasParent = false;
 		this.position = position;
+		this.color = Color.WHITE;
+		this.intensity = Globals.DEFAULT_LIGHT_INTENSITY;
 		this.type = 1;
 		on = true;
 	}
@@ -104,8 +107,13 @@ public class Light implements Comparable<Light> {
 		intensity = baseIntensity * (flickerTest[intensityPosition] * 0.5f);
 
 		if (hasParent) {
-			if (parent == null || !parent.isAlive()) {
-				Lighting.removeLight(this);
+			if (parent == null){// || !parent.isAlive()) {
+				kill();
+				System.err.println("Killing light");
+				if (parent == null)
+					System.err.println("Parent was null");
+				else if(!parent.isAlive())
+					System.err.println("Parent is not alive");
 			}
 			this.position = parent.getPosition();
 		}
@@ -167,6 +175,13 @@ public class Light implements Comparable<Light> {
 	
 	public int getType() {
 		return type;
+	}
+	
+	public void kill() {
+		Lighting.removeLight(this);
+		
+		if (hasParent)
+			parent.setLight(null);
 	}
 
 

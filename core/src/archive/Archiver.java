@@ -11,8 +11,8 @@ public class Archiver {
 	public static final String TIME_RECORD = "time";
 	public static final String TOTAL_RECORD = "total";
 	
-	// CURRENT EXPECTED BUGS 
-	// Changing the number of recorded kept will likely destroy all old records.
+	//TODO: Add start/stop methods for time records.
+	//TODO: After above, fix all menu time records (in/out of menus)
 	
 	/**
 	 * archiveDirectory - The folder to store records.

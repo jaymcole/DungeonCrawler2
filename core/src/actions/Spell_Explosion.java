@@ -10,7 +10,6 @@ public class Spell_Explosion extends Spell{
 	
 	public Spell_Explosion(Actor caster) {
 		super(caster);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

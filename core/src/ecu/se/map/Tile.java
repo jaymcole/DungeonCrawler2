@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import assetManager.AssetManager;
 import ecu.se.GameObject;
+import ecu.se.Lighting;
 import ecu.se.Utils;
 import ecu.se.objects.ItemObject;
 
@@ -33,7 +34,6 @@ public class Tile extends GameObject{
         
         texture = new TextureRegion();	
         texture.setRegion(AssetManager.getTexture("texture/misc/black.jpg").getTexture());
-//		this.setTexture(texture);
     }
     
     @Override
@@ -60,11 +60,12 @@ public class Tile extends GameObject{
     
     public void renderDecals(SpriteBatch batch) {
     	for(GameObject g : decals) {
+    		batch.setColor(Color.WHITE);
         	g.render(batch);
         }
         
-        
         for(GameObject object : objects) {
+        	batch.setColor(Color.WHITE);
             object.render(batch);
         }
     }
@@ -85,6 +86,10 @@ public class Tile extends GameObject{
         for(GameObject object : objects) {
             object.debugRender(renderer);
         }
+    }
+    
+    public LinkedList<GameObject> getObjects() {
+    	return objects;
     }
     
     public void setTexture(TextureRegion texture) {
@@ -114,9 +119,22 @@ public class Tile extends GameObject{
     }
     
     public void remove(GameObject object) {
-    	if (object instanceof ItemObject) {
+//    	if (object instanceof ItemObject) {
     		objects.remove(object);
+//    	}
+    }
+    
+    public void load() {
+    	for(GameObject g : objects) {
+    		if (g.getLight() != null)
+    			Lighting.addLight(g.getLight());
     	}
+    	
+    	for(GameObject g : decals) {
+    		if (g.getLight() != null)
+    			Lighting.addLight(g.getLight());
+    	}
+    		
     }
     
     public void dispose() {
@@ -128,5 +146,7 @@ public class Tile extends GameObject{
             object.dispose();
         } 
     }
+    
+    
 
 }

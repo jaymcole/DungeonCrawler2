@@ -52,8 +52,9 @@ public class Lighting {
 	 *            - Time since last render call.
 	 */
 	public static void updateLights(float deltaTime, Vector2 targetVector) {
+//		System.out.println("Total Lights=" + lights.size());
 		updater = lights.iterator();
-
+		
 		while (updater.hasNext()) {
 			light = updater.next();
 			light.update(deltaTime, targetVector);
@@ -77,10 +78,6 @@ public class Lighting {
 				shader.setUniformf("lights[" + counter + "].color", color.r, color.g, color.b, color.a);
 				shader.setUniformf("lights[" + counter + "].position", position.x, position.y);
 				shader.setUniformf("lights[" + counter + "].intensity", light.intensity);
-//				if (light.getType() == 1 || light.getType() == 2) {
-//					System.err.println("Great! =" + light.getType());
-//				} else
-//					System.err.println("Wrong light type =" + light.getType());
 				counter++;
 			}
 		}
@@ -100,12 +97,12 @@ public class Lighting {
 	private static boolean wipeWaitlist = false;
 	private static void updateLists() {
 		if (wipeList) {
-			lights.removeAll(lights);
+			lights.clear();
 			wipeList = false;
 		}
 
 		if (wipeWaitlist) {
-			waitlist.removeAll(waitlist);
+			waitlist.clear();
 			wipeWaitlist = false;
 		}
 		
@@ -116,15 +113,24 @@ public class Lighting {
 				lights.add(l);
 		}
 
-		waitlist.removeAll(waitlist);
+		waitlist.clear();
+		wipeList = false;
+		wipeWaitlist = false;
 	}
 
 	public static void setLights(LinkedList<Light> newLights) {
-		waitlist = newLights;
+		System.err.println("Adding " + newLights.size() + " new lights");
+		if(waitlist != null)
+			waitlist.clear();
+		else
+			waitlist = new LinkedList<Light>();
+		waitlist.addAll(newLights);
+		
 		wipeList = true;
 	}
 
 	public static void addLight(Light light) {
+		light.delete = false;
 		waitlist.add(light);
 	}
 
@@ -137,7 +143,6 @@ public class Lighting {
 		batch.setShader(shader);
 	}
 
-	// TODO: Add a waitlist for lights (like what ObjectManager has)
 	/**
 	 * Deletes light.
 	 * 
@@ -152,7 +157,6 @@ public class Lighting {
 
 	public static void toggleLights() {
 		lightsOn ^= true;
-		;
 	}
 
 	/**

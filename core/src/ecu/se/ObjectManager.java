@@ -10,10 +10,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 
 import actors.Actor;
-import actors.Player;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
-import ecu.se.objects.ItemObject;
+import ecu.se.objects.InteractableItem;
 
 public class ObjectManager {
 	
@@ -22,7 +21,6 @@ public class ObjectManager {
     private static LinkedList<GameObject> actors;
     private static Iterator<GameObject> updater;
     private static Iterator<GameObject> collisionChecker;
-    private static Player player;
 
     private static GameObject object;
     private static Actor actor1;
@@ -45,7 +43,7 @@ public class ObjectManager {
         while(updater.hasNext()) 
         {
             object = updater.next();
-            if (object.alive) {
+            if (object.isAlive()) {
                 object.update(deltaTime);
             } else {
                 remove(object);
@@ -53,26 +51,27 @@ public class ObjectManager {
         }
         
         
-//        // CHECK PLAYER COLLISION
+//        // CHECK Game.player COLLISION
         updater = actors.iterator();
         while(updater.hasNext())
         {
         	object = updater.next();
-            if (object.alive) {
+            if (object.isAlive()) {
                 object.update(deltaTime);            
-            if(isColliding(player, object))
+            if(isColliding(Game.player, object))
             {
-//                player.move(deltaTime, Direction.directionTo(object.x, object.y, player.x, player.y), true);
-//                if (object instanceof Actor) {
-            		((Actor)object).act(deltaTime);
-//                	((Actor)object).move(deltaTime, Direction.directionTo(player.x, player.y, object.x, object.y), true);
-                	
-//                }
+            	((Actor)object).act(deltaTime);
             }
             } else {
                 remove(object);
             }
         }
+        for(GameObject obj : Map.getTile((int)Game.player.getX(), (int)Game.player.getY()).getObjects()) {
+        	if (isColliding(Game.player, obj)) {
+        		obj.onCollision(Game.player);
+        	}
+        }
+        
         
         // CHECK ACTOR COLLISION
         updater = actors.iterator();
@@ -88,7 +87,6 @@ public class ObjectManager {
                 	actor1.move(deltaTime, Direction.directionTo(actor2.x, actor2.y, actor1.x, actor1.y), false);
                 	actor2.move((int)(deltaTime * 0.5f), Direction.directionTo(actor1.x, actor1.y, actor2.x, actor2.y), false);
                 }
-
             }
             
             collisionChecker = objects.iterator();
@@ -97,10 +95,14 @@ public class ObjectManager {
                 temp = collisionChecker.next();
                 if(isColliding(actor1, temp) && actor1 != temp)
                 {
-                	temp.collision(actor1);
-                	actor1.collision(temp);
+                	temp.onCollision(actor1);
+                	actor1.onCollision(temp);
                 }
-
+            }
+            for(GameObject obj : Map.getTile((int)actor1.getX(), (int)actor1.getY()).getObjects()) {
+            	if (isColliding(actor1, obj)) {
+            		obj.onCollision(actor1);
+            	}
             }
         }
         updateList();
@@ -115,7 +117,7 @@ public class ObjectManager {
         updater = objects.iterator();        
         while(updater.hasNext()) {
             object = updater.next();
-            if (object.alive) {
+            if (object.isAlive()) {
                 object.render(batch);
             }
         }
@@ -123,19 +125,19 @@ public class ObjectManager {
         updater = actors.iterator();
         while(updater.hasNext()) {
             actor1 = (Actor) updater.next();
-            if (actor1.alive) {
+            if (actor1.isAlive()) {
                 actor1.render(batch);
             } 
         }
         
-        player.render(batch);
+        Game.player.render(batch);
         
     }
     
-    public void debugRender(ShapeRenderer renderer) {
+    public static void debugRender(ShapeRenderer renderer) {
 
     	renderer.setColor(Color.BLUE);
-    	renderer.polygon(player.getBounds().getTransformedVertices());
+    	renderer.polygon(Game.player.getBounds().getTransformedVertices());
            	
         updater = actors.iterator();
         renderer.setColor(Color.GREEN);
@@ -143,7 +145,6 @@ public class ObjectManager {
         {
             object = updater.next();
             object.debugRender(renderer);
-//            renderer.polygon(object.getBounds().getTransformedVertices());
         }
         
         
@@ -153,7 +154,6 @@ public class ObjectManager {
         {
             object = updater.next();
             object.debugRender(renderer);
-//            renderer.polygon(object.getBounds().getTransformedVertices());
         }
 
         
@@ -170,25 +170,19 @@ public class ObjectManager {
         
         while(updater.hasNext()) {
             object = updater.next();
-            if(object.alive) {
+            if(object.isAlive()) {
             	if(object instanceof Actor) {
             		actors.add(object);
             	} else {
-//            		if (object instanceof ItemObject) {
-//            			Map.getTile((int)object.x, (int)object.y).addObject(object);
-//            		} else {
-            			objects.add(object);
-//            		}
+            		objects.add(object);
             	}
             } else {
             	if(object instanceof Actor) {
             		actors.remove(object);
             	} else {
-//            		if (object instanceof ItemObject) {
-//                			Map.getTile((int)object.x, (int)object.y).addObject(object);           			
-//                		} else {
-                			objects.remove(object);
-//                		}
+                	boolean deleted = objects.remove(object);
+                	if (!deleted)
+                		Map.getTile((int)object.getX(), (int)object.getY()).remove(object);
             	}
             }
         }
@@ -201,7 +195,7 @@ public class ObjectManager {
      * @param object - The new GameObject.
      */
     public static void add(GameObject object) {
-        object.alive = true;
+//        object.alive = true;
         waitList.add(object);
     }
     
@@ -210,7 +204,7 @@ public class ObjectManager {
      * @param object - GameObjkect to be removed.
      */
     public static void remove(GameObject object) {
-        object.alive = false;
+//        object.alive = false;
         waitList.add(object);
     }
     
@@ -223,14 +217,17 @@ public class ObjectManager {
         
         while(updater.hasNext()) {
             object = updater.next();
-            object.alive = false;
+            object.kill();
             object.dispose();
         }
     }
+
     
-    public static LinkedList<Actor> getNearbyActors() {
-    	//TODO: Finish this method
-		return null;
+    public static LinkedList<GameObject> getAllMapObjects() {
+    	LinkedList<GameObject> temp = new LinkedList<GameObject>();
+    	temp.addAll(actors);
+    	temp.addAll(objects);
+    	return temp;
     }
     
     /**
@@ -241,19 +238,29 @@ public class ObjectManager {
      */
     public static boolean isColliding(GameObject object, GameObject object2)
     {
-//    	return Intersector.intersectPolygons(object.getBounds(), object2.getBounds(), null);
         return Intersector.overlapConvexPolygons(object.getBounds(), object2.getBounds());
     }
     
-    /**
-     * Sets the current player.
-     * @param player
-     * @return
-     */
-    public static void setPlayer(Player player)
-    {
-        ObjectManager.player = player;
-        actors.add(player);
+    public static boolean mouseClick(int mouseX, int mouseY) {
+    	for(GameObject o : objects) {
+    		if (o.bounds.contains(mouseX, mouseY)) {
+    			if (o instanceof InteractableItem) {
+    				((InteractableItem) o).onClick(Game.player);
+    				return true;
+    			}    			
+    		}
+    	}
+    	
+    	for(GameObject o : Map.getTile(mouseX, mouseY).getObjects()) {
+    		if (o.bounds.contains(mouseX, mouseY)) {
+    			if (o instanceof InteractableItem) {
+    				((InteractableItem) o).onClick(Game.player);
+    				return true;
+    			}    			
+    		}
+    	}
+    	
+    	return false;
     }
     
     public static LinkedList<GameObject> getActors() {

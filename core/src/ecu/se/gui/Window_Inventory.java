@@ -1,12 +1,20 @@
 package ecu.se.gui;
 
+import java.util.ArrayList;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import assetManager.AssetManager;
+import ecu.se.objects.ItemObject;
+import stats.Stats;
 
 public class Window_Inventory extends Window {
 
 	public Window_Inventory(GUI gui) {
 		super(gui);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -17,23 +25,53 @@ public class Window_Inventory extends Window {
 		int backgroundY = (int)(halfwayY * 0.5f);
 		int bufferX = 50;
 		
+
+		
+		ArrayList<Widget> widgetList = new ArrayList<Widget>();
 		
 		Widget_Image img_background = new Widget_Image(backgroundX, backgroundY, halfwayX, halfwayY, this, "texture/misc/white.png");
 		img_background.setDefaultColor(new Color(Color.CHARTREUSE.r,Color.CHARTREUSE.g,Color.CHARTREUSE.b,0.5f));
+		widgetList.add(img_background);
 		Widget_Label lbl_title = new Widget_Label(backgroundX + bufferX, backgroundY + halfwayY - 25, 0, 0, parent, this.windowName, 50, Color.CLEAR, Color.BLACK);
+		widgetList.add(lbl_title);
 		
-		Widget_Button btn_close = new Widget_Button(backgroundX + bufferX, backgroundY + halfwayY - 100, halfwayX - bufferX * 2, 50, this, "Close") {
-			public void mouseReleased() {
-				gui.closeWindow(GUI.WINDOW_HUD, GUI.WINDOW_HUD);
+		int fontSize = 35;
+		float labelYChange = fontSize * 0.5f;
+		float startLabelX = halfwayX - halfwayX * 0.5f, startLabelY = halfwayY - labelYChange + backgroundY;
+		float currentY = 40;
+		float currentX = 10;
+		
+		
+		
+		Texture buttonTexture = AssetManager.getTexture("texture/gui/hotkey.png").getTexture();
+		TextureRegion buttonDefault;
+		TextureRegion buttonHighlight;
+		TextureRegion buttonActive;
+		int rows = 10, cols = 10;
+		float startX = GUI.defaultWidth * .25f;
+		float startY = GUI.defaultHeight * .25f;
+		float buttonWidth = 40;
+		float buttonHeight = 40;
+		float xMargin = 5;
+		float yMargin = 1;
+		System.out.println((halfwayY - backgroundY));
+		for(int i = 0 ; i < rows; i++) {
+			for(int j = 0; j < cols; j++) {
+				buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
+				buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
+				buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
+				Widget_ItemSlot hotkey = new Widget_ItemSlot(startX + (buttonWidth + xMargin) * i, startY + (buttonHeight + yMargin) * j, buttonWidth, buttonHeight, this, buttonDefault, buttonHighlight, buttonActive);
+				
+				hotkey.setDefaultColor( Color.RED);
+				hotkey.setActiveColor(Color.CYAN);
+				hotkey.setHighlightColor(Color.CYAN);
+				widgetList.add(hotkey);
 			}
-		};
+		}
 		
 		
-		widgets = new Widget[]{
-				img_background,
-				lbl_title,
-				btn_close
-		};
+		widgets = widgetList.toArray(widgets);
+
 		
 	}
 

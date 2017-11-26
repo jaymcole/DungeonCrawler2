@@ -24,6 +24,8 @@ public abstract class Spell extends Action {
 	protected float baseCooldown;
 	protected float currentCooldown;
 	
+	protected float baseDamage;
+	
 	protected TextureRegion textureRegion;
 	protected Actor caster;
 	
@@ -42,7 +44,7 @@ public abstract class Spell extends Action {
 		this.team = caster.team;
 		baseCastSpeed 	= 0;
 		baseCooldown 	= 0;
-		baseManaCost 	= 0.1f;
+		baseManaCost 	= 10f;
 	}
 	
 	public void act(int x, int y) {
@@ -51,7 +53,7 @@ public abstract class Spell extends Action {
 		Archiver.set(TotalRecords.ACTIONS_TAKEN, 1);
 		// Initialize variables based on caster ability.
 		currentCastSpeed = baseCastSpeed * caster.getStat(Stats.SPELL_CAST_SPEED);
-		currentManaCost = baseManaCost * caster.getStat(Stats.MANA_COST);
+		currentManaCost = baseManaCost * (1 - caster.getStat(Stats.MANA_COST));
 		currentCooldown = baseCooldown * caster.getStat(Stats.SPELL_COOLDOWN);
 		timer = 0;
 		targetX = x;
