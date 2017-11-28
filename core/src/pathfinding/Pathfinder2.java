@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Queue;
 
 import ecu.se.Globals;
+import ecu.se.Utils;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
 
@@ -49,8 +50,12 @@ public class Pathfinder2 {
 	private static LinkedList<Vector2> constructPath(Node node) {
 		LinkedList<Vector2> path = new LinkedList<Vector2>();
 		while (node.parent != null) {
-			path.addFirst(new Vector2(node.x * Globals.TILE_PIXEL_WIDTH + (Globals.TILE_PIXEL_WIDTH * 0.5f),
-					node.y * Globals.TILE_PIXEL_HEIGHT + (Globals.TILE_PIXEL_HEIGHT * 0.5f)));
+//			path.addFirst(new Vector2(node.x * Globals.TILE_PIXEL_WIDTH + (Globals.TILE_PIXEL_WIDTH * 0.5f),
+//					node.y * Globals.TILE_PIXEL_HEIGHT + (Globals.TILE_PIXEL_HEIGHT * 0.5f)));
+			
+			path.addFirst(new Vector2(
+					node.x * Globals.TILE_PIXEL_WIDTH + Utils.getRandomInt(Globals.TILE_PIXEL_WIDTH ),
+					node.y * Globals.TILE_PIXEL_HEIGHT + Utils.getRandomInt(Globals.TILE_PIXEL_HEIGHT)));
 			node = node.parent;
 		}
 		return path;
