@@ -321,6 +321,17 @@ public abstract class Actor extends GameObject {
 				currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentSpeed.y);
 		setIdle(false);
 	}
+	
+	public void move(float deltaTime, double angle, boolean updateDirection) {
+		currentSpeed.x += (currentStats[Stats.MOVEMENT_ACCELERATION.ordinal()] * deltaTime) * Math.cos(angle);
+		currentSpeed.x = Utils.clamp(-currentStats[Stats.MOVEMENT_SPEED.ordinal()],
+				currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentSpeed.x);
+
+		currentSpeed.y += (currentStats[Stats.MOVEMENT_ACCELERATION.ordinal()] * deltaTime) * Math.sin(angle);
+		currentSpeed.y = Utils.clamp(-currentStats[Stats.MOVEMENT_SPEED.ordinal()],
+				currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentSpeed.y);
+		setIdle(false);
+	}
 
 	// TODO: Add different defaults for different classes (Could be done by
 	// subclasses)

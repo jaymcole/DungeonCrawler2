@@ -36,6 +36,9 @@ public class Globals {
     
     public static final float XP_REQUIREMENT_CONSTANT = 0.05f;
     
+    //AI
+    public static int MAX_PATH_LENGTH = 100; //Pathfinding length;
+    
     
     //LIGHTING
     public static int MAX_LIGHTS = 200; //Must also be changed in the shader

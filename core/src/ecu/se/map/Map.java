@@ -132,6 +132,10 @@ public class Map {
         }
     }
     
+    public static Tile getTileByIndex(int x, int y) {
+    	return currentFloor.getTileByIndex(x, y);
+    }
+    
     /**
      * 
      * @param x - x world coordinate
@@ -170,47 +174,8 @@ public class Map {
         tilesHorizontal = (screenWidth/Globals.TILE_PIXEL_WIDTH) + 2;
         tilesVertical = (screenHeight/Globals.TILE_PIXEL_HEIGHT) + 2;
     }    
-    
-    //TODO: Pathfinding! 
-//    public static LinkedList<Vector2> getPath(Vector2 from, Vector2 to) {
-//    	//Return a list of Vector2s. Should correspond to tile indices in tiles.
-//    	LinkedList<Vector2> path = new LinkedList<Vector2>();
-//    	LinkedList<Vector2> open = new LinkedList<Vector2>();
-//    	LinkedList<Vector2> closed = new LinkedList<Vector2>();
-//    	open.add(from);
-//    	float gCost, hCost, fCost;
-//    	while(true)
-//    	{
-//    		open.add(currentFloor.getAdjacent((int)from.x, (int)from.y, currentFloor.getMapWidth(), currentFloor.getMapHeight()));
-//    	}
-//    	while(true) {
-//    		for(;;)
-//    		{
-//    			break;
-//    		}
-//    		break;
-//    	}
-//    	return null;
-//    	
-//    }
-    	
-   /* if we wanted a 2D array:::
-    public static float[][] getPath(Vector2 from, Vector2 to)
-    {
-    	int w = currentFloor.getWidth();
-    	int h = currentFloor.getHeight();
-    	float fromX = from.x;
-    	float fromY = from.y;
-    	float toX = to.x;
-    	float toY = to.y;
-    	
-    	float[][] pathArray = new float[w][h];
-    	pathArray[(int) fromX][(int) fromY] = 1;
-    	pathArray[(int) toX][(int) toY] = 1;
-    	
-    	float gCost, hCost, fCost;
-    	return null;
-    	
-    	
-    }*/
+
+    public static Floor getCurrentFloor() {
+    	return currentFloor;
+    }
 }

@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 
 import actors.Actor;
+import actors.BasicEnemy;
+import actors.RangedBadGuy;
 import ecu.se.objects.FadingLight;
 import ecu.se.objects.InteractableItem;
 import ecu.se.objects.Light;
@@ -81,5 +83,13 @@ public class ObjectMaker {
 		Lighting.addLight(light);
 		orb.setLight(light);
 		return orb;
+	}
+	
+	public static Actor createMob(float x, float y) {
+		return new RangedBadGuy(x,	y, 0,new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0 });
+	}
+	
+	public static Actor createTestMob(float x, float y) {
+		return new BasicEnemy(x,	y, 0,new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0 });
 	}
 }

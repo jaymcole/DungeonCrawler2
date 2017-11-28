@@ -14,6 +14,8 @@ import ecu.se.DecalPicker;
 import ecu.se.Game;
 import ecu.se.GameObject;
 import ecu.se.Globals;
+import ecu.se.ObjectMaker;
+import ecu.se.ObjectManager;
 import ecu.se.Utils;
 import ecu.se.objects.Decal;
 import ecu.se.objects.InteractableItem;
@@ -44,7 +46,8 @@ public class Generate {
 	private static int[][] map;
 	private static Tile[][] tiles;
 
-//	private static Vector2 maxTile = new Vector2(mapWidth, mapHeight), minTile = new Vector2(0, 0);
+	// private static Vector2 maxTile = new Vector2(mapWidth, mapHeight),
+	// minTile = new Vector2(0, 0);
 	private static InteractableItem up, down;
 
 	private static Random random;
@@ -56,9 +59,7 @@ public class Generate {
 
 	public static void generate(Random random, Floor floor) {
 		lights = new LinkedList<Light>();
-		
-		
-		
+
 		Generate.random = random;
 		mapWidth = Globals.MAP_TILE_WIDTH;
 		mapHeight = Globals.MAP_TILE_HEIGHT;
@@ -76,7 +77,7 @@ public class Generate {
 					Map.setFloor(Map.getCurrentLevel() + 1);
 			}
 		};
-		
+
 		up = new InteractableItem(0, 0, tileWidth, tileHeight, "Down Staircase", "texture/floor/staircase_up.png") {
 			@Override
 			public void onClick(GameObject otherObject) {
@@ -96,7 +97,7 @@ public class Generate {
 		map = minimizeMap();
 		finalizeFloor(map, random, floor);
 		finalizeTiles();
-		
+
 		boolean downStaircasePlace = false;
 		while (!downStaircasePlace) {
 			int x = random.nextInt(mapWidth);
@@ -106,11 +107,55 @@ public class Generate {
 				down.setPosition(x * tileWidth, y * tileHeight);
 			}
 		}
+		// ObjectMaker.createTestMob(Game.player.getX() + 15, Game.player.getY()
+		// + 15);
+		// ObjectMaker.createMob(Game.player.getX() + 20, Game.player.getY() +
+		// 20);
 
 		// DONE BUILDING
-	System.err.println("Lights from generator: " + lights.size());
+		System.err.println("Lights from generator: " + lights.size());
 		floor.generatedMap(tiles, lights, up, down, mapWidth, mapHeight);
+
+		addPathNodes();
 		printFloor();
+
+		for (int i = 0; i < 10; i++) {
+			boolean enemyPlaced = false;
+			while (!enemyPlaced) {
+				int x = random.nextInt(mapWidth);
+				int y = random.nextInt(mapHeight);
+//				System.err.println("SOMETHING");
+				if (!tiles[x][y].isWall) {
+					enemyPlaced = true;
+					// ObjectMaker.createTestMob(x * tileWidth, y * tileHeight);
+					ObjectManager.add(ObjectMaker.createTestMob(x * tileWidth, y * tileHeight));
+					// ObjectManager.add(ObjectMaker.createMob(x * tileWidth, y
+					// * tileHeight));
+				}
+			}
+		}
+		// printTiles();
+	}
+
+	private static void addPathNodes() {
+		for (int i = 0; i < mapWidth; i++) {
+			for (int j = 0; j < mapHeight; j++) {
+				tiles[i][j].pathNode = new PathNode(i, j, null, 0);
+				if (tiles[i][j].isWall)
+					tiles[i][j].pathNode.tileCost = 100;
+			}
+		}
+	}
+
+	public static void printTiles() {
+		System.out.println("\n");
+		for (int j = mapHeight - 1; j >= 0; j--) {
+			for (int i = 0; i < mapWidth; i++) {
+				System.out.print(tiles[i][j].pathNode.toString());
+			}
+			System.out.println(" ");
+		}
+		System.out.println("\n");
 	}
 
 	private static void finalizeTiles() {
@@ -145,7 +190,7 @@ public class Generate {
 				if (Direction.isExpanded(dir)) {
 					Direction left = Direction.nextExpandedDirectionCCW(dir);
 					Direction right = Direction.nextExpandedDirectionCW(dir);
-					
+
 					if (tiles[x + left.x][y + left.y].isWall && tiles[x + right.x][y + right.y].isWall) {
 					} else if (!tiles[x + left.x][y + left.y].isWall && !tiles[x + right.x][y + right.y].isWall) {
 						insideCorner = true;
@@ -425,7 +470,7 @@ public class Generate {
 					createLight((int) (i * tileWidth + (tileWidth * 0.5f)),
 							(int) (j * tileHeight + (tileHeight * 0.5f)));
 					totalLights++;
-					up.setPosition((int)(i * tileWidth), (int)(j * tileHeight));
+					up.setPosition((int) (i * tileWidth), (int) (j * tileHeight));
 
 					break;
 				default:
@@ -466,6 +511,7 @@ public class Generate {
 	private static void makeTileWall(int x, int y) {
 		tiles[x][y] = new Tile(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
 		tiles[x][y].setWall(true);
+		// tiles[x][y].pathNode = new PathNode(x,y,null,0);
 	}
 
 	private static void makeTileWalkable(int x, int y) {
@@ -473,20 +519,21 @@ public class Generate {
 			System.err.println("Can't make tile walkable: x=" + x + ", y=" + y);
 			return;
 		}
-		
+
 		if (tiles[x][y] == null) {
 			tiles[x][y] = new Tile(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
 			tiles[x][y].setTexture(AssetManager.getTexture("texture/floor/castle_tile.jpg").getTextureRegion());
-			
+
 			if (random.nextInt(100) > 75) {
-				Decal floorDecal = new Decal(x * tileWidth + random.nextInt(tileWidth), y * tileHeight + random.nextInt(tileHeight), "", AssetManager.getTexture(DecalPicker.getMossDecal()).getTextureRegion(), tileWidth, tileHeight);
+				Decal floorDecal = new Decal(x * tileWidth + random.nextInt(tileWidth),
+						y * tileHeight + random.nextInt(tileHeight), "",
+						AssetManager.getTexture(DecalPicker.getMossDecal()).getTextureRegion(), tileWidth, tileHeight);
 				floorDecal.setRotation(random.nextInt(360));
 				floorDecal.setAlpha(((random.nextInt(4)) / 10.0f) + 0.1f + (random.nextFloat() / 10.0f));
 				tiles[x][y].addObject(floorDecal);
 			}
-				
-			
-			
+
+			// tiles[x][y].pathNode = new PathNode(x,y,null,0);
 			tiles[x][y].setWall(false);
 		}
 	}
