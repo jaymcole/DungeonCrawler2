@@ -18,6 +18,8 @@ public class Tile extends GameObject{
     private TextureRegion texture;
     
     public boolean isWall;
+
+    public PathNode pathNode;
     
     private LinkedList<GameObject> objects;
     private LinkedList<GameObject> decals;
@@ -31,13 +33,15 @@ public class Tile extends GameObject{
         decals = new LinkedList<GameObject> ();
         objects = new LinkedList<GameObject>();
         bounds = Utils.getRectangleBounds(x, y, width, height, Utils.ALIGN_BOTTOM_LEFT);
-        
         texture = new TextureRegion();	
         texture.setRegion(AssetManager.getTexture("texture/misc/black.jpg").getTexture());
     }
     
     @Override
     public void update(float deltaTime) {
+    	
+//    	pathNode.pathParent = null;
+    	
     	for(GameObject object : decals) {
     		if (!object.isIdle())
     			object.update(deltaTime);

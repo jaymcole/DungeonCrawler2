@@ -19,6 +19,7 @@ public class Lighting {
 	private static ShaderProgram shader;
 	private static OrthographicCamera camera;
 
+	//TODO: Switch arraylist to sorted priority queue
 	private static LinkedList<Light> lights;
 	private static LinkedList<Light> waitlist;
 	private static Iterator<Light> updater;

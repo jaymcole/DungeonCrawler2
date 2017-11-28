@@ -35,23 +35,27 @@ import ecu.se.objects.Light;
 public class Game extends ApplicationAdapter {
 	private SpriteBatch batch;
 
-	//TODO: Make a fizzle object to push loot around (needs to remove objects from tile when switching tiles)
-	//TODO: Make a loot dispenser (shoots loot+fizzler out after short delays)
-	//TODO: Make a loot wrapper class
-	//TODO: Make a loot generator
-	//TODO: Make a melee attack action
-	
-	//TODO: Make an acceptable AI
-	
-	//TODO: Balance starting attribute points
-	//TODO: Balance health/mana regen
-	
-	//TODO: Add leveling system
-	//TODO: Add experience bar
-	
-	//TODO: Add monsters to map generator
-	//TODO: Create monster generator (with level and allocated attribute points)
-	
+	// TODO: Make a fizzle object to push loot around (needs to remove objects
+	// from tile when switching tiles)
+	// TODO: Make a loot dispenser (shoots loot+fizzler out after short delays)
+	// TODO: Make a loot wrapper class
+	// TODO: Make a loot generator
+	// TODO: Make a melee attack action
+
+	// TODO: Make an acceptable AI
+
+	// TODO: Balance starting attribute points
+	// TODO: Balance health/mana regen
+
+	// TODO: Add leveling system
+	// TODO: Add experience bar
+
+	// TODO: Add monsters to map generator
+	// TODO: Create monster generator (with level and allocated attribute
+	// points)
+
+	// TODO: Shrink or delete the lava/roots/blood decal that's too large
+
 	private float deltaTime;
 	private int screenHeight, screenWidth;
 	private OrthographicCamera camera;
@@ -109,6 +113,10 @@ public class Game extends ApplicationAdapter {
 
 		new Map();
 		
+		ObjectManager.add(ObjectMaker.createTestMob(Game.player.getX(), Game.player.getY()));
+		ObjectManager.add(ObjectMaker.createMob(Game.player.getX(), Game.player.getY()));
+//		ObjectMaker.createMob(Game.player.getX(), Game.player.getY());
+		
 		// player = new Player(Map.getFloorUp().x, Map.getFloorUp().y, 0,
 		// camera,
 		// new String[]{
@@ -117,34 +125,33 @@ public class Game extends ApplicationAdapter {
 		// "texture/spritesheet/bleh.png"},
 		// new int[]{3,2,1});
 
-		Animation a = new Animation(player.x, player.y, 0,
-				AssetManager.getSpriteSheet("texture/spritesheet/fire_spritesheet.png"));
+//		Animation a = new Animation(player.x, player.y, 0,
+//				AssetManager.getSpriteSheet("texture/spritesheet/fire_spritesheet.png"));
+//
+//		ObjectManager.add(a);
+//		ObjectManager
+//				.add(new ItemObject(player.getX(), player.getY(), "Sprite LOL", "texture/test/spritePlaceholder.png"));
 
-		ObjectManager.add(a);
-		ObjectManager
-				.add(new ItemObject(player.getX(), player.getY(), "Sprite LOL", "texture/test/spritePlaceholder.png"));
+		// Random random = new Random();
+		// for (int i = 0; i < 50; i++) {
+		// ObjectManager.add(new
+		// RangedBadGuy(random.nextInt(Globals.MAP_TILE_WIDTH * 128),
+		// random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0, new
+		// String[]{"texture/spritesheet/zombie_spritesheet.png"}, new
+		// int[]{random.nextInt(5)}));
+		// ObjectManager.add(new
+		// RangedBadGuy(random.nextInt(Globals.MAP_TILE_WIDTH * 128),
+		// random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0,
+		// new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0
+		// }));
+		// }
 
-		Random random = new Random();
-		for (int i = 0; i < 50; i++) {
-			// ObjectManager.add(new
-			// RangedBadGuy(random.nextInt(Globals.MAP_TILE_WIDTH * 128),
-			// random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0, new
-			// String[]{"texture/spritesheet/zombie_spritesheet.png"}, new
-			// int[]{random.nextInt(5)}));
-			ObjectManager.add(new RangedBadGuy(random.nextInt(Globals.MAP_TILE_WIDTH * 128),
-					random.nextInt(Globals.MAP_TILE_HEIGHT * 128), 0,
-					new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0 }));
-		}
-
-		Map.getTile((int) player.getX(), (int) player.getY()).addObject(new Decal(player.x, player.y, "ass",
-				AssetManager.getTexture("texture/decals/decal_lava.png").getTextureRegion()));
+//		Map.getTile((int) player.getX(), (int) player.getY()).addObject(new Decal(player.x, player.y, "ass",
+//				AssetManager.getTexture("texture/decals/decal_lava.png").getTextureRegion()));
 
 		hud = new GUI(player, screenWidth, screenHeight, this);
-		
-		shapeRenderer = new ShapeRenderer();
 
-		
-		
+		shapeRenderer = new ShapeRenderer();
 
 		// Lighting.addLight(light);
 
@@ -278,7 +285,7 @@ public class Game extends ApplicationAdapter {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			Lighting.toggleLights();
 		}
-		
+
 		if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
 			Globals.DEBUG ^= true;
 		}
@@ -309,11 +316,10 @@ public class Game extends ApplicationAdapter {
 	private void playerControls() {
 		Vector3 pos = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 		if (!hud.mouseUsed() && currentState != GAME_STATE_PAUSED) {
-			
-			
+
 			if (leftMouseState == MOUSE_PRESSED)
 				if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
-					ObjectManager.mouseClick((int)pos.x, (int)pos.y);
+					ObjectManager.mouseClick((int) pos.x, (int) pos.y);
 				else
 					player.primaryAction((int) pos.x, (int) pos.y);
 

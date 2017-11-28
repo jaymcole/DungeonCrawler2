@@ -161,6 +161,12 @@ public class Floor {
 			}
 		}
 	}
+	
+	public Tile getTileByIndex(int x, int y) {
+		if (inBounds(x,y))
+			return tiles[x][y];
+		return null;
+    }
 
 	public Tile getTile(int x, int y) {
 		int xCoord = x / tileWidth;
