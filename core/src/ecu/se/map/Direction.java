@@ -25,6 +25,27 @@ public enum Direction {
         this.degAngle = degAngle;
     }
     
+    public String getName()
+    {
+    	return this.name();
+    }
+    
+    public String getShorthand()
+    {
+    	return shorthand;
+    }
+    public int getX()
+    {
+    	return x;
+    }
+    public int getY()
+    {
+    	return y;
+    }
+    public int getDegAngle()
+    {
+    	return degAngle;
+    }
     private static final int directionValues = Direction.values().length;
     
     /**
