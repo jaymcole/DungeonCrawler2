@@ -1,4 +1,4 @@
-package ecu.se.map;
+package tests;
 
 import static org.junit.Assert.*;
 
@@ -65,6 +65,7 @@ public class DirectionTest extends TestCase {
 	public void testEast2Direction() {
 		assertEquals("E", Direction.EAST.getShorthand());
 	}
+	
 	//testing X value
 	public void testNorth3Direction() {
 		assertEquals(0, Direction.NORTH.getX());
