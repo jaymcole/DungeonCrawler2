@@ -7,7 +7,7 @@ import ecu.se.GameObject;
 import ecu.se.map.Direction;
 
 
-public class Animation extends GameObject{
+public class Animation extends GameObject {
 	private boolean hold = true;
 	private int spriteHeight, spriteWidth, spriteX, spriteY, totalRows, totalCol, currentCol, currentRow;
 	private TextureRegion textureRegion;
@@ -27,7 +27,7 @@ public class Animation extends GameObject{
 		offsetY = 0;
 	}
 
-	public Animation(float x, float y, float z,SpriteAsset spriteAsset) {		
+	public Animation(float x, float y, float z, SpriteAsset spriteAsset) {		
 		super(x, y, z);
 		totalRows = spriteAsset.getSpriteRows();
 		totalCol = spriteAsset.getSpriteColumns();
@@ -35,7 +35,7 @@ public class Animation extends GameObject{
 		spriteWidth = spriteAsset.getSpriteWidth();
 		textureRegion = new TextureRegion(spriteAsset.getTexture().getTexture());
 		currentCol = 0;
-
+		
 		offsetX = 0;
 		offsetY = 0;
 			
@@ -62,7 +62,12 @@ public class Animation extends GameObject{
 			time = 0;
 		} else if(time >= speed) {
 			currentCol++;
-			currentCol %= totalCol-1;
+			
+//			if (totalCol > 0) {
+				currentCol %= totalCol;
+//			} else {
+//				System.out.println("totalCol="+totalCol);				
+//			}
 	        
 	        time -= speed;
 	        spriteX = currentCol * spriteWidth;
@@ -133,6 +138,14 @@ public class Animation extends GameObject{
 	public void setScale(float x, float y) {
 		scaleX = x;
 		scaleY = y;
+	}
+	
+	public int getCurrentColumn() {
+		return currentCol;
+	}
+	
+	public int getTotalColumns() {
+		return totalCol;
 	}
 
 	@Override
