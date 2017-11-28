@@ -26,6 +26,7 @@ public class InteractableItem extends ItemObject {
 	
 	public void onClick(GameObject otherObject) {
 		if (otherObject == Game.player) {
+			((Window_Inventory)GUI.getWindow(GUI.WINDOW_INVENTORY)).insertItem(this);
 		}
 	}
 
