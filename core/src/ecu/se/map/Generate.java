@@ -124,7 +124,7 @@ public class Generate {
 			while (!enemyPlaced) {
 				int x = random.nextInt(mapWidth);
 				int y = random.nextInt(mapHeight);
-				System.err.println("SOMETHING");
+//				System.err.println("SOMETHING");
 				if (!tiles[x][y].isWall) {
 					enemyPlaced = true;
 					// ObjectMaker.createTestMob(x * tileWidth, y * tileHeight);

@@ -14,7 +14,7 @@ public class Pathfinder2 {
 
 	private static Node[][] nodes;
 	// private static LinkedList<Node> openList;
-	private static Queue<Node> openList;
+	private static LinkedList<Node> openList;
 
 	private static void addAdjacent(Node parent, Node goal) {
 
@@ -42,7 +42,7 @@ public class Pathfinder2 {
 	}
 
 	private static boolean isEqual(Node n1, Node n2) {
-		System.out.println(n1.toString() + "==" + n2.toString() + "   " + (n1.x == n2.x && n1.y == n2.y));
+//		System.out.println(n1.toString() + "==" + n2.toString() + "   " + (n1.x == n2.x && n1.y == n2.y));
 		return n1.x == n2.x && n1.y == n2.y;
 	}
 
@@ -58,7 +58,7 @@ public class Pathfinder2 {
 
 	public static LinkedList<Vector2> findPath(Vector2 start, Vector2 end) {
 		nodes = new Node[Map.getCurrentFloor().getMapWidth()][Map.getCurrentFloor().getMapHeight()];
-		openList = new Queue<Node>();
+		openList = new LinkedList<Node>();
 		int sx = (int) start.x / Globals.TILE_PIXEL_WIDTH;
 		int sy = (int) start.y / Globals.TILE_PIXEL_HEIGHT;
 		int ex = (int) end.x / Globals.TILE_PIXEL_WIDTH;
@@ -68,15 +68,22 @@ public class Pathfinder2 {
 		startNode.parent = null;
 		Node goalNode = new Node(ex, ey);
 
-		nodes[sx][sy] = startNode;
-		nodes[ex][ey] = goalNode;
-
+		if (inBounds(sx, sy))		
+			nodes[sx][sy] = startNode;
+		else
+			return null;
+		if(inBounds(ex, ey))
+			nodes[ex][ey] = goalNode;
+		else 
+			return null;
 		Node currentNode = startNode;
 		openList.addLast(currentNode);
-		while (openList != null && openList.first() != null) { // openList.first() != null) {
+		if (openList == null)
+			return null;
+		
+		while (openList != null && !openList.isEmpty()) { // openList.first() != null) {
 			// System.out.println("Current length: " + currentNode.length);
-			currentNode = openList.first();
-			openList.removeFirst();
+			currentNode = openList.pop();
 
 			if (isEqual(currentNode, goalNode)) {
 				// System.err.println("Constructing Path");
