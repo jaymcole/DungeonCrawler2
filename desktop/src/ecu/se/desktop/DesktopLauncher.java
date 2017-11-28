@@ -17,4 +17,4 @@ public class DesktopLauncher {
 		config.title = "Dungeon Crawler 2017";
 		new LwjglApplication(new Game(), config);
 	}
-} 
+}

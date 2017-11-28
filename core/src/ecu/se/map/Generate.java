@@ -124,13 +124,11 @@ public class Generate {
 			while (!enemyPlaced) {
 				int x = random.nextInt(mapWidth);
 				int y = random.nextInt(mapHeight);
-//				System.err.println("SOMETHING");
 				if (!tiles[x][y].isWall) {
 					enemyPlaced = true;
-					// ObjectMaker.createTestMob(x * tileWidth, y * tileHeight);
-					ObjectManager.add(ObjectMaker.createTestMob(x * tileWidth, y * tileHeight));
-					// ObjectManager.add(ObjectMaker.createMob(x * tileWidth, y
-					// * tileHeight));
+					if (Vector2.dst(x * tileWidth, y * tileHeight, up.getX(), up.getY()) > 1000) {
+						ObjectManager.add(ObjectMaker.createTestMob(x * tileWidth, y * tileHeight));
+					}
 				}
 			}
 		}

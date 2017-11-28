@@ -10,6 +10,7 @@ import archive.Archiver;
 import archive.TimeRecords;
 import assetManager.AssetManager;
 import ecu.se.Game;
+import ecu.se.objects.ActiveItem;
 import ecu.se.objects.ItemObject;
 import stats.Stats;
 
@@ -25,8 +26,8 @@ public class Window_HUD extends Window {
 	private Widget_Button_Image btn_playerInventory;
 	private Widget_Button_Image btn_mainMenu;
 	
-	private Widget_Button btn_primaryAction;
-	private Widget_Button btn_secondaryAction;
+	private Widget_ItemSlot btn_primaryAction;
+	private Widget_ItemSlot btn_secondaryAction;
 	
 	@Override
 	protected void buildWindow() {
@@ -88,29 +89,37 @@ public class Window_HUD extends Window {
 		buttonDefault =   new TextureRegion(buttonTexture, 373, 0,   185, 109);
 		buttonHighlight = new TextureRegion(buttonTexture, 373, 110, 185, 109);
 		buttonActive =    new TextureRegion(buttonTexture, 373, 222, 185, 109);
-		btn_primaryAction= new Widget_Button_Image(1859, 535, 60, 55, this, buttonDefault, buttonHighlight, buttonActive) {
+		btn_primaryAction= new Widget_ItemSlot(1859, 535, 60, 55, this, buttonDefault, buttonHighlight, buttonActive) {			
 			@Override
-			public void mousePressed(int mouseX, int mouseY) {
-				System.out.println("Bitch please");
+			public void onRemoveItem() {
+				Game.player.setPrimaryAction(null);
 			}
+			
 			@Override
-			public void mouseReleased(int mouseX, int mouseY) {
-				System.out.println("maaaan");
-			}
+			public void onSetItem() {
+				if (this.item instanceof ActiveItem)
+					Game.player.setPrimaryAction(((ActiveItem)item).getAction());
+				else 
+					onRemoveItem();
+			}			
 		};
 		
 		//Player Secondary
 		buttonDefault =   new TextureRegion(buttonTexture, 373, 0,   185, 109);
 		buttonHighlight = new TextureRegion(buttonTexture, 373, 110, 185, 109);
 		buttonActive =    new TextureRegion(buttonTexture, 373, 222, 185, 109);
-		btn_secondaryAction = new Widget_Button_Image(1859, 478, 60, 55, this, buttonDefault, buttonHighlight, buttonActive) {
+		btn_secondaryAction = new Widget_ItemSlot(1859, 478, 60, 55, this, buttonDefault, buttonHighlight, buttonActive) {
 			@Override
-			public void mousePressed(int mouseX, int mouseY) {
-				System.out.println("Secondary WOW");
+			public void onRemoveItem() {
+				Game.player.setSecondaryAction(null);
 			}
+			
 			@Override
-			public void mouseReleased(int mouseX, int mouseY) {
-				System.out.println("unfortunate");
+			public void onSetItem() {
+				if (this.item instanceof ActiveItem)
+					Game.player.setSecondaryAction(((ActiveItem)item).getAction());
+				else 
+					onRemoveItem();
 			}
 		};
 		
@@ -124,7 +133,6 @@ public class Window_HUD extends Window {
 		widgetsList.add(new Widget_Label(800, 80, 10, 10, this, "Wash The Queen", 50, Color.BLUE, Color.WHITE));
 
 		buttonTexture = AssetManager.getTexture("texture/gui/hotkey.png").getTexture();
-//		Widget_Button_Image[] hotkeys = new Widget_Button_Image[13];
 		for(int i = 0; i < 13; i++) {
 			buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
 			buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
@@ -143,6 +151,14 @@ public class Window_HUD extends Window {
 		
 
 	}
+	
+	public void setPrimary(ItemObject item) {
+		btn_primaryAction.setItem(item);
+	}
+	public void setSecondary(ItemObject item) {
+		btn_secondaryAction.setItem(item);
+	}
+	
 
 	@Override
 	public void onPause() {
@@ -153,269 +169,4 @@ public class Window_HUD extends Window {
 	public void onResume() {
 		Archiver.set(TimeRecords.TIME_IN_GAME, false);
 	}
-//		widgets = new Widget[] { 
-//				prgbar_health,
-//				prgbar_mana,
-//				
-//				btn_playerWindow,
-//				btn_playerInventory,
-//				btn_mainMenu,
-//				
-//				btn_primaryAction,
-//				btn_secondaryAction,
-//				
-//				hotkey1,
-//				hotkey2,
-//				hotkey3,
-//				hotkey4,
-//				hotkey5,
-//				hotkey6,
-//				hotkey7,
-//				hotkey8,
-//				hotkey9,
-//				hotkey10,
-//				hotkey11,
-//				hotkey12,
-//				hotkey13,
-//				
-//				// Test Label
-//				new Widget_Label(800, 80, 10, 10, this, "Wash The Queen", 50, Color.BLUE, Color.WHITE),
-//				// GUI OVERLAY
-//				new Widget_Image(0, 0, GUI.defaultWidth, GUI.defaultHeight, this, "texture/gui/hud.png")
-//		};
-	
-//	// QUICKBAR (1-13) (Might could be moved to it's own window)
-//	buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
-//	buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
-//	buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
-//	hotkey1 = new Widget_Button_Image(595, 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive) {
-//		@Override
-//		public void mousePressed() {
-//			System.out.println(":( 1");
-//		}
-//		@Override
-//		public void mouseDown() {
-//			System.out.println("mouseDown");
-//		}
-//		@Override
-//		public void mouseReleased() {
-//			System.out.println("mouseReleased");
-//		}
-//	};
-//	
-//	buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
-//	buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
-//	buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
-//	hotkey2 = new Widget_Button_Image(651, 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive) {
-//		@Override
-//		public void mousePressed() {
-//			System.out.println("mousePressed");
-//		}
-//		@Override
-//		public void mouseDown() {
-//			System.out.println("mouseDown");
-//		}
-//		@Override
-//		public void mouseReleased() {
-//			System.out.println("mouseReleased");
-//		}
-//	};		
-//	
-//	buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
-//	buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
-//	buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
-//	hotkey3 = new Widget_Button_Image(708, 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive) {
-//		@Override
-//		public void mousePressed() {
-//			System.out.println("mousePressed");
-//		}
-//		@Override
-//		public void mouseDown() {
-//			System.out.println("mouseDown");
-//		}
-//		@Override
-//		public void mouseReleased() {
-//			System.out.println("mouseReleased");
-//		}
-//	};
-//	
-//	buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
-//	buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
-//	buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
-//	hotkey4 = new Widget_Button_Image(764, 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive) {
-//		@Override
-//		public void mousePressed() {
-//			System.out.println("mousePressed");
-//		}
-//		@Override
-//		public void mouseDown() {
-//			System.out.println("mouseDown");
-//		}
-//		@Override
-//		public void mouseReleased() {
-//			System.out.println("mouseReleased");
-//		}
-//	};
-//	
-//	buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
-//	buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
-//	buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
-//	hotkey5 = new Widget_Button_Image(821, 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive) {
-//		@Override
-//		public void mousePressed() {
-//			System.out.println("mousePressed");
-//		}
-//		@Override
-//		public void mouseDown() {
-//			System.out.println("mouseDown");
-//		}
-//		@Override
-//		public void mouseReleased() {
-//			System.out.println("mouseReleased");
-//		}
-//	};
-//	
-//	buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
-//	buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
-//	buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
-//	hotkey6 = new Widget_Button_Image(877, 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive) {
-//		@Override
-//		public void mousePressed() {
-//			System.out.println("mousePressed");
-//		}
-//		@Override
-//		public void mouseDown() {
-//			System.out.println("mouseDown");
-//		}
-//		@Override
-//		public void mouseReleased() {
-//			System.out.println("mouseReleased");
-//		}
-//	};
-//	
-//	buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
-//	buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
-//	buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
-//	hotkey7 = new Widget_Button_Image(933, 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive) {
-//		@Override
-//		public void mousePressed() {
-//			System.out.println("mousePressed");
-//		}
-//		@Override
-//		public void mouseDown() {
-//			System.out.println("mouseDown");
-//		}
-//		@Override
-//		public void mouseReleased() {
-//			System.out.println("mouseReleased");
-//		}
-//	};
-//	
-//	buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
-//	buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
-//	buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
-//	hotkey8 = new Widget_Button_Image(990, 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive) {
-//		@Override
-//		public void mousePressed() {
-//			System.out.println("mousePressed");
-//		}
-//		@Override
-//		public void mouseDown() {
-//			System.out.println("mouseDown");
-//		}
-//		@Override
-//		public void mouseReleased() {
-//			System.out.println("mouseReleased");
-//		}
-//	};
-//	
-//	buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
-//	buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
-//	buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
-//	hotkey9 = new Widget_Button_Image(1046, 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive) {
-//		@Override
-//		public void mousePressed() {
-//			System.out.println("mousePressed");
-//		}
-//		@Override
-//		public void mouseDown() {
-//			System.out.println("mouseDown");
-//		}
-//		@Override
-//		public void mouseReleased() {
-//			System.out.println("mouseReleased");
-//		}
-//	};
-//	
-//	buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
-//	buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
-//	buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
-//	hotkey10 = new Widget_Button_Image(1102, 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive) {
-//		@Override
-//		public void mousePressed() {
-//			System.out.println("mousePressed");
-//		}
-//		@Override
-//		public void mouseDown() {
-//			System.out.println("mouseDown");
-//		}
-//		@Override
-//		public void mouseReleased() {
-//			System.out.println("mouseReleased");
-//		}
-//	};
-//	
-//	buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
-//	buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
-//	buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
-//	hotkey11 = new Widget_Button_Image(1158, 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive) {
-//		@Override
-//		public void mousePressed() {
-//			System.out.println("mousePressed");
-//		}
-//		@Override
-//		public void mouseDown() {
-//			System.out.println("mouseDown");
-//		}
-//		@Override
-//		public void mouseReleased() {
-//			System.out.println("mouseReleased");
-//		}
-//	};
-//	
-//	buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
-//	buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
-//	buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
-//	hotkey12 = new Widget_Button_Image(1214, 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive) {
-//		@Override
-//		public void mousePressed() {
-//			System.out.println("mousePressed");
-//		}
-//		@Override
-//		public void mouseDown() {
-//			System.out.println("mouseDown");
-//		}
-//		@Override
-//		public void mouseReleased() {
-//			System.out.println("mouseReleased");
-//		}
-//	};
-//	
-//	buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
-//	buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
-//	buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
-//	hotkey13 = new Widget_Button_Image(1272, 2, 56, 62, this, buttonDefault, buttonHighlight, buttonActive) {
-//		@Override
-//		public void mousePressed() {
-//			System.out.println("mousePressed");
-//		}
-//		@Override
-//		public void mouseDown() {
-//			System.out.println("mouseDown");
-//		}
-//		@Override
-//		public void mouseReleased() {
-//			System.out.println("mouseReleased");
-//		}
-//	};
 }

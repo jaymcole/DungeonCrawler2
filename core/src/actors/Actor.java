@@ -84,6 +84,7 @@ public abstract class Actor extends GameObject {
 
 	protected Action primaryAction;
 	protected Action secondaryAction;
+
 	protected ArrayList<Action> actions = new ArrayList<Action>();
 	protected LinkedList<Action> activeActions = new LinkedList<Action>();
 	protected LinkedList<Animation> animations = new LinkedList<Animation>();
@@ -118,10 +119,10 @@ public abstract class Actor extends GameObject {
 		tempStatModifiers = new LinkedList<TempStatModifier>();
 		setDefaults();
 		calculateStats();
-		
+		team = Team.MOB;
 		currentHealth = getStat(Stats.HEALTH);
 		currentMana = getStat(Stats.MANA);
-		
+
 		Random random = new Random();
 		currentHealth = random.nextInt(100);
 		this.awake = false;
@@ -146,6 +147,22 @@ public abstract class Actor extends GameObject {
 		updateActions(deltaTime);
 		if (currentHealth <= 0)
 			kill();
+	}
+	
+	/**
+	 * Called when the wake state changes from awake to asleep.
+	 */
+	public void onSleep() {
+		this.awake = false;
+	}
+
+	/**
+	 * Called when the wake state changes from sleep to awake. Example use: A
+	 * mob may want to wake nearby mobs even if the player hasn't reached their
+	 * wake bubble.
+	 */
+	public void onWake() {
+		this.awake = true;
 	}
 
 	protected void updateStats(float deltaTime) {
@@ -185,13 +202,22 @@ public abstract class Actor extends GameObject {
 	}
 
 	protected void updateActions(float deltaTime) {
-		for (Action a : activeActions) {
-			if (a.isActive()) {
-				a.update(deltaTime);
+		for(int i = 0; i < activeActions.size(); i++) {
+			if (activeActions.get(i).isActive()) {
+				activeActions.get(i).update(deltaTime);
 			} else {
-				activeActions.remove(a);
+				activeActions.remove(i);
 			}
 		}
+		
+		
+//		for (Action a : activeActions) {
+//			if (a.isActive()) {
+//				a.update(deltaTime);
+//			} else {
+//				activeActions.remove(a);
+//			}
+//		}
 	}
 
 	/**
@@ -221,9 +247,21 @@ public abstract class Actor extends GameObject {
 		batch.draw(debugHealthBarTexture, x - (int) (healthbarWidth * 0.5f), y + healthbarHeight,
 				healthbarWidth * (currentHealth / (currentStats[Stats.HEALTH.ordinal()] + 0.0f)), barHeight * 2);
 		batch.setColor(Color.WHITE);
+
+		// Renders a manabar
+		batch.setColor(1.0f, 1.0f, 1.0f, 0.5f);
+		batch.draw(debugHealthBarTexture, x - (int) (healthbarWidth * 0.5f) - borderWidth,
+				y + healthbarHeight - borderWidth  + barHeight*2 + 2, healthbarWidth + borderWidth * 2, barHeight * 2 + borderWidth * 2);
+
+		batch.setColor(0.0f, 0f, 1f, 0.5f);
+		batch.draw(debugHealthBarTexture, x - (int) (healthbarWidth * 0.5f), y + healthbarHeight + barHeight*2 + 2,
+				healthbarWidth * (currentMana / (currentStats[Stats.MANA.ordinal()] + 0.0f)), barHeight * 2);
+		batch.setColor(Color.WHITE);
 	}
 
 	public float defend(Stats type, float damage) {
+		if (!awake)
+			onWake();
 		currentHealth -= damage;
 		return damage;
 	}
@@ -259,7 +297,8 @@ public abstract class Actor extends GameObject {
 	}
 
 	/**
-	 * Adds amount to this Actors health. Caps the max based on the Actors Health stat.
+	 * Adds amount to this Actors health. Caps the max based on the Actors
+	 * Health stat.
 	 * 
 	 * @param currentHealth
 	 */
@@ -291,12 +330,12 @@ public abstract class Actor extends GameObject {
 	public float getStat(Stats stat) {
 		return currentStats[stat.ordinal()];
 	}
-	
+
 	public void setBaseStat(Stats stat, float value) {
 		baseStats[stat.ordinal()] = value;
 		calculateStats();
 	}
-	
+
 	public void setModifierStat(Stats stat, float value) {
 		modifierStats[stat.ordinal()] = value;
 		calculateStats();
@@ -321,7 +360,7 @@ public abstract class Actor extends GameObject {
 				currentStats[Stats.MOVEMENT_SPEED.ordinal()], currentSpeed.y);
 		setIdle(false);
 	}
-	
+
 	public void move(float deltaTime, double angle, boolean updateDirection) {
 		currentSpeed.x += (currentStats[Stats.MOVEMENT_ACCELERATION.ordinal()] * deltaTime) * Math.cos(angle);
 		currentSpeed.x = Utils.clamp(-currentStats[Stats.MOVEMENT_SPEED.ordinal()],
@@ -359,7 +398,7 @@ public abstract class Actor extends GameObject {
 					currentStats[i] = baseStats[i] + modifierStats[i];
 			else {
 				currentStats[i] = baseStats[i] + modifierStats[i];
-				for(Stats s : Stats.values()[i].grouping) {
+				for (Stats s : Stats.values()[i].grouping) {
 					currentStats[i] += getStat(Stats.values()[s.ordinal()]);
 				}
 			}
@@ -390,7 +429,7 @@ public abstract class Actor extends GameObject {
 	}
 
 	/**
-	 * Mouse Left action
+	 * Use action toward x, y
 	 * 
 	 * @param x
 	 * @param y
@@ -402,7 +441,7 @@ public abstract class Actor extends GameObject {
 	}
 
 	/**
-	 * Mouse Right Action
+	 * Use action toward x, y
 	 * 
 	 * @param x
 	 * @param y
@@ -445,15 +484,18 @@ public abstract class Actor extends GameObject {
 
 	@Override
 	protected void die() {
-		Map.getTile((int) x, (int) y).addObject(new Decal(x, y, "ass", AssetManager.getTexture(DecalPicker.getActorCorpse()).getTextureRegion()));
+		Map.getTile((int) x, (int) y).addObject(
+				new Decal(x, y, "ass", AssetManager.getTexture(DecalPicker.getActorCorpse()).getTextureRegion()));
 
 		if (Utils.getRandomInt(100) > 50) {
-			GameObject hOrb = ObjectMaker.createHealthOrb(x + Utils.getRandomInt(50) - 25, y + Utils.getRandomInt(50) - 25); 
-			Map.getTile((int)hOrb.getX(), (int)hOrb.getY()).addObject(hOrb);
+			GameObject hOrb = ObjectMaker.createHealthOrb(x + Utils.getRandomInt(50) - 25,
+					y + Utils.getRandomInt(50) - 25);
+			Map.getTile((int) hOrb.getX(), (int) hOrb.getY()).addObject(hOrb);
 		}
 		if (Utils.getRandomInt(100) > 50) {
-			GameObject mOrb = ObjectMaker.createManaOrb(x + Utils.getRandomInt(50) - 25, y + Utils.getRandomInt(50) - 25); 
-			Map.getTile((int)mOrb.getX(), (int)mOrb.getY()).addObject(mOrb);
+			GameObject mOrb = ObjectMaker.createManaOrb(x + Utils.getRandomInt(50) - 25,
+					y + Utils.getRandomInt(50) - 25);
+			Map.getTile((int) mOrb.getX(), (int) mOrb.getY()).addObject(mOrb);
 		}
 		// Drop loot
 		// Set Boolean to dead
@@ -465,11 +507,19 @@ public abstract class Actor extends GameObject {
 		// Change render() to do the following
 		// Render corpse instead of alive actor.
 	}
-	
+
+	public void setPrimaryAction(Action a) {
+		primaryAction = a;
+	}
+
+	public void setSecondaryAction(Action a) {
+		secondaryAction = a;
+	}
+
 	public int getRemainingAttributePoints() {
 		return attributePoints;
 	}
-	
+
 	public void addAttributePoints(int points) {
 		attributePoints += points;
 	}

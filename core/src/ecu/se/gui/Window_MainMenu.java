@@ -35,6 +35,7 @@ public class Window_MainMenu extends Window{
 			@Override
 			public void mouseReleased(int mouseX, int mouseY) {
 				gui.getGame().create();
+				gui.setWindow(GUI.WINDOW_HUD);
 			}
 		};
 		

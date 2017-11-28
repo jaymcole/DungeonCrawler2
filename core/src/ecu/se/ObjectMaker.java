@@ -3,12 +3,19 @@ package ecu.se;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 
+import actions.Action;
+import actions.Spell;
+import actions.Spell_Explosion;
+import actions.Spell_Fireball;
+import actions.Spell_Teleport;
 import actors.Actor;
 import actors.BasicEnemy;
 import actors.RangedBadGuy;
+import ecu.se.objects.ActiveItem;
 import ecu.se.objects.FadingLight;
 import ecu.se.objects.InteractableItem;
 import ecu.se.objects.Light;
+import stats.Stats;
 
 public class ObjectMaker {
 	private static final int ORB_SIZE = 15;
@@ -90,6 +97,41 @@ public class ObjectMaker {
 	}
 	
 	public static Actor createTestMob(float x, float y) {
-		return new BasicEnemy(x,	y, 0,new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0 });
+		BasicEnemy mob = new BasicEnemy(x,	y, 0,new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0 });
+		mob.setBaseStat(Stats.BASE_CONSTITUION, 		100);
+		mob.setBaseStat(Stats.BASE_DEXTERITY, 			1);
+		mob.setBaseStat(Stats.BASE_INTELLIGENCE, 		10);
+		mob.setBaseStat(Stats.BASE_MAGICAL_RESISTANCE, 	1);
+		mob.setBaseStat(Stats.BASE_PHYSICAL_RESISTANCE, 1);
+		mob.setBaseStat(Stats.BASE_SPEED, 				1);
+		mob.setBaseStat(Stats.BASE_STRENGTH, 			1);		
+		
+		Spell_Fireball primary = new Spell_Fireball(mob);		
+		primary.setBaseCooldown(10);
+		mob.setPrimaryAction(primary);
+		return mob;
 	}
+	
+	public static ActiveItem createActiveItem(float x, float y, Action action) {
+		
+		//TODO: Find a reasonable default action icon.
+		String texturePath = "texture/items/scroll_blank.png";
+		if (action instanceof Spell) {
+			if (action instanceof Spell_Fireball) {
+				texturePath = "texture/items/scroll_fireball.png";
+			} else if (action instanceof Spell_Teleport) {
+				texturePath = "texture/items/scroll_teleport.png";
+			} else {
+				texturePath = "texture/items/scroll_blank.png";
+			}
+		}
+		
+		
+		
+		ActiveItem a = new ActiveItem(x,y, "Action Scroll", texturePath);
+		a.setAction(action);
+		a.setSize(40, 40);
+		return a;
+	}
+	
 }

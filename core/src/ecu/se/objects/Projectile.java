@@ -57,7 +57,7 @@ public class Projectile extends GameObject {
 		if (!isAlive()) {
 			return;
 		}
-		
+		System.err.println("Colliding with: " + otherObject.getClass().getSimpleName());
 		if (otherObject != this && !Team.isFriendly(team, otherObject.team)) {
 			otherObject.defend(null, damage);
 			this.kill();

@@ -179,7 +179,6 @@ public class Light implements Comparable<Light> {
 	
 	public void kill() {
 		Lighting.removeLight(this);
-		
 		if (hasParent)
 			parent.setLight(null);
 	}

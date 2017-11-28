@@ -10,8 +10,15 @@ import actions.Spell_Fireball;
 import actions.Spell_Teleport;
 import archive.Archiver;
 import archive.TimeRecords;
+import assetManager.AssetManager;
+import ecu.se.DecalPicker;
+import ecu.se.Game;
+import ecu.se.GameObject;
+import ecu.se.ObjectMaker;
+import ecu.se.Utils;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
+import ecu.se.objects.Decal;
 import stats.Stats;
 
 public class Player extends Actor {
@@ -27,8 +34,8 @@ public class Player extends Actor {
 		dir = Direction.NORTH;
 		team = Team.PLAYER;
 		attributePoints = 100;
-		primaryAction = new Spell_Fireball(this);
-		secondaryAction = new Spell_Teleport(this);
+//		primaryAction = new Spell_Fireball(this);
+//		secondaryAction = new Spell_Teleport(this);
 	}
 	
 	@Override
@@ -55,9 +62,17 @@ public class Player extends Actor {
 	}
 
 	public void act(float deltaTime) {
-		
+
 	}
 
+	@Override
+	protected void die() {
+		Map.getTile((int) x, (int) y).addObject(
+				new Decal(x, y, "ass", AssetManager.getTexture(DecalPicker.getActorCorpse()).getTextureRegion()));
+		Game.currentState = Game.GAME_STATE_PAUSED;
+		Game.GAME_OVER = true;
+	}
+	
 	public void setIdle(boolean idle) {
 		this.idle = idle;
 		if (idle) {

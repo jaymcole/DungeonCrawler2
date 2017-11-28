@@ -29,11 +29,9 @@ public class Map {
     	setScreenResolution(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     	changeFloor = false;
         floors = new ArrayList<Floor>(200);
-        currentLevel = 0;
-        changeFloor(0);
-//        changeFloor(1);
-//        changeFloor(0);
-        
+        currentLevel = -1;
+//        currentLevel = 0;
+        changeFloor(0);        
     }
     
     public static void setFloor(int floor) {

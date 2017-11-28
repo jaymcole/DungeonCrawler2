@@ -22,6 +22,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 	protected boolean idle;
 	protected Light light;
 	public Team team;
+	protected boolean isColliding;
 
 	public GameObject(float x, float y, float z) {
 		this.x = x;
@@ -30,6 +31,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 		alive = true;
 		bounds = Utils.getRectangleBounds(x, y, 20, 20, Utils.ALIGN_CENTERED);
 		team = Team.NEUTRAL;
+		isColliding = false;
 	}
 
 	public GameObject(float x, float y) {
@@ -39,12 +41,15 @@ public abstract class GameObject implements Comparable<GameObject> {
 		alive = true;
 		bounds = Utils.getRectangleBounds(x, y, 5, 5, Utils.ALIGN_CENTERED);
 		team = Team.NEUTRAL;
+		isColliding = false;
 	}
 
 	public void setPosition(int x, int y) {
 		this.x = x;
 		this.y = y;
+		isColliding = false;
 		bounds.setPosition(x, y);
+		team = Team.NEUTRAL;
 	}
 
 	public void setPosition(Vector2 pos) {
@@ -65,6 +70,8 @@ public abstract class GameObject implements Comparable<GameObject> {
 		if (this != Game.player && ObjectManager.isColliding(Game.player, this))
 			render.setColor(Color.YELLOW);
 			
+		if (isColliding)
+			render.setColor(Color.ORANGE);
 		render.polygon(bounds.getTransformedVertices());
 		render.ellipse(bounds.getOriginX(), bounds.getOriginY(), 10, 10);
 		Vector2 center = new Vector2();
@@ -82,7 +89,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 	 *            - The object that's colliding with this object.
 	 */
 	public void onCollision(GameObject otherObject) {
-
+		isColliding = true;
 	}
 	
 	public Light getLight() {
@@ -118,6 +125,12 @@ public abstract class GameObject implements Comparable<GameObject> {
 		this.alive = false;
 		ObjectManager.remove(this);
 		dispose();
+	}
+	
+	public void setSize(float width, float height) {
+		this.width = width;
+		this.height = height;
+		bounds = Utils.getRectangleBounds(x, y, width, height, Utils.ALIGN_CENTERED);
 	}
 
 	public Vector3 getPosition() {

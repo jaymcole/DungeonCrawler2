@@ -11,16 +11,18 @@ import ecu.se.objects.ItemObject;
 
 public class Widget_ItemSlot extends Widget_Button_Image {
 
-	private ItemObject item;
+	protected ItemObject item;
 	private TextureRegion itemTexture;
 	private float itemX, itemY;
 	private int MPCX, MPCY; // Mouse Pressed Coordinates X and Y
+	private boolean full;
 
 	public Widget_ItemSlot(float x, float y, float width, float height, Window parent, TextureRegion defaultTexture,
 			TextureRegion highlightTexture, TextureRegion activeTexture) {
 		super(x, y, width, height, parent, defaultTexture, highlightTexture, activeTexture);
 		itemX = x;
 		itemY = y;
+		full = false;
 	}
 
 	@Override
@@ -52,8 +54,9 @@ public class Widget_ItemSlot extends Widget_Button_Image {
 					if (widget.contains(mouseX, mouseY)) {
 						System.out.println("sekjfnbakjlfdljkbasjhkfhkjasfhkjlashjkdshf;lsafsdjhkhlf");
 						if (widget != this && widget instanceof Widget_ItemSlot) {
-							((Widget_ItemSlot) widget).setItem(item);
+							ItemObject movingObject = this.item;
 							this.removeItem();
+							((Widget_ItemSlot) widget).setItem(movingObject);
 //							 return;
 						}
 
@@ -95,6 +98,11 @@ public class Widget_ItemSlot extends Widget_Button_Image {
 		}
 	}
 
+	/**
+	 * Drops the item on the ground at world coordinates (x, y)
+	 * @param mouseX
+	 * @param mouseY
+	 */
 	public void dropItem(int mouseX, int mouseY) {
 		item.setPosition(
 				(int) (Game.player.getX() + mouseX - item.getBounds().getBoundingRectangle().getWidth() * 0.5f),
@@ -103,18 +111,44 @@ public class Widget_ItemSlot extends Widget_Button_Image {
 		this.removeItem();
 	}
 
+	/**
+	 * Removes the item from this slot.
+	 */
 	public void removeItem() {
 		item = null;
 		itemTexture = null;
+		full = false;
+		onRemoveItem();
 	}
+	
+	/**
+	 * Called when an item is removed.
+	 */
+	public void onRemoveItem() {}
 
 	public void setItem(ItemObject item) {
 		// TODO: If this.item != null, send this.item inventory
+		if (this.item != null) {
+			((Window_Inventory)GUI.getWindow(GUI.WINDOW_INVENTORY)).insertItem(this.item);
+		}
+		
+		
 		ObjectManager.remove(item);
 		this.item = item;
 		itemX = x;
 		itemY = y;
 		this.itemTexture = item.getTextureRegion();
+		full = true;
+		onSetItem();
+	}
+	
+	/**
+	 * Called when a new item is set.
+	 */
+	public void onSetItem() {}
+	
+	public boolean isFull() {
+		return full;
 	}
 
 }

@@ -10,9 +10,10 @@ import ecu.se.GameObject;
 import stats.Stats;
 
 public abstract class Spell extends Action {
-	public static final int CHANNEL 	= 0;
-	public static final int CAST		= 1;
-	public static final int COOLDOWN	= 2;
+	private final int CHANNEL 	= 0;
+	private final int CAST		= 1;
+	private final int COOLDOWN	= 2;
+	
 	protected int currentStage = -1;
 
 	protected float baseCastSpeed;
@@ -47,14 +48,15 @@ public abstract class Spell extends Action {
 		baseManaCost 	= 10f;
 	}
 	
+	
+	
 	public void act(int x, int y) {
 		if (active)
 			return;
 		Archiver.set(TotalRecords.ACTIONS_TAKEN, 1);
+		calculateStats();
 		// Initialize variables based on caster ability.
-		currentCastSpeed = baseCastSpeed * caster.getStat(Stats.SPELL_CAST_SPEED);
-		currentManaCost = baseManaCost * (1 - caster.getStat(Stats.MANA_COST));
-		currentCooldown = baseCooldown * caster.getStat(Stats.SPELL_COOLDOWN);
+		
 		timer = 0;
 		targetX = x;
 		targetY = y;
@@ -62,13 +64,10 @@ public abstract class Spell extends Action {
 		// Check if caster has enough mana
 		if (caster.getMana() < currentManaCost) {
 			active = false;
-			System.err.println("Insufficient Mana!!\n\t Caster Mana currently sitting at " + caster.getMana());
-			//TODO: Print message somewhere indicating insufficient mana.
 			return;
 		} else {
 			caster.setMana(-currentManaCost);
 		}
-//		System.out.println("Casting: " + this.getClass().getName());
 		
 		if (instantCast)
 			currentStage = CAST;
@@ -124,5 +123,21 @@ public abstract class Spell extends Action {
 	}
 	
 	
+	public void setBaseCooldown(float cooldown) { 
+		this.baseCooldown = cooldown;
+	}
 	
+	public void setBaseCastSpeed(float baseCastSpeed) { 
+		this.baseCastSpeed = baseCastSpeed;
+	}
+	
+	public void setBaseManaCost(float baseManaCost) { 
+		this.baseManaCost = baseManaCost;
+	}
+	
+	private void calculateStats() {
+		currentCastSpeed = baseCastSpeed * caster.getStat(Stats.SPELL_CAST_SPEED);
+		currentManaCost = baseManaCost * (1 - caster.getStat(Stats.MANA_COST));
+		currentCooldown = baseCooldown * caster.getStat(Stats.SPELL_COOLDOWN);
+	}
 }

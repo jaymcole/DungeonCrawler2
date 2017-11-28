@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import assetManager.AssetManager;
+import ecu.se.ObjectManager;
 import ecu.se.objects.ItemObject;
 import stats.Stats;
 
@@ -16,6 +17,10 @@ public class Window_Inventory extends Window {
 	public Window_Inventory(GUI gui) {
 		super(gui);
 	}
+	
+//	private int[][] slots;
+	private final int slotColumns	= 10;
+	private final int slotRows 		= 10;
 
 	@Override
 	protected void buildWindow() {
@@ -47,7 +52,9 @@ public class Window_Inventory extends Window {
 		TextureRegion buttonDefault;
 		TextureRegion buttonHighlight;
 		TextureRegion buttonActive;
-		int rows = 10, cols = 10;
+//		int rows = 10, cols = 10;
+//		slots = new Widget_ItemSlot[slotRows][slotColumns];
+//		slots = new int[slotRows][slotColumns];
 		float startX = GUI.defaultWidth * .25f;
 		float startY = GUI.defaultHeight * .25f;
 		float buttonWidth = 40;
@@ -55,8 +62,8 @@ public class Window_Inventory extends Window {
 		float xMargin = 5;
 		float yMargin = 1;
 		System.out.println((halfwayY - backgroundY));
-		for(int i = 0 ; i < rows; i++) {
-			for(int j = 0; j < cols; j++) {
+		for(int i = 0 ; i < slotRows; i++) {
+			for(int j = 0; j < slotColumns; j++) {
 				buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);
 				buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
 				buttonActive =    new TextureRegion(buttonTexture, 0, 330, 149, 159);
@@ -65,14 +72,21 @@ public class Window_Inventory extends Window {
 				hotkey.setDefaultColor( Color.RED);
 				hotkey.setActiveColor(Color.CYAN);
 				hotkey.setHighlightColor(Color.CYAN);
+//				slots[i][j] = widgetList.size();
 				widgetList.add(hotkey);
 			}
 		}
-		
-		
 		widgets = widgetList.toArray(widgets);
-
-		
 	}
-
+	
+	public void insertItem(ItemObject item) {
+		for(Widget w : widgets) {
+			if (w instanceof Widget_ItemSlot) {
+				if (!((Widget_ItemSlot)w).isFull()) {
+					((Widget_ItemSlot)w).setItem(item);
+					return;
+				}
+			}
+		}
+	}
 }

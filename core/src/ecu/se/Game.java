@@ -19,12 +19,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import actions.Spell_Fireball;
+import actions.Spell_Teleport;
 import actors.Player;
 import archive.Archiver;
 import archive.TimeRecords;
 import archive.TotalRecords;
 import assetManager.AssetManager;
 import ecu.se.gui.GUI;
+import ecu.se.gui.Window_HUD;
 import ecu.se.map.Map;
 import ecu.se.objects.Light;
 
@@ -76,7 +79,8 @@ public class Game extends ApplicationAdapter {
 	public static final int GAME_STATE_RUNNING = 0;
 	public static final int GAME_STATE_PAUSED = 1;
 	public static final int GAME_STATE_EXITING = 2;
-	public static int currentState = 0;
+	public static int currentState = GAME_STATE_RUNNING;
+	public static boolean GAME_OVER = false;
 
 	public static final int MOUSE_UP = -1;
 	public static final int MOUSE_DOWN = 0;
@@ -88,6 +92,8 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void create() {
 		// RECORDS
+		GAME_OVER = false;
+		currentState = GAME_STATE_RUNNING;
 		Archiver.startArchiver();
 		Archiver.set(TimeRecords.TOTAL_TIME_PLAYED, false);
 		Archiver.set(TotalRecords.TIMES_STARTING_GAME, 1);
@@ -110,10 +116,17 @@ public class Game extends ApplicationAdapter {
 		player.setLight(light);
 
 		new Map();
-		
-		ObjectManager.add(ObjectMaker.createTestMob(Game.player.getX(), Game.player.getY()));
-		ObjectManager.add(ObjectMaker.createMob(Game.player.getX(), Game.player.getY()));
+
+		// ObjectManager.add(ObjectMaker.createTestMob(Game.player.getX(),
+		// Game.player.getY()));
+		// ObjectManager.add(ObjectMaker.createMob(Game.player.getX(),
+		// Game.player.getY()));
+//		ObjectManager.add(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Fireball(player)));
+//		ObjectManager.add(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Teleport(player)));
+
 		hud = new GUI(player, screenWidth, screenHeight, this);
+		((Window_HUD)GUI.getWindow(GUI.WINDOW_HUD)).setPrimary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Fireball(player)));
+		((Window_HUD)GUI.getWindow(GUI.WINDOW_HUD)).setSecondary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Teleport(player)));
 
 		shapeRenderer = new ShapeRenderer();
 		backgroundTexture = AssetManager.getTexture(backgroundTextureName).getTexture();
@@ -220,7 +233,7 @@ public class Game extends ApplicationAdapter {
 
 		debugControls();
 		guiControls();
-		if (currentState != GAME_STATE_PAUSED) {
+		if (currentState != GAME_STATE_PAUSED || GAME_OVER) {
 			cameraControls();
 			playerControls();
 		}
@@ -322,11 +335,16 @@ public class Game extends ApplicationAdapter {
 	}
 
 	public static void pauseGame() {
+		
 		if (currentState == GAME_STATE_PAUSED) {
 			currentState = GAME_STATE_RUNNING;
 		} else {
 			currentState = GAME_STATE_PAUSED;
 			Archiver.set(TimeRecords.TIME_PAUSED, false);
+		}
+		
+		if (GAME_OVER) {
+			currentState = GAME_STATE_PAUSED;
 		}
 	}
 
