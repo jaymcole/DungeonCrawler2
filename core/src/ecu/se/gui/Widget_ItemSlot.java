@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import ecu.se.Game;
 import ecu.se.ObjectManager;
 import ecu.se.map.Map;
+import ecu.se.objects.ActiveItem;
 import ecu.se.objects.ItemObject;
 
 public class Widget_ItemSlot extends Widget_Button_Image {
@@ -41,29 +42,49 @@ public class Widget_ItemSlot extends Widget_Button_Image {
 		}
 	}
 
+	public void act(int mouseX, int mouseY) {
+		if (item instanceof ActiveItem) {
+			((ActiveItem) item).getAction().act(mouseX, mouseY);
+			if (!item.isAlive())
+				removeItem();
+
+		}
+	}
+
+	@Override
+	public void specialActions(float deltaTime, int mouseX, int mouseY) {
+		if (item != null)
+			item.update(deltaTime);
+		if (item != null && !item.isAlive()) {
+			removeItem();
+			System.err.println("removing item");
+		} else
+			System.out.println("Not removing item");
+
+	}
+
 	@Override
 	public void mouseReleased(int mouseX, int mouseY) {
 		// Active item if it's an action
 		if (mouseX == MPCX && mouseY == MPCY)
-			System.out.println("Activate Item");
+			act(mouseX, mouseY);
 		// Move item (to the ground, to a new slot, etc)
 		else if (item != null) {
 			System.out.println("Mouse Released");
 			for (Window window : GUI.getActiveWindows()) {
 				for (Widget widget : window.getChildren()) {
 					if (widget.contains(mouseX, mouseY)) {
-						System.out.println("sekjfnbakjlfdljkbasjhkfhkjasfhkjlashjkdshf;lsafsdjhkhlf");
 						if (widget != this && widget instanceof Widget_ItemSlot) {
 							ItemObject movingObject = this.item;
 							this.removeItem();
 							((Widget_ItemSlot) widget).setItem(movingObject);
-//							 return;
+							// return;
 						}
 
 					}
 				}
 			}
-//			 dropItem(mouseX, mouseY);
+			// dropItem(mouseX, mouseY);
 		}
 		itemX = x;
 		itemY = y;
@@ -100,6 +121,7 @@ public class Widget_ItemSlot extends Widget_Button_Image {
 
 	/**
 	 * Drops the item on the ground at world coordinates (x, y)
+	 * 
 	 * @param mouseX
 	 * @param mouseY
 	 */
@@ -120,19 +142,19 @@ public class Widget_ItemSlot extends Widget_Button_Image {
 		full = false;
 		onRemoveItem();
 	}
-	
+
 	/**
 	 * Called when an item is removed.
 	 */
-	public void onRemoveItem() {}
+	public void onRemoveItem() {
+	}
 
 	public void setItem(ItemObject item) {
 		// TODO: If this.item != null, send this.item inventory
 		if (this.item != null) {
-			((Window_Inventory)GUI.getWindow(GUI.WINDOW_INVENTORY)).insertItem(this.item);
+			((Window_Inventory) GUI.getWindow(GUI.WINDOW_INVENTORY)).insertItem(this.item);
 		}
-		
-		
+
 		ObjectManager.remove(item);
 		this.item = item;
 		itemX = x;
@@ -141,12 +163,13 @@ public class Widget_ItemSlot extends Widget_Button_Image {
 		full = true;
 		onSetItem();
 	}
-	
+
 	/**
 	 * Called when a new item is set.
 	 */
-	public void onSetItem() {}
-	
+	public void onSetItem() {
+	}
+
 	public boolean isFull() {
 		return full;
 	}

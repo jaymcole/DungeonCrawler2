@@ -2,6 +2,8 @@ package ecu.se.gui;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -184,12 +186,17 @@ public class Window_HUD extends Window {
 			buttonHighlight = new TextureRegion(buttonTexture, 0, 165, 149, 159);
 			buttonActive = new TextureRegion(buttonTexture, 0, 330, 149, 159);
 			Widget_ItemSlot hotkey = new Widget_ItemSlot(595 + (55 * i) + i + (int) (i * 0.3), 2, 56, 62, this,
-					buttonDefault, buttonHighlight, buttonActive);
+					buttonDefault, buttonHighlight, buttonActive) ;
 
 			hotkey.setDefaultColor(Color.RED);
 			hotkey.setActiveColor(Color.CYAN);
 			hotkey.setHighlightColor(Color.CYAN);
 			hotkey.setItem(new ItemObject(0, 0, "Sprite LOL", "texture/test/spritePlaceholder.png"));
+			
+			hotkey.setHotkey(Input.Keys.NUM_1 + i);
+			
+			
+			
 			widgetsList.add(hotkey);
 		}
 		widgetsList.add(new Widget_Image(0, 0, GUI.defaultWidth, GUI.defaultHeight, this, "texture/gui/hud.png"));

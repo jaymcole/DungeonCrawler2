@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 
 import actions.Action;
+import actions.Potion;
 import actions.Spell;
 import actions.Spell_Explosion;
 import actions.Spell_Fireball;
@@ -11,6 +12,8 @@ import actions.Spell_Teleport;
 import actors.Actor;
 import actors.BasicEnemy;
 import actors.RangedBadGuy;
+import ecu.se.gui.GUI;
+import ecu.se.gui.Window_Inventory;
 import ecu.se.objects.ActiveItem;
 import ecu.se.objects.FadingLight;
 import ecu.se.objects.InteractableItem;
@@ -23,6 +26,40 @@ public class ObjectMaker {
 	private static final int HEALTH_PICKUP_VALUE = 15;
 	private static final int MANA_PICKUP_VALUE = 15;
 
+//	public static GameObject createPotion (float x, float y, int potionType) {
+//
+//		InteractableItem orb = new InteractableItem(x, y, ORB_SIZE, ORB_SIZE, "Health Orb", "texture/misc/orb_blue.png") {
+//			@Override
+//			public void onCollision(GameObject otherObject) {
+//				if (otherObject == Game.player) {
+//					((Window_Inventory)GUI.getWindow(GUI.WINDOW_INVENTORY)).insertItem(this);
+//					this.kill();
+//				}
+//			}
+//			
+//			@Override
+//			public void onClick(GameObject otherObject) {
+//				((Window_Inventory)GUI.getWindow(GUI.WINDOW_INVENTORY)).insertItem(this);
+//				this.kill();
+//			}
+//			
+//			@Override
+//			public void die() {
+//				Lighting.removeLight(light);
+//				FadingLight fadeLight = new FadingLight(new Vector3(x, y, 0), Color.BLUE, ORB_BRIGHTNESS * 3, 0.99f, 2);
+//				Lighting.addLight(fadeLight);
+//			}
+//		};
+//		Light light = new Light(new Vector3(x, y, 0));
+//		light.setColor(Color.BLUE);
+//		light.type = 2;
+//		light.setIntensity(ORB_BRIGHTNESS);
+//		light.setParent(orb);
+//
+//		Lighting.addLight(light);
+//		orb.setLight(light);
+//		return orb;
+//	}
 	
 	public static GameObject createHealthOrb (float x, float y) {
 		
@@ -124,6 +161,11 @@ public class ObjectMaker {
 			} else {
 				texturePath = "texture/items/scroll_blank.png";
 			}
+		} else if (action instanceof Potion) {
+			if (((Potion)action).getPotionType() == Potion.POTION_HEALTH)
+				texturePath = "texture/items/potion_health.png";
+			else 
+				texturePath = "texture/items/potion_mana.png";
 		}
 		
 		

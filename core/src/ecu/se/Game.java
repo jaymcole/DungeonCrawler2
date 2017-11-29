@@ -19,6 +19,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import actions.Potion;
 import actions.Spell_Fireball;
 import actions.Spell_Teleport;
 import actors.Player;
@@ -127,11 +128,11 @@ public class Game extends ApplicationAdapter {
 		// new Spell_Teleport(player)));
 
 		hud = new GUI(player, screenWidth, screenHeight, this);
-		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD))
-				.setPrimary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Fireball(player)));
-		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD))
-				.setSecondary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Teleport(player)));
-
+		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD)).setPrimary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Fireball(player)));
+		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD)).setSecondary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Teleport(player)));
+		ObjectManager.add(ObjectMaker.createActiveItem(player.x + Utils.getRandomInt(100), player.y + Utils.getRandomInt(100), new Potion(null,Potion.POTION_HEALTH)));
+		
+		
 		shapeRenderer = new ShapeRenderer();
 		backgroundTexture = AssetManager.getTexture(backgroundTextureName).getTexture();
 
@@ -245,20 +246,20 @@ public class Game extends ApplicationAdapter {
 
 	private void debugControls() {
 		// Generate new floor
-		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-			floor++;
-			Map.setFloor(floor);
-		}
-		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-			floor--;
-			if (floor < 0)
-				floor = 0;
-			Map.setFloor(floor);
-		}
-
-		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
-			Globals.RENDER_ALL_TILES ^= true;
-		}
+//		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+//			floor++;
+//			Map.setFloor(floor);
+//		}
+//		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+//			floor--;
+//			if (floor < 0)
+//				floor = 0;
+//			Map.setFloor(floor);
+//		}
+//
+//		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+//			Globals.RENDER_ALL_TILES ^= true;
+//		}
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			Lighting.toggleLights();

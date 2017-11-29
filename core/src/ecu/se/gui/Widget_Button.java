@@ -1,5 +1,6 @@
 package ecu.se.gui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -40,6 +41,8 @@ public abstract class Widget_Button extends Widget{
 	 */
 	protected int variableOne;
 	
+	protected int hotkey;
+	
 	public Widget_Button(float x, float y, float width, float height, Window parent, String text) {
 		super(x, y, width, height, parent);
 		texture = AssetManager.getTexture("texture/misc/white.png").getTexture();
@@ -58,6 +61,10 @@ public abstract class Widget_Button extends Widget{
 		activeColor = Color.SKY;
 	}
 	
+	public void setHotkey (int key) {
+		this.hotkey = key;
+	}
+	
 	/**
 	 * The action this button performs WHEN the left mouse button is pressed AND over this button.
 	 */
@@ -73,8 +80,34 @@ public abstract class Widget_Button extends Widget{
 	 */
 	public void mouseReleased(int mouseX, int mouseY){};
 
+	public void onHotkey(int mouseX, int mouseY) {
+		mousePressed(mouseX, mouseY);
+	};
+	
+	public void onHotKeyDown(int mouseX, int mouseY) {
+		mouseDown(mouseX, mouseY);
+	};
+	
+	public void onHotKeyReleased(int mouseX, int mouseY) {
+		mouseReleased(mouseX, mouseY);
+	};
+	
+//	private boolean hotkeyDown;
+	
 	@Override
 	public boolean update(float deltaTime, int mouseX, int mouseY) {
+		if (Gdx.input.isKeyJustPressed(hotkey)) {
+			onHotkey(mouseX, mouseY);
+			onHotKeyReleased(mouseX, mouseY);
+			//			hotkeyDown = true;
+		}
+//		else if (Gdx.input.isKeyPressed(hotkey)) {
+////			onHotKeyDown(mouseX, mouseY);
+//			hotkeyDown = true;
+//		}else if (!Gdx.input.isKeyPressed(hotkey) && !Gdx.input.isKeyJustPressed(hotkey) && hotkeyDown) {
+//			onHotKeyReleased(mouseX, mouseY);
+//			hotkeyDown = false;
+//		}
 		
 		if (bounds.contains(mouseX, mouseY) || activeWidget) {
 			highlight = true;
@@ -105,7 +138,13 @@ public abstract class Widget_Button extends Widget{
 		if (Game.leftMouseState == Game.MOUSE_RELEASED) 
 			activeWidget = false;
 		
+		specialActions(deltaTime, mouseX, mouseY);
 		return false;
+	}
+	
+	
+	public void specialActions(float deltaTime, int mouseX, int mouseY) {
+		
 	}
 
 	@Override

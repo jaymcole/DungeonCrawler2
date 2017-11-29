@@ -6,9 +6,11 @@ public abstract class Action {
 
 	protected boolean active = false;
 	protected Actor caster;
+	protected boolean delete;
 
 	public Action(Actor caster) {
 		this.caster = caster;
+		delete = false;
 	}
 	
 	/**
@@ -22,5 +24,13 @@ public abstract class Action {
 
 	public boolean isActive() {
 		return active;
+	}
+	
+	public void setCaster(Actor caster) {
+		this.caster = caster;
+	}
+	
+	public boolean getDelete() {
+		return delete;
 	}
 }
