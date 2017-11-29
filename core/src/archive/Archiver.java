@@ -79,15 +79,13 @@ public class Archiver {
 			
 			int counter = 0;
 			for(int i = 0; i < timeRecords.length; i+=2) {
-				System.out.println("WRITING: " +  TIME_RECORD + " " + i + " " + timeRecords[i+1] + " " + TimeRecords.values()[counter].name());
 				writer.write(TIME_RECORD + " " + timeRecords[i+1] + " " + TimeRecords.values()[counter].name() +"\n");
 				counter++;
 			}
 			
 			counter = 0;
 			for(int i = 0; i < totalRecords.length; i+=2) {
-				System.out.println("WRITING: " + TOTAL_RECORD + " " + i + " " + totalRecords[i+1] + " " + TotalRecords.values()[counter].name());
-				writer.write(TOTAL_RECORD + " " + totalRecords[i+1] + " " + TotalRecords.values()[counter].name() + "\n");
+				writer.write(TOTAL_RECORD + " " + totalRecords[i] + " " + TotalRecords.values()[counter].name() + "\n");
 				counter++;
 			}
 			
@@ -186,11 +184,11 @@ public class Archiver {
 	 * @param allTime
 	 * @return Double, record correlating to type
 	 */
-	public static Double getRecord(TotalRecords type, boolean allTime) {
+	public static float getRecord(TotalRecords type, boolean allTime) {
 		if (allTime)
-			return totalRecords[type.ordinal() * 2];
+			return totalRecords[type.ordinal() * 2].floatValue();
 		else
-			return totalRecords[type.ordinal() * 2 + 1];
+			return totalRecords[type.ordinal() * 2 + 1].floatValue();
 	}
 	
 	public static long getRecord(TimeRecords type) {

@@ -276,9 +276,9 @@ public abstract class Actor extends GameObject {
 	@Override
 	public float defend(GameObject attacker, Stats type, float damage) {
 		if (attacker == Game.player) {
-			Archiver.set(TotalRecords.DAM_GIVEN, damage);
+			Archiver.set(TotalRecords.DAM_GIVEN, Math.min(damage, currentHealth));
 		} else if (this == Game.player) {
-			Archiver.set(TotalRecords.DAM_TAKEN, damage);
+			Archiver.set(TotalRecords.DAM_TAKEN, Math.min(damage, currentHealth));
 		}
 		
 		

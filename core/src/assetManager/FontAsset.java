@@ -12,23 +12,7 @@ public class FontAsset extends Asset{
     private BitmapFont font;
     private FreeTypeFontParameter parameter;
     private String name;
-    
-    // TODO: Fix FontAsset constructors so that they manage characters better. 
-    
-//    public FontAsset(String name) {
-//        this.name = name;
-//        try {
-//            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(name));
-//            parameter = new FreeTypeFontParameter();
-//            parameter.size = 48;
-//            parameter.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"'()+,-./";
-//            font = generator.generateFont(parameter);
-//            generator.dispose();    
-//        } catch (GdxRuntimeException e) {
-//            System.err.println("Unable to load texture \""+ name +"\"");
-//        }
-//    }
-    
+     
     public FontAsset(String name, int size) {
     	size = (int)(size * (GUI.conversionX + GUI.conversionY) * 0.5f);
     	this.name = name;
@@ -43,20 +27,6 @@ public class FontAsset extends Asset{
             System.err.println("Unable to load texture \""+ name +"\"");
         }        
     }
-    
-//    public FontAsset(String name, FreeTypeFontParameter parameter) {
-//        this.name = name;
-//        this.parameter = parameter;
-//        try {
-//            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(name));
-//            parameter.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"'()+,-./";
-//            
-//            font = generator.generateFont(parameter);
-//            generator.dispose();    
-//        } catch (GdxRuntimeException e) {
-//            System.err.println("Unable to load texture \""+ name +"\"");
-//        }
-//    }
     
     public boolean loadedSuccessfully() {
         return font != null;
