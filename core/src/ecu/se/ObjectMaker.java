@@ -25,41 +25,6 @@ public class ObjectMaker {
 	private static final int ORB_BRIGHTNESS = 300;
 	private static final int HEALTH_PICKUP_VALUE = 15;
 	private static final int MANA_PICKUP_VALUE = 15;
-
-//	public static GameObject createPotion (float x, float y, int potionType) {
-//
-//		InteractableItem orb = new InteractableItem(x, y, ORB_SIZE, ORB_SIZE, "Health Orb", "texture/misc/orb_blue.png") {
-//			@Override
-//			public void onCollision(GameObject otherObject) {
-//				if (otherObject == Game.player) {
-//					((Window_Inventory)GUI.getWindow(GUI.WINDOW_INVENTORY)).insertItem(this);
-//					this.kill();
-//				}
-//			}
-//			
-//			@Override
-//			public void onClick(GameObject otherObject) {
-//				((Window_Inventory)GUI.getWindow(GUI.WINDOW_INVENTORY)).insertItem(this);
-//				this.kill();
-//			}
-//			
-//			@Override
-//			public void die() {
-//				Lighting.removeLight(light);
-//				FadingLight fadeLight = new FadingLight(new Vector3(x, y, 0), Color.BLUE, ORB_BRIGHTNESS * 3, 0.99f, 2);
-//				Lighting.addLight(fadeLight);
-//			}
-//		};
-//		Light light = new Light(new Vector3(x, y, 0));
-//		light.setColor(Color.BLUE);
-//		light.type = 2;
-//		light.setIntensity(ORB_BRIGHTNESS);
-//		light.setParent(orb);
-//
-//		Lighting.addLight(light);
-//		orb.setLight(light);
-//		return orb;
-//	}
 	
 	public static GameObject createHealthOrb (float x, float y) {
 		
@@ -96,12 +61,26 @@ public class ObjectMaker {
 	}
 	
 	public static GameObject createManaOrb (float x, float y) {
-		InteractableItem orb = new InteractableItem(x, y, ORB_SIZE, ORB_SIZE, "Health Orb", "texture/misc/orb_blue.png") {
+		InteractableItem orb = new InteractableItem(x - ORB_SIZE, y, ORB_SIZE, ORB_SIZE, "Health Orb", "texture/misc/orb_blue.png") {
 			@Override
 			public void onCollision(GameObject otherObject) {
 				if (otherObject == Game.player) {
 					((Actor)otherObject).setMana(MANA_PICKUP_VALUE);
 					this.kill();
+					
+//					System.out.println("Width:" + this.width);
+//					System.out.println("height:" + this.height);
+//					System.out.println("getWidth:" + this.bounds.getBoundingRectangle().getWidth());
+//					System.out.println("getHeight:" + this.bounds.getBoundingRectangle().getHeight());
+//					System.out.println("x:" + this.x);
+//					System.out.println("y:" + this.y);
+//					System.out.println("x:" + this.getX());
+//					System.out.println("y:" + this.getY());
+//					System.out.println("getX:" + this.bounds.getX());
+//					System.out.println("getY:" + this.bounds.getY());
+//					System.out.println("\n");
+					
+					
 				}
 			}
 			
@@ -118,6 +97,9 @@ public class ObjectMaker {
 				Lighting.addLight(fadeLight);
 			}
 		};
+//		orb.bounds = Utils.getRectangleBounds(x, y, orb.width, orb.height, Utils.ALIGN_TOP_LEFT);
+		
+		
 		Light light = new Light(new Vector3(x, y, 0));
 		light.setColor(Color.BLUE);
 		light.type = 2;

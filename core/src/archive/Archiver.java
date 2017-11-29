@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class Archiver {	
 	public static final String TIME_RECORD = "time";
@@ -106,11 +108,18 @@ public class Archiver {
 			rec = 0;
 		}
 		
-		File file = new File(DIR);
+		
+//		InputStream is = Archiver.class.getClass().getResourceAsStream(DIR);
+		
+				File file = new File(DIR);
+		
+		// TODO: Handle missing file
 		try {
 			file.createNewFile();
+			
 			FileReader fileReader = new FileReader(file); 
 			BufferedReader reader = new BufferedReader(fileReader);
+//			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 			
 			String line = null;
 			String[] parts = null;
@@ -136,6 +145,7 @@ public class Archiver {
                 }
                 
             } 
+//			is.close();
 			reader.close();
 			
 		} catch (IOException e) {

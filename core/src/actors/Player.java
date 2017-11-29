@@ -27,12 +27,10 @@ public class Player extends Actor {
 		super(x, y, z, spriteSheet, row);
 		currentSpeed = new Vector2(0, 0);
 		Archiver.set(TimeRecords.TIME_IDLE, false);
-		currentHealth = 5;
+		currentHealth = 100;
 		dir = Direction.NORTH;
 		team = Team.PLAYER;
 		attributePoints = 5;
-//		primaryAction = new Spell_Fireball(this);
-//		secondaryAction = new Spell_Teleport(this);
 	}
 	
 	@Override

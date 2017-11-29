@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import actions.Potion;
 import archive.Archiver;
 import archive.TotalRecords;
 import assetManager.AssetManager;
@@ -108,18 +109,17 @@ public class Generate {
 			int y = random.nextInt(mapHeight);
 			if (!tiles[x][y].isWall && (x != up.getX() && y != up.getY())) {
 				downStaircasePlace = true;
-				down.setPosition(x * tileWidth, y * tileHeight);
+				down.setPosition( ((int)(x * tileWidth + tileWidth * 0.5f)), ((int)(y * tileHeight + tileHeight * 0.5f)));
 			}
 		}
 
 		// DONE BUILDING
-//		System.err.println("Lights from generator: " + lights.size());
 		floor.generatedMap(tiles, lights, up, down, mapWidth, mapHeight);
 
 		addPathNodes();
 		printFloor();
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < Utils.getRandomInt(15) + 10; i++) {
 			boolean enemyPlaced = false;
 			while (!enemyPlaced) {
 				int x = random.nextInt(mapWidth);
@@ -468,7 +468,7 @@ public class Generate {
 					createLight((int) (i * tileWidth + (tileWidth * 0.5f)),
 							(int) (j * tileHeight + (tileHeight * 0.5f)));
 					totalLights++;
-					up.setPosition((int) (i * tileWidth), (int) (j * tileHeight));
+					up.setPosition(((int)(i * tileWidth + tileWidth * 0.5f)), ((int)(j * tileHeight + tileHeight * 0.5f)));
 
 					break;
 				default:
@@ -529,6 +529,15 @@ public class Generate {
 				floorDecal.setRotation(random.nextInt(360));
 				floorDecal.setAlpha(((random.nextInt(4)) / 10.0f) + 0.1f + (random.nextFloat() / 10.0f));
 				tiles[x][y].addObject(floorDecal);
+				
+				if(Utils.getRandomInt(100) >= 97) {
+					if (Utils.getRandomInt(100) > 51) 
+						ObjectManager.add(ObjectMaker.createActiveItem(x * tileWidth + Utils.getRandomInt(tileWidth), y * tileHeight + Utils.getRandomInt(tileHeight), new Potion(null, Potion.POTION_HEALTH)));
+					else
+						ObjectManager.add(ObjectMaker.createActiveItem(x * tileWidth + Utils.getRandomInt(tileWidth), y * tileHeight + Utils.getRandomInt(tileHeight), new Potion(null, Potion.POTION_MANA)));
+				}
+				
+				
 			}
 
 			// tiles[x][y].pathNode = new PathNode(x,y,null,0);

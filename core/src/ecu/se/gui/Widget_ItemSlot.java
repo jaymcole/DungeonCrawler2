@@ -55,12 +55,8 @@ public class Widget_ItemSlot extends Widget_Button_Image {
 	public void specialActions(float deltaTime, int mouseX, int mouseY) {
 		if (item != null)
 			item.update(deltaTime);
-		if (item != null && !item.isAlive()) {
+		if (item != null && !item.isAlive()) 
 			removeItem();
-			System.err.println("removing item");
-		} else
-			System.out.println("Not removing item");
-
 	}
 
 	@Override

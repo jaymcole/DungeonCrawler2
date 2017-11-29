@@ -562,6 +562,7 @@ public abstract class Actor extends GameObject {
 					y + Utils.getRandomInt(50) - 25);
 			Map.getTile((int) hOrb.getX(), (int) hOrb.getY()).addObject(hOrb);
 		}
+		
 		if (Utils.getRandomInt(100) > 50) {
 			GameObject mOrb = ObjectMaker.createManaOrb(x + Utils.getRandomInt(50) - 25,
 					y + Utils.getRandomInt(50) - 25);

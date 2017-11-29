@@ -29,6 +29,7 @@ import archive.TotalRecords;
 import assetManager.AssetManager;
 import ecu.se.gui.GUI;
 import ecu.se.gui.Window_HUD;
+import ecu.se.gui.Window_Inventory;
 import ecu.se.map.Map;
 import ecu.se.objects.Light;
 
@@ -118,19 +119,9 @@ public class Game extends ApplicationAdapter {
 
 		new Map();
 
-		// ObjectManager.add(ObjectMaker.createTestMob(Game.player.getX(),
-		// Game.player.getY()));
-		// ObjectManager.add(ObjectMaker.createMob(Game.player.getX(),
-		// Game.player.getY()));
-		// ObjectManager.add(ObjectMaker.createActiveItem(player.x, player.y,
-		// new Spell_Fireball(player)));
-		// ObjectManager.add(ObjectMaker.createActiveItem(player.x, player.y,
-		// new Spell_Teleport(player)));
-
 		hud = new GUI(player, screenWidth, screenHeight, this);
 		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD)).setPrimary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Fireball(player)));
 		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD)).setSecondary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Teleport(player)));
-		ObjectManager.add(ObjectMaker.createActiveItem(player.x + Utils.getRandomInt(100), player.y + Utils.getRandomInt(100), new Potion(null,Potion.POTION_HEALTH)));
 		
 		
 		shapeRenderer = new ShapeRenderer();
@@ -245,22 +236,6 @@ public class Game extends ApplicationAdapter {
 	}
 
 	private void debugControls() {
-		// Generate new floor
-//		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-//			floor++;
-//			Map.setFloor(floor);
-//		}
-//		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-//			floor--;
-//			if (floor < 0)
-//				floor = 0;
-//			Map.setFloor(floor);
-//		}
-//
-//		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
-//			Globals.RENDER_ALL_TILES ^= true;
-//		}
-
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			Lighting.toggleLights();
 		}
@@ -286,6 +261,14 @@ public class Game extends ApplicationAdapter {
 	private void guiControls() {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P))
 			pauseGame();
+		
+		if (Gdx.input.isKeyJustPressed(Input.Keys.I) && !GAME_OVER) {
+			if (GUI.currentWindow != GUI.WINDOW_INVENTORY) {
+				GUI.setWindow(GUI.WINDOW_INVENTORY);				
+			} else {
+				GUI.setWindow(GUI.WINDOW_HUD);					
+			}
+		}
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 			if (GAME_OVER)
