@@ -57,7 +57,6 @@ public class Projectile extends GameObject {
 		if (!isAlive()) {
 			return;
 		}
-		System.err.println("Colliding with: " + otherObject.getClass().getSimpleName());
 		if (otherObject != this && !Team.isFriendly(team, otherObject.team)) {
 			otherObject.defend(null, damage);
 			this.kill();
@@ -90,8 +89,8 @@ public class Projectile extends GameObject {
 	
 	@Override
 	protected void die() {
-		ObjectManager.add(new Explosion(this.x, this.y, knockback, 0, parent));
-		Lighting.addLight(new FadingLight(this.getPosition(), Color.CHARTREUSE, light.intensity * 20, 0.7f, 2) );
+		ObjectManager.add(new Explosion(this.x, this.y, knockback, 100, parent));
+		Lighting.addLight(new FadingLight(this.getPosition(), Color.ORANGE, light.intensity * 40, 0.85f, 2) );
 	}
 
 	@Override

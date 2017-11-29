@@ -37,11 +37,6 @@ public abstract class Actor extends GameObject {
 	protected float oldy = 0;
 	protected Direction direction;
 
-	protected Animation animation_body;
-	protected Animation animation_feet;
-	protected Animation animation_arms;
-	protected Animation animation_head;
-
 	protected int spriteWidth;// = 40;
 	protected int spriteHeight;// = 48;
 	// protected TextureRegion textureRegion;
@@ -110,6 +105,7 @@ public abstract class Actor extends GameObject {
 			animation.setRow(row[i]);
 			animations.add(animation);
 		}
+		
 		light = null;
 		attributePoints = 0;
 		invisible = false;
@@ -209,15 +205,6 @@ public abstract class Actor extends GameObject {
 				activeActions.remove(i);
 			}
 		}
-		
-		
-//		for (Action a : activeActions) {
-//			if (a.isActive()) {
-//				a.update(deltaTime);
-//			} else {
-//				activeActions.remove(a);
-//			}
-//		}
 	}
 
 	/**

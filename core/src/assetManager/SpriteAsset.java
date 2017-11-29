@@ -20,24 +20,6 @@ public class SpriteAsset extends Asset {
 		this.name = name;
 		sprite = AssetManager.getTexture(name);
 		name = name.substring(0, name.indexOf('.')) + "." + Globals.SPRITE_INFORMATION_EXTENSION;
-		// System.out.println("Path=" + name);
-		// Scanner spriteFile = null;
-		// try {
-		// spriteFile = new Scanner(new File(name));
-		// numRows = spriteFile.nextInt();
-		// numCol = spriteFile.nextInt();
-		// spriteW = spriteFile.nextInt();
-		// spriteH = spriteFile.nextInt();
-		// spriteFile.close();
-		// }
-		// catch(FileNotFoundException e) {
-		// System.err.println("!!! Missing Texture: Could not find sprite
-		// sheet.");
-		// System.err.println("\tFailed: " + name);
-		// }
-		// System.out.println(numRows + " " + numCol + " " + spriteW + " " +
-		// spriteH);
-
 		numRows = 2;
 		numCol = 2;
 		spriteW = 1;
