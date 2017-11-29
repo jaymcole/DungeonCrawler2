@@ -65,11 +65,7 @@ public class Explosion extends GameObject {
 				if (!Team.isFriendly(((Actor) a).team, this.team)) {
 					((Actor) a).addTempStat(new TempStatExplosion(Stats.MOVEMENT_SPEED, force, (Actor) a,
 							(float) (Math.cos(angle) * tempForce), (float) (Math.sin(angle) * tempForce)));
-					((Actor)a).defend(Stats.BLUNT_DEFENSE, tempForce);
-//					System.out.println("Damage="+ (damage/distance));
-//					if (damage/distance > 5f) {
-//						((Actor)a).defend(Stats.BLUNT_DEFENSE, damage/distance);
-//					}
+					((Actor)a).defend(caster, Stats.BLUNT_DEFENSE, tempForce);
 				}
 			}
 		}

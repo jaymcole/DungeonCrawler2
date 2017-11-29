@@ -63,11 +63,7 @@ public class Animation extends GameObject {
 		} else if(time >= speed) {
 			currentCol++;
 			
-//			if (totalCol > 0) {
-				currentCol %= totalCol;
-//			} else {
-//				System.out.println("totalCol="+totalCol);				
-//			}
+			currentCol %= totalCol;
 	        
 	        time -= speed;
 	        spriteX = currentCol * spriteWidth;

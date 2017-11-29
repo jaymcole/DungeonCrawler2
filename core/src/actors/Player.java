@@ -6,16 +6,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 
 import actions.Action;
-import actions.Spell_Fireball;
-import actions.Spell_Teleport;
 import archive.Archiver;
 import archive.TimeRecords;
+import archive.TotalRecords;
 import assetManager.AssetManager;
 import ecu.se.DecalPicker;
 import ecu.se.Game;
-import ecu.se.GameObject;
-import ecu.se.ObjectMaker;
-import ecu.se.Utils;
+import ecu.se.gui.GUI;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
 import ecu.se.objects.Decal;
@@ -33,7 +30,7 @@ public class Player extends Actor {
 		currentHealth = 5;
 		dir = Direction.NORTH;
 		team = Team.PLAYER;
-		attributePoints = 100;
+		attributePoints = 5;
 //		primaryAction = new Spell_Fireball(this);
 //		secondaryAction = new Spell_Teleport(this);
 	}
@@ -67,10 +64,14 @@ public class Player extends Actor {
 
 	@Override
 	protected void die() {
+		Archiver.set(TotalRecords.DEATHS, 1);
+		
+		
 		Map.getTile((int) x, (int) y).addObject(
 				new Decal(x, y, "ass", AssetManager.getTexture(DecalPicker.getActorCorpse()).getTextureRegion()));
 		Game.currentState = Game.GAME_STATE_PAUSED;
 		Game.GAME_OVER = true;
+		GUI.setWindow(GUI.WINDOW_GAME_OVER);
 	}
 	
 	public void setIdle(boolean idle) {
@@ -125,6 +126,5 @@ public class Player extends Actor {
 			move(deltaTime, dir, true);
 			return;
 		}
-
 	}
 }

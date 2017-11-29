@@ -27,8 +27,7 @@ public abstract class Widget {
 	protected Color defaultColor;
 	
 	protected GlyphLayout glyphLayout;
-	protected float textX, textY;
-	
+	protected float textX, textY;	
 	
 	public Widget (float x, float y, float width, float height, Window parentWindow) {
 		this.x = GUI.getProportionalX(x);

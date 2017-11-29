@@ -78,7 +78,7 @@ public abstract class Window {
 			if (w == null) {
 				System.err.println("[" + windowName + "] widget was null: ");
 			}
-			if (w.update(deltaTime, mouseX, mouseY))
+			if (w != null && w.update(deltaTime, mouseX, mouseY))
 				 mouseUsed = true;
 		}
 		return mouseUsed;
@@ -95,7 +95,8 @@ public abstract class Window {
 			background.render(batch);
 		
 		for(Widget w : widgets) {
-			w.render(batch);
+			if (w != null)
+				w.render(batch);
 		}
 	}
 	

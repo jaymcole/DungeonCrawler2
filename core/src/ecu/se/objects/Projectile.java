@@ -58,7 +58,7 @@ public class Projectile extends GameObject {
 			return;
 		}
 		if (otherObject != this && !Team.isFriendly(team, otherObject.team)) {
-			otherObject.defend(null, damage);
+			otherObject.defend(parent, null, damage);
 			this.kill();
 		}
 	}

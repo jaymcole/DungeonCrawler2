@@ -36,6 +36,7 @@ public class GUI {
 	public static final int WINDOW_SETTINGS = 3;
 	public static final int WINDOW_INVENTORY = 4;
 	public static final int WINDOW_PLAYER_STATS = 5;
+	public static final int WINDOW_GAME_OVER = 6;
 	public static int currentWindow;
 
 	/**
@@ -61,7 +62,7 @@ public class GUI {
 		hudCamera = new OrthographicCamera(screenWidth, screenHeight);
 
 		windows = new Window[] { new Window_PauseScreen(this), new Window_HUD(this), new Window_MainMenu(this),
-				new Window_Settings(this), new Window_Inventory(this), new Window_PlayerStats(this) };
+				new Window_Settings(this), new Window_Inventory(this), new Window_PlayerStats(this), new Window_DeathScreen(this) };
 		setWindow(WINDOW_MAIN_MENU);
 	}
 
@@ -234,7 +235,7 @@ public class GUI {
 	 *            GUI.WINDOW_* integers. Warning: Does not check if window is
 	 *            valid.
 	 */
-	public void setWindow(int changeTo) {
+	public static void setWindow(int changeTo) {
 		if (changeTo < 0 || changeTo >= windows.length) {
 			System.err.println("An invalid window integer was passed to setWindow() in GUI.java.");
 			System.err.println("Int passed: " + changeTo);

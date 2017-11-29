@@ -17,6 +17,7 @@ public class Window_PlayerStats extends Window {
 
 	@Override
 	protected void buildWindow() {
+//		widgets = new Widget[0];
 		ArrayList<Widget> widgetList = new ArrayList<Widget>();
 		int halfwayX = (int) (GUI.defaultWidth * 0.5f);
 		int halfwayY = (int) (GUI.defaultHeight * 0.5f);
@@ -50,7 +51,7 @@ public class Window_PlayerStats extends Window {
 		float attrButtonSize = 15;
 		float xOffset = attrButtonSize * 1.25f;
 		System.out.println((halfwayY - backgroundY));
-		lbl_AttrPoints = new Widget_Label(currentX + startLabelX, startLabelY - 20, 0, 0, this,
+		Widget_Label lbl_AttrPoints = new Widget_Label(currentX + startLabelX, startLabelY - 20, 0, 0, this,
 				"Attribute Points: " + Game.player.getRemainingAttributePoints(), fontSize, Color.BLACK, Color.WHITE);
 		for (int i = 0; i < Stats.values().length; i++) {
 			Stats stat = Stats.values()[i];
@@ -66,8 +67,11 @@ public class Window_PlayerStats extends Window {
 						}
 					}
 				};
+				
+				if (Game.player.getAttributePoints() > 0) {
 				attrButton.setMultiVariableOne(i);
 				widgetList.add(attrButton);
+				}
 			}
 
 			widgetList.add(new Widget_Label(xOffset + currentX + startLabelX, startLabelY - currentY, 0, 0, this,
@@ -86,8 +90,6 @@ public class Window_PlayerStats extends Window {
 
 		widgets = widgetList.toArray(widgets);
 	}
-
-	private Widget_Label lbl_AttrPoints;
 
 	@Override
 	public void onResume() {

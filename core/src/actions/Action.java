@@ -1,10 +1,15 @@
 package actions;
 
+import actors.Actor;
+
 public abstract class Action {
 
 	protected boolean active = false;
-	
-	public Action() {}
+	protected Actor caster;
+
+	public Action(Actor caster) {
+		this.caster = caster;
+	}
 	
 	/**
 	 * Performs and action.

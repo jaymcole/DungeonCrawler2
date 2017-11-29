@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import archive.Archiver;
+import archive.TotalRecords;
 import assetManager.AssetManager;
 import ecu.se.DecalPicker;
 import ecu.se.Game;
@@ -75,6 +77,7 @@ public class Generate {
 			public void onClick(GameObject otherObject) {
 				if (otherObject == Game.player)
 					Map.setFloor(Map.getCurrentLevel() + 1);
+					Archiver.set(TotalRecords.STAIRS_TAKEN, 1);
 			}
 		};
 
@@ -83,6 +86,7 @@ public class Generate {
 			public void onClick(GameObject otherObject) {
 				if (otherObject == Game.player)
 					Map.setFloor(Map.getCurrentLevel() - 1);
+					Archiver.set(TotalRecords.STAIRS_TAKEN, 1);
 			}
 		};
 
@@ -107,13 +111,9 @@ public class Generate {
 				down.setPosition(x * tileWidth, y * tileHeight);
 			}
 		}
-		// ObjectMaker.createTestMob(Game.player.getX() + 15, Game.player.getY()
-		// + 15);
-		// ObjectMaker.createMob(Game.player.getX() + 20, Game.player.getY() +
-		// 20);
 
 		// DONE BUILDING
-		System.err.println("Lights from generator: " + lights.size());
+//		System.err.println("Lights from generator: " + lights.size());
 		floor.generatedMap(tiles, lights, up, down, mapWidth, mapHeight);
 
 		addPathNodes();

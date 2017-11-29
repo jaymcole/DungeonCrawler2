@@ -30,7 +30,6 @@ public class Map {
     	changeFloor = false;
         floors = new ArrayList<Floor>(200);
         currentLevel = -1;
-//        currentLevel = 0;
         changeFloor(0);        
     }
     

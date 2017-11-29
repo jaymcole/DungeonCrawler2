@@ -34,7 +34,7 @@ public class Window_MainMenu extends Window{
 		Widget_Button btn_newGame = new Widget_Button(backgroundX + bufferX, backgroundY + halfwayY - 200, halfwayX - bufferX * 2, 50, this, "New Game") {
 			@Override
 			public void mouseReleased(int mouseX, int mouseY) {
-				gui.getGame().create();
+				gui.getGame().newGame();
 				gui.setWindow(GUI.WINDOW_HUD);
 			}
 		};

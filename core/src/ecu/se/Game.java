@@ -96,7 +96,7 @@ public class Game extends ApplicationAdapter {
 		currentState = GAME_STATE_RUNNING;
 		Archiver.startArchiver();
 		Archiver.set(TimeRecords.TOTAL_TIME_PLAYED, false);
-		Archiver.set(TotalRecords.TIMES_STARTING_GAME, 1);
+		Archiver.set(TotalRecords.NEW_GAMES, 1);
 		Archiver.set(TimeRecords.TIME_IN_MENU, false);
 		Archiver.set(TimeRecords.TIME_IDLE, false);
 		batch = new SpriteBatch();
@@ -121,12 +121,16 @@ public class Game extends ApplicationAdapter {
 		// Game.player.getY()));
 		// ObjectManager.add(ObjectMaker.createMob(Game.player.getX(),
 		// Game.player.getY()));
-//		ObjectManager.add(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Fireball(player)));
-//		ObjectManager.add(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Teleport(player)));
+		// ObjectManager.add(ObjectMaker.createActiveItem(player.x, player.y,
+		// new Spell_Fireball(player)));
+		// ObjectManager.add(ObjectMaker.createActiveItem(player.x, player.y,
+		// new Spell_Teleport(player)));
 
 		hud = new GUI(player, screenWidth, screenHeight, this);
-		((Window_HUD)GUI.getWindow(GUI.WINDOW_HUD)).setPrimary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Fireball(player)));
-		((Window_HUD)GUI.getWindow(GUI.WINDOW_HUD)).setSecondary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Teleport(player)));
+		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD))
+				.setPrimary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Fireball(player)));
+		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD))
+				.setSecondary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Teleport(player)));
 
 		shapeRenderer = new ShapeRenderer();
 		backgroundTexture = AssetManager.getTexture(backgroundTextureName).getTexture();
@@ -283,7 +287,10 @@ public class Game extends ApplicationAdapter {
 			pauseGame();
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-			hud.closeWindow(GUI.WINDOW_HUD, GUI.WINDOW_MAIN_MENU);
+			if (GAME_OVER)
+				hud.closeWindow(GUI.WINDOW_HUD, GUI.WINDOW_GAME_OVER);
+			else
+				hud.closeWindow(GUI.WINDOW_HUD, GUI.WINDOW_MAIN_MENU);
 		}
 	}
 
@@ -302,6 +309,11 @@ public class Game extends ApplicationAdapter {
 		}
 		player.lookAt = new Vector2(pos.x, pos.y);
 		player.input(deltaTime);
+	}
+	
+	public void newGame() {
+		Archiver.dispose();
+		create();
 	}
 
 	private int checkMouseButton(int oldState, boolean buttonDown) {
@@ -335,14 +347,14 @@ public class Game extends ApplicationAdapter {
 	}
 
 	public static void pauseGame() {
-		
+
 		if (currentState == GAME_STATE_PAUSED) {
 			currentState = GAME_STATE_RUNNING;
 		} else {
 			currentState = GAME_STATE_PAUSED;
 			Archiver.set(TimeRecords.TIME_PAUSED, false);
 		}
-		
+
 		if (GAME_OVER) {
 			currentState = GAME_STATE_PAUSED;
 		}

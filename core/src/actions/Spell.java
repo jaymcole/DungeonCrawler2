@@ -6,6 +6,7 @@ import actors.Actor;
 import actors.Team;
 import archive.Archiver;
 import archive.TotalRecords;
+import ecu.se.Game;
 import ecu.se.GameObject;
 import stats.Stats;
 
@@ -28,7 +29,6 @@ public abstract class Spell extends Action {
 	protected float baseDamage;
 	
 	protected TextureRegion textureRegion;
-	protected Actor caster;
 	
 	protected float targetX, targetY;
 	protected GameObject target;
@@ -40,7 +40,7 @@ public abstract class Spell extends Action {
 	protected boolean instantCast = false;
 	
 	public Spell(Actor caster) {
-		this.caster = caster;
+		super(caster);
 		active = false;
 		this.team = caster.team;
 		baseCastSpeed 	= 0;
@@ -53,7 +53,7 @@ public abstract class Spell extends Action {
 	public void act(int x, int y) {
 		if (active)
 			return;
-		Archiver.set(TotalRecords.ACTIONS_TAKEN, 1);
+//		Archiver.set(TotalRecords.ACTIONS_TAKEN, 1);
 		calculateStats();
 		// Initialize variables based on caster ability.
 		
@@ -88,7 +88,8 @@ public abstract class Spell extends Action {
 				targetX = target.getX();
 				targetY = target.getY();
 			}
-			Archiver.set(TotalRecords.SPELLS_CAST, 1);
+			if (caster == Game.player)
+				Archiver.set(TotalRecords.SPELLS_CAST, 1);
 			cast(deltaTime);
 			break;
 		case COOLDOWN:

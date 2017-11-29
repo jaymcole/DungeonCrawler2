@@ -100,7 +100,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 		this.light = light;
 	}
 	
-	public float defend(Stats type, float damage) {
+	public float defend(GameObject attacker, Stats type, float damage) {
 		return 0;
 	}
 
@@ -121,6 +121,8 @@ public abstract class GameObject implements Comparable<GameObject> {
 	protected void die() {}
 	
 	public void kill() {
+		if (!this.isAlive())
+			return;
 		die();
 		this.alive = false;
 		ObjectManager.remove(this);

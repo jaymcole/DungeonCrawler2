@@ -11,6 +11,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import actions.Action;
+import archive.Archiver;
+import archive.TotalRecords;
 import assetManager.Animation;
 import assetManager.AssetManager;
 import ecu.se.DecalPicker;
@@ -88,10 +90,10 @@ public abstract class Actor extends GameObject {
 	protected float currentHealth;
 	protected float currentMana;
 
-	// TDOD: Implement this level poop!
 	protected int characterLevel;
 	protected int characterXP;
 	protected int xpToLevel;
+	private int xpWorth = 5;
 	protected int attributePoints;
 
 	private Texture debugHealthBarTexture;
@@ -105,7 +107,7 @@ public abstract class Actor extends GameObject {
 			animation.setRow(row[i]);
 			animations.add(animation);
 		}
-		
+
 		light = null;
 		attributePoints = 0;
 		invisible = false;
@@ -118,6 +120,10 @@ public abstract class Actor extends GameObject {
 		team = Team.MOB;
 		currentHealth = getStat(Stats.HEALTH);
 		currentMana = getStat(Stats.MANA);
+
+		characterLevel = 0;
+		characterXP = 0;
+		xpToLevel = 25;
 
 		Random random = new Random();
 		currentHealth = random.nextInt(100);
@@ -144,7 +150,7 @@ public abstract class Actor extends GameObject {
 		if (currentHealth <= 0)
 			kill();
 	}
-	
+
 	/**
 	 * Called when the wake state changes from awake to asleep.
 	 */
@@ -198,7 +204,7 @@ public abstract class Actor extends GameObject {
 	}
 
 	protected void updateActions(float deltaTime) {
-		for(int i = 0; i < activeActions.size(); i++) {
+		for (int i = 0; i < activeActions.size(); i++) {
 			if (activeActions.get(i).isActive()) {
 				activeActions.get(i).update(deltaTime);
 			} else {
@@ -238,18 +244,58 @@ public abstract class Actor extends GameObject {
 		// Renders a manabar
 		batch.setColor(1.0f, 1.0f, 1.0f, 0.5f);
 		batch.draw(debugHealthBarTexture, x - (int) (healthbarWidth * 0.5f) - borderWidth,
-				y + healthbarHeight - borderWidth  + barHeight*2 + 2, healthbarWidth + borderWidth * 2, barHeight * 2 + borderWidth * 2);
+				y + healthbarHeight - borderWidth + barHeight * 2 + 2, healthbarWidth + borderWidth * 2,
+				barHeight * 2 + borderWidth * 2);
 
 		batch.setColor(0.0f, 0f, 1f, 0.5f);
-		batch.draw(debugHealthBarTexture, x - (int) (healthbarWidth * 0.5f), y + healthbarHeight + barHeight*2 + 2,
+		batch.draw(debugHealthBarTexture, x - (int) (healthbarWidth * 0.5f), y + healthbarHeight + barHeight * 2 + 2,
 				healthbarWidth * (currentMana / (currentStats[Stats.MANA.ordinal()] + 0.0f)), barHeight * 2);
 		batch.setColor(Color.WHITE);
 	}
 
-	public float defend(Stats type, float damage) {
+	private void levelUp() {
+		while (characterXP > xpToLevel) {
+			System.err.println("Level increases!");
+			System.err.println("+3 Attribute Points");
+			characterLevel++;
+			characterXP -= xpToLevel;
+			attributePoints += 3;
+		}
+	}
+
+	public void addXP(int xp) {
+		System.out.println("Giving " + xp +" xp to " + this.getClass().getSimpleName());
+		characterXP += xp;
+		System.out.println("XP: " + characterXP + " of " + xpToLevel);
+//		if (this == Game.player) {
+			if (characterXP >= xpToLevel)
+				levelUp();
+//		}
+	}
+
+	@Override
+	public float defend(GameObject attacker, Stats type, float damage) {
+		if (attacker == Game.player) {
+			Archiver.set(TotalRecords.DAM_GIVEN, damage);
+		} else if (this == Game.player) {
+			Archiver.set(TotalRecords.DAM_TAKEN, damage);
+		}
+		
+		
+		
+		
 		if (!awake)
 			onWake();
 		currentHealth -= damage;
+		System.err.println("Defending against " + attacker.getClass().getSimpleName()  + " ("+damage+ " damage)");
+		if (currentHealth <= 0) {
+			this.kill();
+			if (attacker instanceof Actor && attacker.isAlive()) {
+				((Actor) attacker).addXP(xpWorth);
+				xpWorth = 0;
+			}
+		}
+
 		return damage;
 	}
 
@@ -294,6 +340,10 @@ public abstract class Actor extends GameObject {
 			return;
 		this.currentHealth += amount;
 		this.currentHealth = Utils.clamp(0, getStat(Stats.HEALTH), this.currentHealth);
+	}
+	
+	public int getAttributePoints() {
+		return attributePoints;
 	}
 
 	public float getMana() {
@@ -414,6 +464,30 @@ public abstract class Actor extends GameObject {
 		}
 		modifierChanges.removeAll(modifierChanges);
 	}
+	
+	/**
+	 * 
+	 * @return the amount of xp this actor currently has.
+	 */
+	public int getXP() {
+		return characterXP;
+	}
+	
+	/**
+	 * 
+	 * @return this actors current level
+	 */
+	public int getLevel() {
+		return characterLevel;
+	}
+	
+	/**
+	 * 
+	 * @return the total amount xp to reach the next level.
+	 */
+	public int getXPNeeded() {
+		return xpToLevel;
+	}
 
 	/**
 	 * Use action toward x, y
@@ -462,6 +536,11 @@ public abstract class Actor extends GameObject {
 		actions.add(action);
 	}
 
+	
+	/**
+	 * Sets the chracter level.
+	 * @param level
+	 */
 	public void setLevel(int level) {
 		if (level < 0)
 			level = 0;
@@ -471,6 +550,10 @@ public abstract class Actor extends GameObject {
 
 	@Override
 	protected void die() {
+		if (this != Game.player) {
+			Archiver.set(TotalRecords.MONSTERS_SLAIN, 1);
+		}
+		
 		Map.getTile((int) x, (int) y).addObject(
 				new Decal(x, y, "ass", AssetManager.getTexture(DecalPicker.getActorCorpse()).getTextureRegion()));
 
@@ -484,33 +567,43 @@ public abstract class Actor extends GameObject {
 					y + Utils.getRandomInt(50) - 25);
 			Map.getTile((int) mOrb.getX(), (int) mOrb.getY()).addObject(mOrb);
 		}
-		// Drop loot
-		// Set Boolean to dead
-
-		// Change update() to do the following
-		// Subtract deltaTime from timer.
-		// Upon timer running out, add self to remove list in ObjectManager
-
-		// Change render() to do the following
-		// Render corpse instead of alive actor.
 	}
 
+	/**
+	 * Set primary action.
+	 * @param a
+	 */
 	public void setPrimaryAction(Action a) {
 		primaryAction = a;
 	}
 
+	/**
+	 * Set secondary action
+	 * @param a
+	 */
 	public void setSecondaryAction(Action a) {
 		secondaryAction = a;
 	}
 
+	/**
+	 * 
+	 * @return the number of remaining attribute points.
+	 */
 	public int getRemainingAttributePoints() {
 		return attributePoints;
 	}
 
+	/**
+	 * Adds attribute points to this actor.
+	 * @param points
+	 */
 	public void addAttributePoints(int points) {
 		attributePoints += points;
 	}
 
+	/**
+	 * Disposes this actor
+	 */
 	@Override
 	public void dispose() {
 

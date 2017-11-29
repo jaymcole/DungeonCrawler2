@@ -20,7 +20,7 @@ public enum Stats {
 	MOVEMENT_SPEED			(false, 1f, new Stats[]{BASE_SPEED}),
 	MOVEMENT_DRAG			(false, 1f, new Stats[]{BASE_SPEED}),
 	MOVEMENT_ACCELERATION	(false, 1f, new Stats[]{BASE_SPEED}),
-	SIZE					(true, 1f, new Stats[]{}),
+	SIZE					(false, 1f, new Stats[]{}),
 	
 	// Physical Ranged
 	RANGED_WEAPON_ATTACK	(false, 1f, new Stats[]{BASE_DEXTERITY}),
