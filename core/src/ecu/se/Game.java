@@ -106,8 +106,7 @@ public class Game extends ApplicationAdapter {
 		screenHeight = Gdx.graphics.getHeight();
 		screenWidth = Gdx.graphics.getWidth();
 		new ObjectManager();
-		player = new Player(0, 0, 0, camera, new String[] { "texture/spritesheet/bleh.png",
-				"texture/spritesheet/bleh.png", "texture/spritesheet/bleh.png" }, new int[] { 3, 2, 1 });
+		player = new Player(0, 0, 0, camera, new String[] { "texture/spritesheet/player.png" }, new int[] { 1 });
 
 		camera = new OrthographicCamera(screenWidth, screenHeight);
 		Lighting.init(camera, player);
