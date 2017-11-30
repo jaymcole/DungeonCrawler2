@@ -3,6 +3,10 @@ package assetManager;
 import java.io.*;
 import ecu.se.Globals;
 
+/**
+ * 
+ *  SpriteAsset for animations.
+ */
 public class SpriteAsset extends Asset {
 
 	private TextureAsset sprite;
@@ -12,9 +16,6 @@ public class SpriteAsset extends Asset {
 	public int spriteW;
 	public int spriteH;
 	public float frameTimeLength;
-	// public Animation animation;
-
-	// Load text file with sprite sheet
 
 	public SpriteAsset(String name) {
 		this.name = name;
@@ -61,34 +62,67 @@ public class SpriteAsset extends Asset {
 		}
 	}
 
+	/**
+	 * 
+	 * @return true if loaded correctly
+	 */
 	public boolean loadedSuccessfully() {
 		return sprite != null;
 	}
 
+	/**
+	 * 
+	 * @return file path
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * 
+	 * @return this asset
+	 */
 	public SpriteAsset getAsset() {
 		return this;
 	}
 
+	/**
+	 * 
+	 * @return current fram column
+	 */
 	public int getSpriteRows() {
 		return this.numRows;
 	}
 
+	/**
+	 * 
+	 * @return total frame columns
+	 */
 	public int getSpriteColumns() {
 		return this.numCol;
 	}
 
+	/**
+	 * 
+	 * @return frame width
+	 */
 	public int getSpriteWidth() {
 		return this.spriteW;
 	}
 
+	/**
+	 * 
+	 * @return frame height
+	 */
 	public int getSpriteHeight() {
 		return this.spriteH;
 	}
 
+	
+	/**
+	 * 
+	 * @return texture used for this spriteAsset
+	 */
 	public TextureAsset getTexture() {
 		return sprite;
 	}

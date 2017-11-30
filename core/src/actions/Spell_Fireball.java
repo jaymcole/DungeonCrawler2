@@ -5,6 +5,10 @@ import ecu.se.ObjectManager;
 import ecu.se.objects.Projectile;
 import stats.Stats;
 
+/**
+ * 
+ * A spell that creates a fireball.
+ */
 public class Spell_Fireball extends Spell{
 
 	public Spell_Fireball(Actor caster) {

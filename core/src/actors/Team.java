@@ -1,11 +1,15 @@
 package actors;
 
+/**
+ * 
+ * Teams for objects/actors/etc
+ */
 public enum Team {
 	NONE,
 	NEUTRAL,
 	PLAYER,
 	MOB,
-	FINANCIAL_DISPARAGED;
+	FINANCIALLY_DISPARAGED;
 	
 	/** 
 	 * @param t1 - The team GameObject 1 is currently on.

@@ -17,6 +17,10 @@ import ecu.se.map.PathNode;
 import pathfinding.Pathfinder2;
 import stats.Stats;
 
+/**
+ * 
+ * The basic enemy ai. We like won't have anything better by the due date. 
+ */
 public class BasicEnemy extends Actor {
 
 	private LinkedList<Vector2> path;
@@ -37,6 +41,7 @@ public class BasicEnemy extends Actor {
 		calculateStats();
 	}
 
+	@Override
 	public void act(float deltaTime) {
 		float playerDistance = this.getPositionV2().dst(Game.player.getPositionV2());
 		if (awake) {
@@ -52,6 +57,9 @@ public class BasicEnemy extends Actor {
 		}
 	}
 
+	/**
+	 * Current used to determining how often an Actor should update their path.
+	 */
 	private int counter = 0;
 
 	/**
@@ -139,18 +147,12 @@ public class BasicEnemy extends Actor {
 			}
 		}
 
-		// Draw wake distance
-		// TODO: Make relative to perception?
 		render.setColor(Color.YELLOW);
 		render.circle(x, y, wakeDistance);
 
-		// Draw wake distance
-		// TODO: Make relative to perception?
 		render.setColor(Color.RED);
 		render.circle(x, y, attackRange);
 
-		// Draw wake distance
-		// TODO: Make relative to perception?
 		render.setColor(Color.BLUE);
 		render.circle(x, y, friendWakeDistance);
 

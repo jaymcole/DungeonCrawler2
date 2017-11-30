@@ -8,6 +8,10 @@ import ecu.se.Game;
 import ecu.se.map.Direction;
 import stats.Stats;
 
+/**
+ * 
+ * No longer used. 
+ */
 public class RangedBadGuy extends Actor {
 	
 	private int maxDist = 115, minDist = 100;
@@ -22,6 +26,7 @@ public class RangedBadGuy extends Actor {
 	     calculateStats();
 	}
 	
+	@Override
 	public void act(float deltaTime) {
 		float dist = Math.abs(Game.player.getPosition().x-x) + Math.abs(Game.player.getPosition().y-y);
 		

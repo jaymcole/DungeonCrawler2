@@ -1,7 +1,5 @@
 package actions;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 import actors.Actor;
 import actors.Team;
 import archive.Archiver;
@@ -10,6 +8,10 @@ import ecu.se.Game;
 import ecu.se.GameObject;
 import stats.Stats;
 
+/**
+ * 
+ *	Spells can be used by Actors.
+ */
 public abstract class Spell extends Action {
 	private final int CHANNEL 	= 0;
 	private final int CAST		= 1;
@@ -17,6 +19,9 @@ public abstract class Spell extends Action {
 	
 	protected int currentStage = -1;
 
+	/**
+	 * Base stats for the spell.
+	 */
 	protected float baseCastSpeed;
 	protected float currentCastSpeed;
 	
@@ -27,14 +32,28 @@ public abstract class Spell extends Action {
 	protected float currentCooldown;
 	
 	protected float baseDamage;
-	
-	protected TextureRegion textureRegion;
-	
+	/**
+	 * 
+	 */
+		
+	/**
+	 * The position the spell moves toward.
+	 */
 	protected float targetX, targetY;
+	
+	/**
+	 * The GameObject that spell is being cast on.
+	 */
 	protected GameObject target;
 	
+	/**
+	 * float for moving between phases.
+	 */
 	protected float timer;
 	
+	/**
+	 * The team this spell belongs to.
+	 */
 	protected Team team;
 	
 	protected boolean instantCast = false;
@@ -49,13 +68,11 @@ public abstract class Spell extends Action {
 	}
 	
 	
-	
+	@Override
 	public void act(int x, int y) {
 		if (active)
 			return;
-//		Archiver.set(TotalRecords.ACTIONS_TAKEN, 1);
 		calculateStats();
-		// Initialize variables based on caster ability.
 		
 		timer = 0;
 		targetX = x;
@@ -102,6 +119,7 @@ public abstract class Spell extends Action {
 	}
 	
 	/**
+	 * Spells that need to be channeled require some time before that can be cast.
 	 * Override if an animation or something needs to happen while channeling, ignore otherwise.
 	 */
 	protected void channel(float deltaTime) {
@@ -112,8 +130,16 @@ public abstract class Spell extends Action {
 		}
 	}
 	
+	/**
+	 * What the spell needs to actually do.
+	 * @param deltaTime
+	 */
 	protected abstract void cast(float deltaTime);
 
+	/**
+	 * Time phase before that spell can be cast again.
+	 * @param deltaTime
+	 */
 	protected void cooldown(float deltaTime) {
 		timer += deltaTime;
 		if (timer >= currentCooldown) {
@@ -123,19 +149,33 @@ public abstract class Spell extends Action {
 		}
 	}
 	
-	
+	/**
+	 * Sets the baseCooldown to cooldown.
+	 * @param cooldown
+	 */
 	public void setBaseCooldown(float cooldown) { 
 		this.baseCooldown = cooldown;
 	}
 	
+	/**
+	 * Sets baseCastSpeed to baseCastSpeed
+	 * @param baseCastSpeed
+	 */
 	public void setBaseCastSpeed(float baseCastSpeed) { 
 		this.baseCastSpeed = baseCastSpeed;
 	}
 	
+	/**
+	 * Sets baseManaCost to baseManaCost
+	 * @param baseManaCost
+	 */
 	public void setBaseManaCost(float baseManaCost) { 
 		this.baseManaCost = baseManaCost;
 	}
 	
+	/**
+	 * Calculates the base costs for this spell based on the casters ability.
+	 */
 	private void calculateStats() {
 		currentCastSpeed = baseCastSpeed * caster.getStat(Stats.SPELL_CAST_SPEED);
 		currentManaCost = baseManaCost * (1 - caster.getStat(Stats.MANA_COST));

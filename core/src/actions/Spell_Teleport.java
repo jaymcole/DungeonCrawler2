@@ -7,11 +7,11 @@ import actors.Actor;
 import ecu.se.Lighting;
 import ecu.se.map.Map;
 import ecu.se.objects.FadingLight;
-import ecu.se.objects.Light;
 
+/**
+ * A Spell that teleports the caster to a new location.
+ */
 public class Spell_Teleport extends Spell{
-
-	private FadingLight light;
 	
 	public Spell_Teleport(Actor caster) {
 		super(caster);

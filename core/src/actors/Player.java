@@ -18,6 +18,10 @@ import ecu.se.map.Map;
 import ecu.se.objects.Decal;
 import stats.Stats;
 
+/**
+ * 
+ * The players Actor class.
+ */
 public class Player extends Actor {
 	private Direction dir;
 	
@@ -72,6 +76,7 @@ public class Player extends Actor {
 		GUI.setWindow(GUI.WINDOW_GAME_OVER);
 	}
 	
+	@Override
 	public void setIdle(boolean idle) {
 		this.idle = idle;
 		if (idle) {
@@ -81,7 +86,10 @@ public class Player extends Actor {
 		}
 	}
 
-	//TODO: Come up with a better solution to this (if someone could make a system for adding directions, that'd be great).
+	/**
+	 * Movement controls for the player.
+	 * @param deltaTime
+	 */
 	public void input(float deltaTime) {
 		if (Gdx.input.isKeyPressed(Input.Keys.W) && Gdx.input.isKeyPressed(Input.Keys.D)) {
 			dir = Direction.NORTHEAST;

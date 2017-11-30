@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 
 import archive.Archiver;
 import archive.TimeRecords;
+import archive.TotalRecords;
 import ecu.se.Game;
 import stats.Stats;
 
@@ -63,6 +64,7 @@ public class Window_PlayerStats extends Window {
 						if (Game.player.getRemainingAttributePoints() > 0) {
 							Game.player.addAttributePoints(-1);
 							Game.player.setBaseStat(Stats.values()[variableOne], Game.player.getStat(Stats.values()[variableOne]) + 1);
+							Archiver.set(TotalRecords.ATTRIBUTE_POINTS_SPENT, 1);
 							buildWindow();
 						}
 					}

@@ -1,24 +1,18 @@
 package archive;
 
+/**
+ * 
+ * Records that require only addition.
+ */
 public enum TotalRecords {
 
-//	// PLAYERS STATS
 	DAM_TAKEN,
 	DAM_GIVEN,
-//	DAM_MITIGATED,
-//	
-//	
-//	// MISC
-//	FLOORS_CLEARED,
-//	AVERAGE_LEVEL_AT_DEATH,
-//	TIMES_STARTING_GAME,
-//	ACTIONS_TAKEN,
 	DEATHS,
 	NEW_GAMES,
 	SPELLS_CAST,
 	STAIRS_TAKEN,
-//	
-//	// NPC / MONSTER
+	ATTRIBUTE_POINTS_SPENT,
 	MONSTERS_SLAIN;
 	;
 	

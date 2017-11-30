@@ -8,6 +8,10 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import ecu.se.gui.GUI;
 
+/**
+ * 
+ * Stores font information
+ */
 public class FontAsset extends Asset{
     private BitmapFont font;
     private FreeTypeFontParameter parameter;
@@ -28,26 +32,47 @@ public class FontAsset extends Asset{
         }        
     }
     
+    /**
+     * 
+     * @return true if font was loaded correctly.
+     */
     public boolean loadedSuccessfully() {
         return font != null;
     }
     
+    /**
+     * 
+     * @returns this fontAsset (for some reason). 
+     */
     public FontAsset getAsset() {
         return this;
     }
     
+    /**
+     * 
+     * @return font
+     */
     public BitmapFont getFont() {
         return font;
     }
     
+    /**
+     * 
+     * @return file path
+     */
     public String getName () {
         return name;
     }
     
+    /**
+     * 
+     * @return the parameters used to construct this font asset.
+     */
     public FreeTypeFontParameter getFreeTypeFontParameter() {
         return parameter;
     }
     
+    @Override
     public void dispose() {
         if(font != null)
             

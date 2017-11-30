@@ -30,6 +30,10 @@ import ecu.se.objects.Light;
 import stats.Stats;
 import stats.TempStatModifier;
 
+/**
+ * 
+ * Actor: All game players. (npcs, enemies, player, etc)
+ */
 public abstract class Actor extends GameObject {
 
 	protected String name;
@@ -167,6 +171,11 @@ public abstract class Actor extends GameObject {
 		this.awake = true;
 	}
 
+	/**
+	 * Updates the Actors stats to account for changes.
+	 * 
+	 * @param deltaTime
+	 */
 	protected void updateStats(float deltaTime) {
 		finalizeModifiers();
 		for (TempStatModifier stat : tempStatModifiers) {
@@ -176,6 +185,11 @@ public abstract class Actor extends GameObject {
 		setMana(deltaTime * getStat(Stats.MANA_REGEN));
 	}
 
+	/**
+	 * Updates the Actors position.
+	 * 
+	 * @param deltaTime
+	 */
 	protected void updateMovement(float deltaTime) {
 		x += (currentSpeed.x);
 		y += (currentSpeed.y);
@@ -186,6 +200,11 @@ public abstract class Actor extends GameObject {
 		bounds.setScale(getStat(Stats.SIZE), getStat(Stats.SIZE));
 	}
 
+	/**
+	 * Updates the Actors animations.
+	 * 
+	 * @param deltaTime
+	 */
 	protected void updateAnimations(float deltaTime) {
 		float angle = Direction.angleDeg(this.getPositionV2(), lookAt);
 
@@ -203,6 +222,11 @@ public abstract class Actor extends GameObject {
 		idle = true;
 	}
 
+	/**
+	 * Updates the Actors actions (like spells).
+	 * 
+	 * @param deltaTime
+	 */
 	protected void updateActions(float deltaTime) {
 		for (int i = 0; i < activeActions.size(); i++) {
 			if (activeActions.get(i).isActive()) {
@@ -253,6 +277,9 @@ public abstract class Actor extends GameObject {
 		batch.setColor(Color.WHITE);
 	}
 
+	/**
+	 * Increases this actors level IF they've gained enough xp.
+	 */
 	private void levelUp() {
 		while (characterXP > xpToLevel) {
 			System.err.println("Level increases!");
@@ -263,14 +290,17 @@ public abstract class Actor extends GameObject {
 		}
 	}
 
+	/**
+	 * Adds xp to this player.
+	 * 
+	 * @param xp
+	 */
 	public void addXP(int xp) {
-		System.out.println("Giving " + xp +" xp to " + this.getClass().getSimpleName());
+		System.out.println("Giving " + xp + " xp to " + this.getClass().getSimpleName());
 		characterXP += xp;
 		System.out.println("XP: " + characterXP + " of " + xpToLevel);
-//		if (this == Game.player) {
-			if (characterXP >= xpToLevel)
-				levelUp();
-//		}
+		if (characterXP >= xpToLevel)
+			levelUp();
 	}
 
 	@Override
@@ -280,14 +310,11 @@ public abstract class Actor extends GameObject {
 		} else if (this == Game.player) {
 			Archiver.set(TotalRecords.DAM_TAKEN, Math.min(damage, currentHealth));
 		}
-		
-		
-		
-		
+
 		if (!awake)
 			onWake();
 		currentHealth -= damage;
-		System.err.println("Defending against " + attacker.getClass().getSimpleName()  + " ("+damage+ " damage)");
+		System.err.println("Defending against " + attacker.getClass().getSimpleName() + " (" + damage + " damage)");
 		if (currentHealth <= 0) {
 			this.kill();
 			if (attacker instanceof Actor && attacker.isAlive()) {
@@ -325,6 +352,10 @@ public abstract class Actor extends GameObject {
 		return currentHealth;
 	}
 
+	/**
+	 * 
+	 * @return an int version of current health.
+	 */
 	public int getHealthRounded() {
 		return (int) currentHealth;
 	}
@@ -341,11 +372,19 @@ public abstract class Actor extends GameObject {
 		this.currentHealth += amount;
 		this.currentHealth = Utils.clamp(0, getStat(Stats.HEALTH), this.currentHealth);
 	}
-	
+
+	/**
+	 * 
+	 * @return this Actors current attribute points.
+	 */
 	public int getAttributePoints() {
 		return attributePoints;
 	}
 
+	/**
+	 * 
+	 * @return this actors current mana
+	 */
 	public float getMana() {
 		return currentMana;
 	}
@@ -360,33 +399,67 @@ public abstract class Actor extends GameObject {
 		currentMana = Utils.clamp(0, getStat(Stats.MANA), currentMana);
 	}
 
+	/**
+	 * 
+	 * @return this actors stats
+	 */
 	public float[] getStats() {
 		return currentStats;
 	}
 
+	/**
+	 * 
+	 * @param stat - the stat to retrieve
+	 * @return this actors stat corresponding to stat.
+	 */
 	public float getStat(Stats stat) {
 		return currentStats[stat.ordinal()];
 	}
-
+	
+	/**
+	 * Sets a base stat.
+	 * @param stat
+	 * @param value
+	 */
 	public void setBaseStat(Stats stat, float value) {
 		baseStats[stat.ordinal()] = value;
 		calculateStats();
 	}
 
+	/**
+	 * Sets a modifier stat.
+	 * @param stat
+	 * @param value
+	 */
 	public void setModifierStat(Stats stat, float value) {
 		modifierStats[stat.ordinal()] = value;
 		calculateStats();
 	}
 
+	/**
+	 * Sets idle to idle
+	 * @param idle
+	 */
 	public void setIdle(boolean idle) {
 		this.idle = idle;
 	}
 
+	/**
+	 * Used for pushing this Actor
+	 * @param x
+	 * @param y
+	 */
 	public void push(float x, float y) {
 		currentSpeed.x += x;
 		currentSpeed.y += y;
 	}
 
+	/**
+	 * Moves this actor.
+	 * @param deltaTime
+	 * @param direction
+	 * @param updateDirection
+	 */
 	public void move(float deltaTime, Direction direction, boolean updateDirection) {
 		currentSpeed.x += (currentStats[Stats.MOVEMENT_ACCELERATION.ordinal()] * deltaTime) * direction.x;
 		currentSpeed.x = Utils.clamp(-currentStats[Stats.MOVEMENT_SPEED.ordinal()],
@@ -398,6 +471,12 @@ public abstract class Actor extends GameObject {
 		setIdle(false);
 	}
 
+	/**
+	 * Moves this actor.
+	 * @param deltaTime
+	 * @param angle
+	 * @param updateDirection
+	 */
 	public void move(float deltaTime, double angle, boolean updateDirection) {
 		currentSpeed.x += (currentStats[Stats.MOVEMENT_ACCELERATION.ordinal()] * deltaTime) * Math.cos(angle);
 		currentSpeed.x = Utils.clamp(-currentStats[Stats.MOVEMENT_SPEED.ordinal()],
@@ -409,8 +488,9 @@ public abstract class Actor extends GameObject {
 		setIdle(false);
 	}
 
-	// TODO: Add different defaults for different classes (Could be done by
-	// subclasses)
+	/**
+	 * Sets defaults stats.
+	 */
 	public void setDefaults() {
 		for (int i = 0; i < Stats.values().length; i++) {
 			baseStats[i] = 1;
@@ -425,7 +505,9 @@ public abstract class Actor extends GameObject {
 		baseStats[Stats.SIZE.ordinal()] = 1f;
 	}
 
-	// TODO: Calculate stats based on equipped items / other modifiers
+	/**
+	 * Recalculates this Actors stats.
+	 */
 	public void calculateStats() {
 		for (int i = 0; i < Stats.values().length; i++) {
 			if (Stats.values()[i].upgradeable)
@@ -445,16 +527,27 @@ public abstract class Actor extends GameObject {
 
 	public LinkedList<TempStatModifier> modifierChanges = new LinkedList<TempStatModifier>();
 
+	/**
+	 * Removes a temporary stat.
+	 * @param stat
+	 */
 	public void removeTempStat(TempStatModifier stat) {
 		stat.remove = true;
 		modifierChanges.add(stat);
 	}
 
+	/**
+	 * Adds a temporary stat changer.
+	 * @param stat
+	 */
 	public void addTempStat(TempStatModifier stat) {
 		stat.remove = false;
 		modifierChanges.add(stat);
 	}
 
+	/**
+	 * Updates the modifier lists.
+	 */
 	public void finalizeModifiers() {
 		for (TempStatModifier stat : modifierChanges) {
 			if (stat.remove)
@@ -464,7 +557,7 @@ public abstract class Actor extends GameObject {
 		}
 		modifierChanges.removeAll(modifierChanges);
 	}
-	
+
 	/**
 	 * 
 	 * @return the amount of xp this actor currently has.
@@ -472,7 +565,7 @@ public abstract class Actor extends GameObject {
 	public int getXP() {
 		return characterXP;
 	}
-	
+
 	/**
 	 * 
 	 * @return this actors current level
@@ -480,7 +573,7 @@ public abstract class Actor extends GameObject {
 	public int getLevel() {
 		return characterLevel;
 	}
-	
+
 	/**
 	 * 
 	 * @return the total amount xp to reach the next level.
@@ -528,17 +621,25 @@ public abstract class Actor extends GameObject {
 		}
 	}
 
+	/**
+	 * Adds an active ability.
+	 * @param action
+	 */
 	public void addActiveAction(Action action) {
 		activeActions.add(action);
 	}
 
+	/**
+	 * Adds an action.
+	 * @param action
+	 */
 	public void addAction(Action action) {
 		actions.add(action);
 	}
 
-	
 	/**
 	 * Sets the chracter level.
+	 * 
 	 * @param level
 	 */
 	public void setLevel(int level) {
@@ -553,7 +654,7 @@ public abstract class Actor extends GameObject {
 		if (this != Game.player) {
 			Archiver.set(TotalRecords.MONSTERS_SLAIN, 1);
 		}
-		
+
 		Map.getTile((int) x, (int) y).addObject(
 				new Decal(x, y, "ass", AssetManager.getTexture(DecalPicker.getActorCorpse()).getTextureRegion()));
 
@@ -562,7 +663,7 @@ public abstract class Actor extends GameObject {
 					y + Utils.getRandomInt(50) - 25);
 			Map.getTile((int) hOrb.getX(), (int) hOrb.getY()).addObject(hOrb);
 		}
-		
+
 		if (Utils.getRandomInt(100) > 50) {
 			GameObject mOrb = ObjectMaker.createManaOrb(x + Utils.getRandomInt(50) - 25,
 					y + Utils.getRandomInt(50) - 25);
@@ -572,6 +673,7 @@ public abstract class Actor extends GameObject {
 
 	/**
 	 * Set primary action.
+	 * 
 	 * @param a
 	 */
 	public void setPrimaryAction(Action a) {
@@ -580,6 +682,7 @@ public abstract class Actor extends GameObject {
 
 	/**
 	 * Set secondary action
+	 * 
 	 * @param a
 	 */
 	public void setSecondaryAction(Action a) {
@@ -596,6 +699,7 @@ public abstract class Actor extends GameObject {
 
 	/**
 	 * Adds attribute points to this actor.
+	 * 
 	 * @param points
 	 */
 	public void addAttributePoints(int points) {

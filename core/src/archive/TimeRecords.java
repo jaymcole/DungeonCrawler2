@@ -1,8 +1,6 @@
 package archive;
 
 /**
- * 
- * @author Jaymc
  *	Record dealing with time.
  */
 public enum TimeRecords {
