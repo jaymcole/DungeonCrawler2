@@ -17,7 +17,7 @@ import ecu.se.map.PathNode;
 import pathfinding.Pathfinder2;
 import stats.Stats;
 
-public class RandomBasicEnemy extends Actor {
+public class RandomBasicEnemy extends BasicEnemy {
 	
 	private LinkedList<Vector2> path;
 	private float attackRange = 650;

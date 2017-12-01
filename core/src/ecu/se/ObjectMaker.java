@@ -69,20 +69,6 @@ public class ObjectMaker {
 				if (otherObject == Game.player) {
 					((Actor)otherObject).setMana(MANA_PICKUP_VALUE);
 					this.kill();
-					
-//					System.out.println("Width:" + this.width);
-//					System.out.println("height:" + this.height);
-//					System.out.println("getWidth:" + this.bounds.getBoundingRectangle().getWidth());
-//					System.out.println("getHeight:" + this.bounds.getBoundingRectangle().getHeight());
-//					System.out.println("x:" + this.x);
-//					System.out.println("y:" + this.y);
-//					System.out.println("x:" + this.getX());
-//					System.out.println("y:" + this.getY());
-//					System.out.println("getX:" + this.bounds.getX());
-//					System.out.println("getY:" + this.bounds.getY());
-//					System.out.println("\n");
-					
-					
 				}
 			}
 			
@@ -99,8 +85,6 @@ public class ObjectMaker {
 				Lighting.addLight(fadeLight);
 			}
 		};
-//		orb.bounds = Utils.getRectangleBounds(x, y, orb.width, orb.height, Utils.ALIGN_TOP_LEFT);
-		
 		
 		Light light = new Light(new Vector3(x, y, 0));
 		light.setColor(Color.BLUE);
@@ -118,7 +102,14 @@ public class ObjectMaker {
 	}
 	
 	public static Actor createTestMob(float x, float y) {
-		BasicEnemy mob = new BasicEnemy(x,	y, 0,new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0 });
+		BasicEnemy mob;
+		if (Utils.randomBoolean()) {
+			mob = new BasicEnemy(x,	y, 0,new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0 });			
+		} else {
+			mob = new RandomBasicEnemy(x,	y, 0,new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0 });	
+		}
+		
+		
 		mob.setBaseStat(Stats.BASE_CONSTITUION, 		100);
 		mob.setBaseStat(Stats.BASE_DEXTERITY, 			1);
 		mob.setBaseStat(Stats.BASE_INTELLIGENCE, 		10);
@@ -126,10 +117,12 @@ public class ObjectMaker {
 		mob.setBaseStat(Stats.BASE_PHYSICAL_RESISTANCE, 1);
 		mob.setBaseStat(Stats.BASE_SPEED, 				1);
 		mob.setBaseStat(Stats.BASE_STRENGTH, 			1);		
+		mob.setBaseStat(Stats.MANA_REGEN, 3 + Utils.getRandomInt(5));
 		
 		Spell_Fireball primary = new Spell_Fireball(mob);		
 		primary.setBaseCooldown(10);
 		mob.setPrimaryAction(primary);
+		
 		return mob;
 	}
 	

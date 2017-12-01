@@ -42,7 +42,6 @@ public class TeleportEnemy extends Actor {
 		this.baseStats[Stats.BASE_SPEED.ordinal()] = 1;
 		calculateStats();
 		this.setSecondaryAction(tele);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

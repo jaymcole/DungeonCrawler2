@@ -4,8 +4,8 @@ public enum Stats {
 	//TODO: Add nice presentation text for all stats
 	
 	// Base Player Stats
-	BASE_CONSTITUION				(true, 1f, new Stats[]{}),
-	BASE_PHYSICAL_RESISTANCE		(true, 1f, new Stats[]{}),
+	BASE_CONSTITUION			(true, 1f, new Stats[]{}),
+	BASE_PHYSICAL_RESISTANCE	(true, 1f, new Stats[]{}),
 	BASE_MAGICAL_RESISTANCE		(true, 1f, new Stats[]{}),
 	BASE_STRENGTH				(true, 1f, new Stats[]{}),
 	BASE_DEXTERITY				(true, 1f, new Stats[]{}),
@@ -16,7 +16,7 @@ public enum Stats {
 	HEALTH					(false, 1f, new Stats[]{BASE_CONSTITUION}),
 	HEALTH_REGEN			(false, 0.01f, new Stats[]{BASE_CONSTITUION}),
 	MANA					(false, 1f, new Stats[]{BASE_INTELLIGENCE}),
-	MANA_REGEN				(false, 0.01f, new Stats[]{BASE_INTELLIGENCE}),
+	MANA_REGEN				(false, 0.1f, new Stats[]{BASE_INTELLIGENCE}),
 	MOVEMENT_SPEED			(false, 1f, new Stats[]{BASE_SPEED}),
 	MOVEMENT_DRAG			(false, 1f, new Stats[]{BASE_SPEED}),
 	MOVEMENT_ACCELERATION	(false, 1f, new Stats[]{BASE_SPEED}),

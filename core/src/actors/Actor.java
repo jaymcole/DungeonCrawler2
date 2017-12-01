@@ -111,7 +111,7 @@ public abstract class Actor extends GameObject {
 			animation.setRow(row[i]);
 			animations.add(animation);
 		}
-
+		invulnerable = false;
 		light = null;
 		attributePoints = 0;
 		invisible = false;
@@ -145,7 +145,6 @@ public abstract class Actor extends GameObject {
 	 *            Time between each frame.
 	 */
 	public void update(float deltaTime) {
-		invulnerable = false;
 		updateStats(deltaTime);
 		act(deltaTime);
 		updateMovement(deltaTime);
@@ -305,6 +304,10 @@ public abstract class Actor extends GameObject {
 
 	@Override
 	public float defend(GameObject attacker, Stats type, float damage) {
+		if (invulnerable)
+			damage = 0;
+		
+		
 		if (attacker == Game.player) {
 			Archiver.set(TotalRecords.DAM_GIVEN, Math.min(damage, currentHealth));
 		} else if (this == Game.player) {

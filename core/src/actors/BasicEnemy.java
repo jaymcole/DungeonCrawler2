@@ -25,7 +25,8 @@ public class BasicEnemy extends Actor {
 
 	private LinkedList<Vector2> path;
 	private float attackRange = 650;
-	private float wakeDistance = 750;
+//	private float wakeDistance = 750;
+	private float wakeDistance = 1;
 	private float sleepDistance = 1500;
 	private float friendWakeDistance = 200;
 	private float pathUpdateRate = 30;

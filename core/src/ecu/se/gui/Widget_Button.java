@@ -42,6 +42,7 @@ public abstract class Widget_Button extends Widget{
 	protected int variableOne;
 	
 	protected int hotkey;
+	protected boolean hasHotkey;
 	
 	public Widget_Button(float x, float y, float width, float height, Window parent, String text) {
 		super(x, y, width, height, parent);
@@ -51,6 +52,7 @@ public abstract class Widget_Button extends Widget{
 		defaultColor = Color.MAGENTA;
 		highlightColor = Color.BROWN;
 		activeColor = Color.SKY;
+		hasHotkey = false;
 	}
 	
 	public Widget_Button(float x, float y, float width, float height, Window parent) {
@@ -59,10 +61,12 @@ public abstract class Widget_Button extends Widget{
 		defaultColor = Color.MAGENTA;
 		highlightColor = Color.BROWN;
 		activeColor = Color.SKY;
+		hasHotkey = false;
 	}
 	
 	public void setHotkey (int key) {
 		this.hotkey = key;
+		hasHotkey = true;
 	}
 	
 	/**
@@ -91,23 +95,13 @@ public abstract class Widget_Button extends Widget{
 	public void onHotKeyReleased(int mouseX, int mouseY) {
 		mouseReleased(mouseX, mouseY);
 	};
-	
-//	private boolean hotkeyDown;
-	
+		
 	@Override
 	public boolean update(float deltaTime, int mouseX, int mouseY) {
-		if (Gdx.input.isKeyJustPressed(hotkey)) {
+		if (hasHotkey && Gdx.input.isKeyJustPressed(hotkey)) {
 			onHotkey(mouseX, mouseY);
 			onHotKeyReleased(mouseX, mouseY);
-			//			hotkeyDown = true;
 		}
-//		else if (Gdx.input.isKeyPressed(hotkey)) {
-////			onHotKeyDown(mouseX, mouseY);
-//			hotkeyDown = true;
-//		}else if (!Gdx.input.isKeyPressed(hotkey) && !Gdx.input.isKeyJustPressed(hotkey) && hotkeyDown) {
-//			onHotKeyReleased(mouseX, mouseY);
-//			hotkeyDown = false;
-//		}
 		
 		if (bounds.contains(mouseX, mouseY) || activeWidget) {
 			highlight = true;
@@ -118,10 +112,7 @@ public abstract class Widget_Button extends Widget{
 				mousePressed(mouseX, mouseY);
 				activeWidget = true;
 			}
-			
-//			if (!activeWidget) 
-//				return true;
-			
+
 			if (Game.leftMouseState == Game.MOUSE_RELEASED) {
 				mouseReleased(mouseX, mouseY);
 				activeWidget = false;

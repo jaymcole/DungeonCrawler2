@@ -31,7 +31,7 @@ public class Lighting {
 	// private static GameObject renderTarget;
 	
 	private static float attenuationA = 10f;
-	private static float attenuationB = 0.4351f;
+	private static float attenuationB = 2.29857f;
 
 	public static void init(OrthographicCamera cam, GameObject rt) {
 		camera = cam;

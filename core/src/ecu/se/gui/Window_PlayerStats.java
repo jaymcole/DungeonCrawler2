@@ -18,7 +18,7 @@ public class Window_PlayerStats extends Window {
 
 	@Override
 	protected void buildWindow() {
-//		widgets = new Widget[0];
+		widgets = new Widget[0];
 		ArrayList<Widget> widgetList = new ArrayList<Widget>();
 		int halfwayX = (int) (GUI.defaultWidth * 0.5f);
 		int halfwayY = (int) (GUI.defaultHeight * 0.5f);
@@ -71,8 +71,8 @@ public class Window_PlayerStats extends Window {
 				};
 				
 				if (Game.player.getAttributePoints() > 0) {
-				attrButton.setMultiVariableOne(i);
-				widgetList.add(attrButton);
+					attrButton.setMultiVariableOne(i);
+					widgetList.add(attrButton);
 				}
 			}
 

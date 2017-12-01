@@ -18,6 +18,10 @@ public class Utils {
     private static ShapeRenderer debugRenderer = new ShapeRenderer();
     private static Random random = new Random();
     
+    public static boolean randomBoolean() {
+    	return random.nextBoolean();
+    }
+    
     public static int getRandomInt() {
     	return random.nextInt();
     }

@@ -54,6 +54,8 @@ public class Game extends ApplicationAdapter {
 	// TODO: Add monsters to map generator
 	// TODO: Create monster generator (with level and allocated attribute
 	// points)
+	
+	// TODO: attribute points are giving 2 for each point for some reason
 
 	// BUGS
 	// TODO: BUG: Pathfinding some times stops on certain tiles. not sure why
