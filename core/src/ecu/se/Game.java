@@ -19,7 +19,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 
-import actions.Potion;
 import actions.Spell_Fireball;
 import actions.Spell_Teleport;
 import actors.Player;
@@ -29,10 +28,14 @@ import archive.TotalRecords;
 import assetManager.AssetManager;
 import ecu.se.gui.GUI;
 import ecu.se.gui.Window_HUD;
-import ecu.se.gui.Window_Inventory;
 import ecu.se.map.Map;
 import ecu.se.objects.Light;
 
+
+/**
+ * 
+ * Main game loop - controls everything
+ */
 public class Game extends ApplicationAdapter {
 	private SpriteBatch batch;
 
@@ -108,14 +111,15 @@ public class Game extends ApplicationAdapter {
 		screenHeight = Gdx.graphics.getHeight();
 		screenWidth = Gdx.graphics.getWidth();
 		new ObjectManager();
-		player = new Player(0, 0, 0, camera, new String[] { "texture/spritesheet/player.png" }, new int[] { 1 });
+		player = new Player(0, 0, 0, camera, new String[] { "texture/spritesheet/player.png" }, new int[] { 0 });
 
 		camera = new OrthographicCamera(screenWidth, screenHeight);
 		Lighting.init(camera, player);
 		Lighting.setShader(batch);
 		light = new Light(player);
-		light.setColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f));
-		light.setIntensity(1800);
+//		light.setColor(new Color(167.0f/255f, 220.0f/255f, 201.0f/255f, 1.0f));
+		light.setColor(new Color(135.0f/255f, 146.0f/255f, 218.0f/255f, 1.0f));
+		light.setIntensity(2500);
 		player.setLight(light);
 
 		new Map();

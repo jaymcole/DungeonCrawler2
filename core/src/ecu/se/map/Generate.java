@@ -126,7 +126,7 @@ public class Generate {
 				int y = random.nextInt(mapHeight);
 				if (!tiles[x][y].isWall) {
 					enemyPlaced = true;
-					if (Vector2.dst(x * tileWidth, y * tileHeight, up.getX(), up.getY()) > 1000) {
+					if (Vector2.dst(x * tileWidth + (Utils.getRandomInt(tileWidth)), y * tileHeight + Utils.getRandomInt(tileHeight), up.getX(), up.getY()) > 1000) {
 						ObjectManager.add(ObjectMaker.createTestMob(x * tileWidth, y * tileHeight));
 					}
 				}
