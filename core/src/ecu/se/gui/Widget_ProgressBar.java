@@ -16,9 +16,6 @@ public class Widget_ProgressBar extends Widget {
 	
 	
 	protected static final int borderWidth = GUI.convertX(2);
-	
-//	protected Texture backgroundTexture;
-//	protected Texture foregroundTexture;
 	protected TextureRegion texture;
 	
 	public Widget_ProgressBar(float x, float y, float width, float height, Window parent, Color bgc, Color fgc) {

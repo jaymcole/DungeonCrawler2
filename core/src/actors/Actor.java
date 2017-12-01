@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 
 import actions.Action;
 import archive.Archiver;
@@ -18,15 +17,11 @@ import assetManager.AssetManager;
 import ecu.se.DecalPicker;
 import ecu.se.Game;
 import ecu.se.GameObject;
-import ecu.se.Lighting;
 import ecu.se.ObjectMaker;
-import ecu.se.ObjectManager;
 import ecu.se.Utils;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
 import ecu.se.objects.Decal;
-import ecu.se.objects.InteractableItem;
-import ecu.se.objects.Light;
 import stats.Stats;
 import stats.TempStatModifier;
 
