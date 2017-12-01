@@ -24,6 +24,11 @@ import ecu.se.objects.Decal;
 import ecu.se.objects.InteractableItem;
 import ecu.se.objects.Light;
 
+/**
+ *
+ * Generates a new floor
+ *
+ */
 public class Generate {
 	private static int mapWidth = Globals.MAP_TILE_WIDTH;
 	private static int mapHeight = Globals.MAP_TILE_HEIGHT;
@@ -49,8 +54,6 @@ public class Generate {
 	private static int[][] map;
 	private static Tile[][] tiles;
 
-	// private static Vector2 maxTile = new Vector2(mapWidth, mapHeight),
-	// minTile = new Vector2(0, 0);
 	private static InteractableItem up, down;
 
 	private static Random random;
@@ -60,6 +63,11 @@ public class Generate {
 	private static BuildNode minMapNode;
 	private static BuildNode maxMapNode;
 
+	/**
+	 * Generates a floor
+	 * @param random
+	 * @param floor
+	 */
 	public static void generate(Random random, Floor floor) {
 		lights = new LinkedList<Light>();
 
@@ -116,7 +124,6 @@ public class Generate {
 		// DONE BUILDING
 		floor.generatedMap(tiles, lights, up, down, mapWidth, mapHeight);
 
-		addPathNodes();
 		printFloor();
 
 		for (int i = 0; i < Utils.getRandomInt(15) + 10; i++) {
@@ -135,16 +142,9 @@ public class Generate {
 		// printTiles();
 	}
 
-	private static void addPathNodes() {
-		for (int i = 0; i < mapWidth; i++) {
-			for (int j = 0; j < mapHeight; j++) {
-				tiles[i][j].pathNode = new PathNode(i, j, null, 0);
-				if (tiles[i][j].isWall)
-					tiles[i][j].pathNode.tileCost = 100;
-			}
-		}
-	}
-
+	/**
+	 * Prints all tiles
+	 */
 	public static void printTiles() {
 		System.out.println("\n");
 		for (int j = mapHeight - 1; j >= 0; j--) {
@@ -156,6 +156,9 @@ public class Generate {
 		System.out.println("\n");
 	}
 
+	/**
+	 * Finalizes the tiles by adding wall decals to walls 
+	 */
 	private static void finalizeTiles() {
 		for (int i = 0; i < mapWidth; i++) {
 			for (int j = 0; j < mapHeight; j++) {
@@ -173,6 +176,11 @@ public class Generate {
 		}
 	}
 
+	/**
+	 *Picks corner wall decals
+	 * @param x
+	 * @param y
+	 */
 	private static void createCorners(int x, int y) {
 		int xCoord = 0;
 		int yCoord = 0;
@@ -211,6 +219,11 @@ public class Generate {
 		}
 	}
 
+	/**
+	 * Creates a wall
+	 * @param x
+	 * @param y
+	 */
 	private static void createWalls(int x, int y) {
 		int xCoord = 0;
 		int yCoord = 0;
@@ -243,6 +256,12 @@ public class Generate {
 		}
 	}
 
+	/**
+	 * Gets the correct corner decal
+	 * @param tile
+	 * @param direction
+	 * @param insideCorner
+	 */
 	private static void setTileWallTexture(Tile tile, Direction direction, boolean insideCorner) {
 		if (direction == Direction.NORTH || direction == Direction.SOUTH)
 			direction = Direction.oppositeDirection(direction);
@@ -272,6 +291,10 @@ public class Generate {
 		tile.addObject(new Decal(tile.getX(), tile.getY(), "WallBoi", tr, tileWidth, tileHeight));
 	}
 
+	/**
+	 * Generates a spanw room
+	 * @param node
+	 */
 	private static void generateSpawnRoom(BuildNode node) {
 		genRoom(node, 5, 5, true, false);
 		node.x += node.direction.x * 2;
@@ -282,6 +305,10 @@ public class Generate {
 	private static int totalTiles = mapWidth * mapHeight;
 	private final static int minTiles = (int) (totalTiles * 0.25);
 
+	/**
+	 * Builds the base walkable map
+	 * @param node
+	 */
 	private static void generatePath(BuildNode node) {
 		remainingNodes.remove(node);
 		if (totalWalkable >= minTiles && random.nextInt(100) > totalTiles / (totalWalkable / 2.0f)) {
@@ -319,6 +346,14 @@ public class Generate {
 		}
 	}
 
+	/**
+	 * Generates a rectangular room
+	 * @param node
+	 * @param width
+	 * @param length
+	 * @param extend
+	 * @param intersect
+	 */
 	private static void genRoom(BuildNode node, int width, int length, boolean extend, boolean intersect) {
 		// setMapInt(node, SPAWN, true);
 		width = Utils.clamp(3, 100, width);
@@ -375,15 +410,33 @@ public class Generate {
 		}
 	}
 
+	/**
+	 * 
+	 * @param node
+	 * @return the type for tile
+	 * 			Example: walkable, wall, spawn room, etc
+	 */
 	private static int getType(BuildNode node) {
 		return map[node.x][node.y];
 	}
 
+	/**
+	 * Adds a new buildNode to the list buildNodes that still need work
+	 * @param node
+	 */
 	private static void addNewNode(BuildNode node) {
 		if (inBounds(node.x, node.y) && getType(node) == EMPTY)
 			remainingNodes.add(node);
 	}
 
+	/**
+	 * Generates a straight path of tiles
+	 * @param node
+	 * @param length
+	 * @param extend
+	 * @param intersect
+	 * @param continueForward
+	 */
 	private static void genStraightPath(BuildNode node, int length, boolean extend, boolean intersect,
 			boolean continueForward) {
 		for (int i = 0; i < length; i++) {
@@ -404,10 +457,22 @@ public class Generate {
 		}
 	}
 
+	/**
+	 * Sets the type of a tile
+	 * @param node
+	 * @param floorType
+	 * @param override
+	 */
 	private static void setMapInt(BuildNode node, int floorType, boolean override) {
 		setMapInt(node.x, node.y, floorType, override);
 	}
 
+	/**
+	 * Sets the type of a tile
+	 * @param node
+	 * @param floorType
+	 * @param override
+	 */
 	private static void setMapInt(int x, int y, int floorType, boolean override) {
 		if (inBounds(x, y)) {
 			if (map[x][y] == SPAWN)
@@ -428,6 +493,12 @@ public class Generate {
 		}
 	}
 
+	/**
+	 * Minimizes the map by removing excess tiles.
+	 * 		Example: All maps start out a with a large default number of tiles (maybe 100x100)
+	 * 				But a map that ends up only being 25x25 shouldn't store information about a 100x100 map.
+	 * @return
+	 */
 	private static int[][] minimizeMap() {
 		int buffer = 2;
 		mapWidth = maxMapNode.x - minMapNode.x + 1;
@@ -444,6 +515,15 @@ public class Generate {
 		return temp;
 	}
 
+	/**
+	 * Finalizes the floor.
+	 * Spawns enemies and lights.
+	 * Spawns a down staircase
+	 *
+	 * @param map
+	 * @param random
+	 * @param floor
+	 */
 	private static void finalizeFloor(int[][] map, Random random, Floor floor) {
 		tiles = new Tile[mapWidth][mapHeight];
 
@@ -480,6 +560,9 @@ public class Generate {
 		Utils.print("Light Count: " + totalLights + "\n");
 	}
 
+	/**
+	 * Prints the floor
+	 */
 	public static void printFloor() {
 		System.out.println("\n");
 		for (int j = mapHeight - 1; j >= 0; j--) {
@@ -506,12 +589,22 @@ public class Generate {
 		System.out.println("\n");
 	}
 
+	/**
+	 * Sets a tile to a wall
+	 * @param x
+	 * @param y
+	 */
 	private static void makeTileWall(int x, int y) {
 		tiles[x][y] = new Tile(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
 		tiles[x][y].setWall(true);
 		// tiles[x][y].pathNode = new PathNode(x,y,null,0);
 	}
 
+	/**
+	 * Makes a tile walkable
+	 * @param x
+	 * @param y
+	 */
 	private static void makeTileWalkable(int x, int y) {
 		if (!inBounds(x, y)) {
 			System.err.println("Can't make tile walkable: x=" + x + ", y=" + y);
@@ -545,6 +638,11 @@ public class Generate {
 		}
 	}
 
+	/**
+	 * Creates a light
+	 * @param x
+	 * @param y
+	 */
 	private static void createLight(int x, int y) {
 		Light light = new Light(new Vector3(x + random.nextInt(tileWidth), y + random.nextInt(tileWidth), 0));
 		light.setColor(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1.0f));
@@ -552,6 +650,12 @@ public class Generate {
 		lights.add(light);
 	}
 
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @return true if (x,y) is within this maps bounds
+	 */
 	private static boolean inBounds(int x, int y) {
 		if (x < 0 || x >= mapWidth)
 			return false;

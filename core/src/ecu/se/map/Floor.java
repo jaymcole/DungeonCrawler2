@@ -14,6 +14,12 @@ import ecu.se.ObjectManager;
 import ecu.se.objects.InteractableItem;
 import ecu.se.objects.Light;
 
+/**
+ * 
+ * Floor classes holds all of the information about a given floor.
+ * Capable of saving/loading information from ObjectManager when this floor isn't in use.
+ *
+ */
 public class Floor {
 	private long seed;
 	private Random random;
@@ -53,15 +59,25 @@ public class Floor {
 		init();
 	}
 
+	/**
+	 * Initializes this floor
+	 */
 	private void init() {
 		lights = new LinkedList<Light>();
 		generated = false;
 	}
 
+	/**
+	 * Saves everything from ObjectManager
+	 */
 	public void save() {
 		floorObjects = ObjectManager.getAllMapObjects();
 	}
 
+	/**
+	 * Spawns this floor.
+	 * If it hasn't been generated yet, it generates itself.
+	 */
 	public void spawnMap() {
 		System.err.println("(Before SPAWN) Floor has " + lights.size() + " lights.");
 		System.err.println("Spawning map");
@@ -93,11 +109,23 @@ public class Floor {
 		System.err.println("(after SPAWN) Floor has " + lights.size() + " lights.");
 	}
 
+	/**
+	 * Generates this floor
+	 */
 	public void generate() {
 		generated = true;
 		Generate.generate(random, this);
 	}
 
+	/**
+	 * Sets parameters from the generator
+	 * @param tiles
+	 * @param lights
+	 * @param up
+	 * @param down
+	 * @param mapWidth
+	 * @param mapHeight
+	 */
 	public void generatedMap(Tile[][] tiles, LinkedList<Light> lights, InteractableItem up, InteractableItem down,
 			int mapWidth, int mapHeight) {
 		this.tiles = tiles;
@@ -110,6 +138,10 @@ public class Floor {
 		getTile((int) down.getX(), (int) down.getY()).addObject(down);
 	}
 
+	/**
+	 * Renders all tiles.
+	 * @param batch
+	 */
 	public void renderAll(SpriteBatch batch) {
 		for (int i = 0; i < mapWidth; i++) {
 			for (int j = 0; j < mapHeight; j++) {
@@ -119,6 +151,14 @@ public class Floor {
 		}
 	}
 
+	/**
+	 * Returns a width horizontal and height vertical adjacent tiles from world position (x, y)
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @return
+	 */
 	public Tile[][] getAdjacent(int x, int y, int width, int height) {
 		x /= tileWidth;
 		y /= tileHeight;
@@ -138,6 +178,12 @@ public class Floor {
 		return tilesToRender;
 	}
 
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @return true if (x, y) are within the bounds of this floor
+	 */
 	private boolean inBounds(int x, int y) {
 		if (x < 0 || x >= mapWidth)
 			return false;
@@ -146,10 +192,17 @@ public class Floor {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @return true if this floor has already been generated
+	 */
 	public boolean getGenerated() {
 		return generated;
 	}
 
+	/**
+	 * Disposes this floor
+	 */
 	public void dispose() {
 		if (tiles == null)
 			return;
@@ -162,12 +215,26 @@ public class Floor {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @return the tile that's located at tiles[x][y]
+	 * 				null if out of bounds
+	 */
 	public Tile getTileByIndex(int x, int y) {
 		if (inBounds(x,y))
 			return tiles[x][y];
 		return null;
     }
 
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @return the tile that contains world position (x,y)
+	 * 				null if out of bounds
+	 */
 	public Tile getTile(int x, int y) {
 		int xCoord = x / tileWidth;
 		int yCoord = y / tileHeight;
@@ -178,10 +245,18 @@ public class Floor {
 		}
 	}
 
+	/**
+	 * 
+	 * @return the number of horizontal tiles
+	 */
 	public int getMapWidth() {
 		return mapWidth;
 	}
 
+	/**
+	 * 
+	 * @return the number of vertical tiles
+	 */
 	public int getMapHeight() {
 		return mapHeight;
 	}
@@ -194,9 +269,7 @@ public class Floor {
 		if (up == null) {
 			return new Vector2();
 		}
-//		return new Vector2(up.getX() - (tileWidth * 0.5f), up.getY() - (tileHeight * 0.5f));
 		return new Vector2(up.getX() + (tileWidth * 0.5f), up.getY() + (tileHeight * 0.5f));
-		// return up.getPositionV2();
 	}
 
 	/**
@@ -204,11 +277,13 @@ public class Floor {
 	 * @return Staircase coordinates when moving up floors
 	 */
 	public Vector2 getFloorOut() {
-//		return new Vector2(down.getX() - (tileWidth * 0.5f), down.getY() - (tileHeight * 0.5f));
 		return new Vector2(down.getX() + (tileWidth * 0.5f), down.getY() + (tileHeight * 0.5f));
-		// return down.getPositionV2();
 	}
 
+	/**
+	 * 
+	 * @return the list of light this floor has
+	 */
 	public LinkedList<Light> getlights() {
 		return lights;
 	}

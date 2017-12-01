@@ -18,8 +18,12 @@ import ecu.se.map.Map;
 import ecu.se.map.PathNode;
 import pathfinding.Pathfinder2;
 import stats.Stats;
-
-public class TeleportEnemy extends Actor {
+/**
+ *
+ * An enemy type that teleports. Current broken/unused.
+ *
+ */
+public class TeleportEnemy extends BasicEnemy {
 
 	private LinkedList<Vector2> path;
 	private float attackRange = 650;
@@ -63,6 +67,7 @@ public class TeleportEnemy extends Actor {
 
 	private int counter = 0;
 
+	@Override
 	protected void actAwake(float deltaTime, float playerDistance) {
 		counter++;
 
@@ -87,6 +92,7 @@ public class TeleportEnemy extends Actor {
 		}
 	}
 
+	@Override
 	protected void actAsleep(float deltaTime, float playerDistance) {
 
 	}

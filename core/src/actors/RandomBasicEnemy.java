@@ -112,7 +112,7 @@ public class RandomBasicEnemy extends BasicEnemy {
 		this.awake = true;
 		for(GameObject a : ObjectManager.getActors() ) {
 			Actor actor = ((Actor)a);
-			if (team.isFriendly(team, actor.team)) {
+			if (Team.isFriendly(team, actor.team)) {
 				if (!actor.awake && Vector2.dst(x, y, actor.getX(), actor.getY()) < friendWakeDistance) {	
 					actor.onWake();
 				}

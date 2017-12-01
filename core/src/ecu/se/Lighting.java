@@ -94,6 +94,10 @@ public class Lighting {
 		updateLists();
 	}
 
+	/**
+	 * updates the current light list.
+	 * 		Ensures lights are not added/removes while Lighting is updating the lights / packaging light information for the GPU.
+	 */
 	private static boolean wipeList = false;
 	private static boolean wipeWaitlist = false;
 	private static void updateLists() {
@@ -119,6 +123,10 @@ public class Lighting {
 		wipeWaitlist = false;
 	}
 
+	/**
+	 * Sets the light list to newLights and clears the old list.
+	 * @param newLights
+	 */
 	public static void setLights(LinkedList<Light> newLights) {
 		System.err.println("Adding " + newLights.size() + " new lights");
 		if(waitlist != null)
@@ -130,6 +138,10 @@ public class Lighting {
 		wipeList = true;
 	}
 
+	/**
+	 * Adds a new light to the light list. Does NOT clear the old list.
+	 * @param light
+	 */
 	public static void addLight(Light light) {
 		light.delete = false;
 		waitlist.add(light);
@@ -156,6 +168,9 @@ public class Lighting {
 		}
 	}
 
+	/**
+	 * Toggle for turning on/off global lighting. 
+	 */
 	public static void toggleLights() {
 		lightsOn ^= true;
 	}
@@ -167,18 +182,34 @@ public class Lighting {
 		shader.dispose();
 	}
 	
+	/**
+	 * 
+	 * @return attentuationA
+	 */
 	public static float getAttnA() {
 		return attenuationA;
 	}
 	
+	/**
+	 * 
+	 * @return attenuationB
+	 */
 	public static float getAttnB() {
 		return attenuationB;
 	}
 	
+	/**
+	 * Sets attenuationA - used for adjusting light brightness
+	 * @param val
+	 */
 	public static void setAttnA(float val) {
 		attenuationA = val;
 	}
 	
+	/**
+	 * Sets attenuationB - used for adjusting light brightness
+	 * @param val
+	 */
 	public static void setAttnB(float val) {
 		attenuationB = val;
 	}

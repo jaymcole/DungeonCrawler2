@@ -83,12 +83,18 @@ public class Game extends ApplicationAdapter {
 	private Light light;
 	// END DEBUG OBJECT(S)
 
+	/**
+	 * Various game states
+	 */
 	public static final int GAME_STATE_RUNNING = 0;
 	public static final int GAME_STATE_PAUSED = 1;
 	public static final int GAME_STATE_EXITING = 2;
 	public static int currentState = GAME_STATE_RUNNING;
 	public static boolean GAME_OVER = false;
 
+	/**
+	 * Various mouse states
+	 */
 	public static final int MOUSE_UP = -1;
 	public static final int MOUSE_DOWN = 0;
 	public static final int MOUSE_RELEASED = 1;
@@ -96,6 +102,9 @@ public class Game extends ApplicationAdapter {
 	public static int leftMouseState = MOUSE_UP;
 	public static int rightMouseState = MOUSE_UP;
 
+	/**
+	 * Creates a new game
+	 */
 	@Override
 	public void create() {
 		// RECORDS
@@ -136,7 +145,9 @@ public class Game extends ApplicationAdapter {
 		halfHeight = screenHeight * 0.5f;
 	}
 
-	// Update all game objects
+	/**
+	 * Updates all game objects
+	 */
 	public void update() {
 		deltaTime = Gdx.graphics.getDeltaTime();
 		hud.update(deltaTime);
@@ -154,6 +165,9 @@ public class Game extends ApplicationAdapter {
 	private float halfWidth;
 	private float halfHeight;
 
+	/**
+	 * Renders everything
+	 */
 	@Override
 	public void render() {
 		if (currentState == GAME_STATE_EXITING) {
@@ -226,6 +240,9 @@ public class Game extends ApplicationAdapter {
 	int floor = 0;
 	// game is paused and things that should be blocked)
 
+	/**
+	 * Handles user input
+	 */
 	public void input() {
 		// MOUSE INPUT
 		leftMouseState = checkMouseButton(leftMouseState, Gdx.input.isButtonPressed(Input.Buttons.LEFT));
@@ -240,6 +257,9 @@ public class Game extends ApplicationAdapter {
 		}
 	}
 
+	/**
+	 * Handles debug related input
+	 */
 	private void debugControls() {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			Lighting.toggleLights();
@@ -249,7 +269,10 @@ public class Game extends ApplicationAdapter {
 			Globals.DEBUG ^= true;
 		}
 	}
-
+	
+	/**
+	 * Handles camera input
+	 */
 	private void cameraControls() {
 		// Zoom camera
 		if (Gdx.input.isKeyPressed(Input.Keys.E)) {
@@ -263,6 +286,9 @@ public class Game extends ApplicationAdapter {
 		}
 	}
 
+	/**
+	 * Handles gui input
+	 */
 	private void guiControls() {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P))
 			pauseGame();
@@ -283,6 +309,9 @@ public class Game extends ApplicationAdapter {
 		}
 	}
 
+	/**
+	 * Handles player intput
+	 */
 	private void playerControls() {
 		Vector3 pos = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 		if (!hud.mouseUsed() && currentState != GAME_STATE_PAUSED) {
@@ -300,11 +329,20 @@ public class Game extends ApplicationAdapter {
 		player.input(deltaTime);
 	}
 	
+	/**
+	 * Starts anew game
+	 */
 	public void newGame() {
 		Archiver.dispose();
 		create();
 	}
 
+	/**
+	 * Checks mouse status
+	 * @param oldState
+	 * @param buttonDown
+	 * @returns the current mouse state
+	 */
 	private int checkMouseButton(int oldState, boolean buttonDown) {
 		int newState = 0;
 		switch (oldState) {
@@ -335,6 +373,9 @@ public class Game extends ApplicationAdapter {
 		return newState;
 	}
 
+	/**
+	 * Pauses the game
+	 */
 	public static void pauseGame() {
 
 		if (currentState == GAME_STATE_PAUSED) {
@@ -349,6 +390,9 @@ public class Game extends ApplicationAdapter {
 		}
 	}
 
+	/**
+	 * Closes Dungeon Crawler
+	 */
 	public void close() {
 		System.out.println("Disposing Archiver");
 		Archiver.dispose();

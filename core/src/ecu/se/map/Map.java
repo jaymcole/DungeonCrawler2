@@ -13,6 +13,11 @@ import ecu.se.Game;
 import ecu.se.Globals;
 import ecu.se.ObjectManager;
 
+/**
+ * 
+ * Manages all floors
+ *
+ */
 public class Map {
     private static int tilesVertical = 5;
     private static int tilesHorizontal = 5;
@@ -33,11 +38,19 @@ public class Map {
         changeFloor(0);        
     }
     
+    /**
+     * Sets the floor to floor
+     * @param floor
+     */
     public static void setFloor(int floor) {
     	changeFloor = true;
     	changeTo = floor;
     }
     
+    /**
+     * Changes the floor to floor
+     * @param floor
+     */
     private static void changeFloor(int floor) {
     	changeFloor = false;
     	boolean movingDown = floor > currentLevel;
@@ -68,6 +81,12 @@ public class Map {
     
     private static LinkedList<Tile> wallsToRender;
     private static LinkedList<Tile> floorsToRender;
+    /**
+     * Updates all tiles
+     * @param deltaTime
+     * @param cameraX
+     * @param cameraY
+     */
     public static void update(float deltaTime, int cameraX, int cameraY) {
     	if (changeFloor)
     		changeFloor(changeTo);
@@ -89,7 +108,11 @@ public class Map {
              }
          }
     }
-      
+     
+    /**
+     * Renders all tiles
+     * @param batch
+     */
     public static void render(SpriteBatch batch) { 
         if(Globals.RENDER_ALL_TILES) {
             currentFloor.renderAll(batch);
@@ -110,6 +133,12 @@ public class Map {
         }
     }
     
+    /** 
+     * Renders the debug view
+     * @param renderer
+     * @param cameraX
+     * @param cameraY
+     */
     public static void debugRender(ShapeRenderer renderer, int cameraX, int cameraY) { 
     	renderer.setColor(Color.SKY);
         visibleTiles = currentFloor.getAdjacent(cameraX, cameraY, tilesHorizontal, tilesVertical);
@@ -122,6 +151,9 @@ public class Map {
         }
     }
     
+    /**
+     * Disposes all floors
+     */
     public static void dispose() {
         for(Floor f : floors) {
             if(f != null)
@@ -129,6 +161,13 @@ public class Map {
         }
     }
     
+    /**
+     * 
+     * @param x
+     * @param y
+     * @return a tile with index x,y
+     * 			null if out of bounds
+     */
     public static Tile getTileByIndex(int x, int y) {
     	return currentFloor.getTileByIndex(x, y);
     }
@@ -163,15 +202,28 @@ public class Map {
         return currentFloor.getFloorOut();
     }
     
+    /**
+     * 
+     * @return the current floor level
+     */
     public static int getCurrentLevel() {
     	return currentLevel;
     }
     
+    /**
+     * Sets the screen resolution - used for determining how many tiles to render
+     * @param screenWidth
+     * @param screenHeight
+     */
     public static void setScreenResolution(int screenWidth, int screenHeight) {
         tilesHorizontal = (screenWidth/Globals.TILE_PIXEL_WIDTH) + 2;
         tilesVertical = (screenHeight/Globals.TILE_PIXEL_HEIGHT) + 2;
     }    
 
+    /**
+     * 
+     * @return the current flor
+     */
     public static Floor getCurrentFloor() {
     	return currentFloor;
     }

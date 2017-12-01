@@ -28,6 +28,12 @@ public class ObjectMaker {
 	private static final int HEALTH_PICKUP_VALUE = 15;
 	private static final int MANA_PICKUP_VALUE = 15;
 	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @return a health orb
+	 */
 	public static GameObject createHealthOrb (float x, float y) {
 		
 		InteractableItem orb = new InteractableItem(x, y, ORB_SIZE, ORB_SIZE, "Health Orb", "texture/misc/orb_red.png") {
@@ -62,6 +68,12 @@ public class ObjectMaker {
 		return orb;
 	}
 	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @return a mana orb
+	 */
 	public static GameObject createManaOrb (float x, float y) {
 		InteractableItem orb = new InteractableItem(x - ORB_SIZE, y, ORB_SIZE, ORB_SIZE, "Health Orb", "texture/misc/orb_blue.png") {
 			@Override
@@ -97,10 +109,22 @@ public class ObjectMaker {
 		return orb;
 	}
 	
+	/**
+	 * *Unused Creates a mob
+	 * @param x
+	 * @param y
+	 * @return (currently) a rangedBadGuy
+	 */
 	public static Actor createMob(float x, float y) {
 		return new RangedBadGuy(x,	y, 0,new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0 });
 	}
 	
+	/**
+	 * Creates a mob
+	 * @param x
+	 * @param y
+	 * @return either a BasicEnemy or a RandomBasicEnemy
+	 */
 	public static Actor createTestMob(float x, float y) {
 		BasicEnemy mob;
 		if (Utils.randomBoolean()) {
@@ -126,6 +150,13 @@ public class ObjectMaker {
 		return mob;
 	}
 	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param action
+	 * @return creates an active items with action
+	 */
 	public static ActiveItem createActiveItem(float x, float y, Action action) {
 		
 		//TODO: Find a reasonable default action icon.
@@ -144,9 +175,7 @@ public class ObjectMaker {
 			else 
 				texturePath = "texture/items/potion_mana.png";
 		}
-		
-		
-		
+
 		ActiveItem a = new ActiveItem(x,y, "Action Scroll", texturePath);
 		a.setAction(action);
 		a.setSize(40, 40);

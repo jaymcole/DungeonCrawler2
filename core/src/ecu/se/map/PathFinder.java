@@ -8,6 +8,13 @@ import com.badlogic.gdx.math.Vector2;
 import ecu.se.Globals;
 
 /**
+ * UNUSED
+ */
+
+
+
+
+/**
  * The AStarSearch class, along with the AStarNode class, implements a generic
  * A* search algorithm. The AStarNode class should be subclassed to provide
  * searching capability.

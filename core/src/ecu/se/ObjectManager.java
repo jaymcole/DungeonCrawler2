@@ -14,6 +14,14 @@ import ecu.se.map.Direction;
 import ecu.se.map.Map;
 import ecu.se.objects.InteractableItem;
 
+/**
+ *
+ * Manages all objects
+ * 	Updating/rendering
+ * 	Adding/removing
+ * 	Collision
+ *
+ */
 public class ObjectManager {
 
 	private static LinkedList<GameObject> objects;

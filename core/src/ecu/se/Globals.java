@@ -1,5 +1,10 @@
 package ecu.se;
 
+/**
+ *
+ * Globals Settings - provides a convenient centralized locations for global setting values.
+ *
+ */
 public class Globals {
     public static final String VERSION = " MISSING";
     

@@ -4,6 +4,11 @@ import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ *
+ * A utility class used through Dungeon Crawler.
+ *
+ */
 public enum Direction {
     NORTH		("NORTH"	 , "N"	, 0, 	1, 	90),
     NORTHEAST	("NORTH EAST", "NE"	, 1,	1, 	45),
@@ -335,6 +340,11 @@ public enum Direction {
     	return (float)Math.toDegrees(angleRad(p1, p2));
     }
     
+    /**
+     * 
+     * @param dir
+     * @return true if dir is one of the expanded directions.
+     */
     public static boolean isExpanded(Direction dir) {
     	switch (dir) {
     		case NORTHEAST:

@@ -13,23 +13,49 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import assetManager.AssetManager;
 
+/**
+ *
+ * A utilities class with useful methods.
+ *
+ */
 public class Utils {
     
     private static ShapeRenderer debugRenderer = new ShapeRenderer();
     private static Random random = new Random();
     
+    /**
+     * 
+     * @return a random boolean
+     */
     public static boolean randomBoolean() {
     	return random.nextBoolean();
     }
     
+    /**
+     * 
+     * @return a random int
+     */
     public static int getRandomInt() {
     	return random.nextInt();
     }
     
+    /**
+     * 
+     * @param bound
+     * @return a random int between 0 and bound
+     */
     public static int getRandomInt(int bound) {
     	return random.nextInt(bound);
     }
     
+    /**
+     * Draws a debug line 
+     * @param start
+     * @param end
+     * @param lineWidth
+     * @param color
+     * @param projectionMatrix
+     */
     public static void DrawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix)
     {
         Gdx.gl.glLineWidth(lineWidth);
@@ -41,7 +67,12 @@ public class Utils {
         Gdx.gl.glLineWidth(1);
     }
     
-
+    /**
+     * Draws a debug line
+     * @param start
+     * @param end
+     * @param projectionMatrix
+     */
     public static void DrawDebugLine(Vector2 start, Vector2 end, Matrix4 projectionMatrix)
     {
         Gdx.gl.glLineWidth(2);
@@ -61,7 +92,15 @@ public class Utils {
     public static final int ALIGN_TOP_LEFT		= 4;
     public static final int ALIGN_BOTTOM_CENTER = 5;
     
-    
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param ALIGN
+     * @return a bounding box with the specified settings/attributes
+     */
     public static Polygon getRectangleBounds(float x, float y, float width, float height, int ALIGN) {
 
         Polygon poly = new Polygon();
@@ -119,6 +158,15 @@ public class Utils {
         return poly;
     }
     
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param resolution
+     * @return a bounding circle with the specified settings/attributes
+     */
     public static Polygon getEllipseBounds(float x, float y, float width, float height, int resolution) {
     	float[] verts = new float[(int)(360.0f / resolution) * 2];
     	float currentAngle = 0;
