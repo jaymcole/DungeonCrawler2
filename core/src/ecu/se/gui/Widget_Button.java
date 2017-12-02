@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import assetManager.AssetManager;
 import ecu.se.Game;
+import ecu.se.assetManager.AssetManager;
 
 public abstract class Widget_Button extends Widget{	
 	/**

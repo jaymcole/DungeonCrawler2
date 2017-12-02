@@ -3,8 +3,8 @@ package ecu.se.gui;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import archive.Archiver;
-import archive.TimeRecords;
+import ecu.se.archive.Archiver;
+import ecu.se.archive.TimeRecords;
 
 public abstract class Window {
 

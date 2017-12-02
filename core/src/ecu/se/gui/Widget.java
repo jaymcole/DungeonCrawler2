@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polygon;
 
-import assetManager.AssetManager;
 import ecu.se.Utils;
+import ecu.se.assetManager.AssetManager;
 
 public abstract class Widget {
 	

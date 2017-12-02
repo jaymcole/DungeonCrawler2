@@ -1,9 +1,9 @@
 package ecu.se.objects;
 
-import actions.Action;
-import actors.Actor;
 import ecu.se.Game;
 import ecu.se.GameObject;
+import ecu.se.actions.Action;
+import ecu.se.actors.Actor;
 import ecu.se.gui.GUI;
 import ecu.se.gui.Window_Inventory;
 

@@ -3,7 +3,7 @@ package ecu.se.gui;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import assetManager.AssetManager;
+import ecu.se.assetManager.AssetManager;
 
 public class Widget_ProgressBar_Image extends Widget_ProgressBar {
 	public Widget_ProgressBar_Image(float x, float y, float width, float height, Window parent, Color bgc, Color fgc, String foregroundTexture) {

@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import assetManager.AssetManager;
+import ecu.se.assetManager.AssetManager;
 
 public class Widget_ProgressBar extends Widget {
 	

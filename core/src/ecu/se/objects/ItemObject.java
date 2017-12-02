@@ -4,9 +4,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import assetManager.AssetManager;
 import ecu.se.GameObject;
 import ecu.se.Utils;
+import ecu.se.assetManager.AssetManager;
 
 public class ItemObject extends GameObject {
 

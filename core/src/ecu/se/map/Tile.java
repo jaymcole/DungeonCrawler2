@@ -7,10 +7,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import assetManager.AssetManager;
 import ecu.se.GameObject;
 import ecu.se.Lighting;
 import ecu.se.Utils;
+import ecu.se.assetManager.AssetManager;
 import ecu.se.objects.ItemObject;
 
 /**

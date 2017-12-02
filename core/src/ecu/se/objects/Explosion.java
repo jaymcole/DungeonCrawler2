@@ -3,16 +3,16 @@ package ecu.se.objects;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-import actors.Actor;
-import actors.Team;
-import assetManager.Animation;
-import assetManager.AssetManager;
 import ecu.se.GameObject;
 import ecu.se.ObjectManager;
 import ecu.se.Utils;
+import ecu.se.actors.Actor;
+import ecu.se.actors.Team;
+import ecu.se.assetManager.Animation;
+import ecu.se.assetManager.AssetManager;
 import ecu.se.map.Direction;
-import stats.Stats;
-import stats.TempStatExplosion;
+import ecu.se.stats.Stats;
+import ecu.se.stats.TempStatExplosion;
 
 public class Explosion extends GameObject {
 

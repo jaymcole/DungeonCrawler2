@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 
-import actors.Actor;
+import ecu.se.actors.Actor;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
 import ecu.se.objects.InteractableItem;

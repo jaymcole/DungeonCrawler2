@@ -4,14 +4,14 @@ package ecu.se.objects;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import actors.Actor;
-import actors.Team;
-import assetManager.Animation;
-import assetManager.AssetManager;
 import ecu.se.GameObject;
 import ecu.se.Lighting;
 import ecu.se.ObjectManager;
 import ecu.se.Utils;
+import ecu.se.actors.Actor;
+import ecu.se.actors.Team;
+import ecu.se.assetManager.Animation;
+import ecu.se.assetManager.AssetManager;
 import ecu.se.map.Map;
 
 public class Projectile extends GameObject {

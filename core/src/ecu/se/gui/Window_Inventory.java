@@ -7,10 +7,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import assetManager.AssetManager;
 import ecu.se.ObjectManager;
+import ecu.se.assetManager.AssetManager;
 import ecu.se.objects.ItemObject;
-import stats.Stats;
+import ecu.se.stats.Stats;
 
 public class Window_Inventory extends Window {
 

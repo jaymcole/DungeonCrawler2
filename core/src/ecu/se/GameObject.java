@@ -8,10 +8,10 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import actors.Team;
+import ecu.se.actors.Team;
 import ecu.se.objects.ItemObject;
 import ecu.se.objects.Light;
-import stats.Stats;
+import ecu.se.stats.Stats;
 
 /**
  *

@@ -3,24 +3,24 @@ package ecu.se;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 
-import actions.Action;
-import actions.Potion;
-import actions.Spell;
-import actions.Spell_Explosion;
-import actions.Spell_Fireball;
-import actions.Spell_Teleport;
-import actors.Actor;
-import actors.BasicEnemy;
-import actors.RandomBasicEnemy;
-import actors.RangedBadGuy;
-import actors.TeleportEnemy;
+import ecu.se.actions.Action;
+import ecu.se.actions.Potion;
+import ecu.se.actions.Spell;
+import ecu.se.actions.Spell_Explosion;
+import ecu.se.actions.Spell_Fireball;
+import ecu.se.actions.Spell_Teleport;
+import ecu.se.actors.Actor;
+import ecu.se.actors.BasicEnemy;
+import ecu.se.actors.RandomBasicEnemy;
+import ecu.se.actors.RangedBadGuy;
+import ecu.se.actors.TeleportEnemy;
 import ecu.se.gui.GUI;
 import ecu.se.gui.Window_Inventory;
 import ecu.se.objects.ActiveItem;
 import ecu.se.objects.FadingLight;
 import ecu.se.objects.InteractableItem;
 import ecu.se.objects.Light;
-import stats.Stats;
+import ecu.se.stats.Stats;
 
 public class ObjectMaker {
 	private static final int ORB_SIZE = 15;

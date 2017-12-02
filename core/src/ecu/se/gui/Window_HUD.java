@@ -8,14 +8,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import archive.Archiver;
-import archive.TimeRecords;
-import assetManager.AssetManager;
 import ecu.se.Game;
+import ecu.se.archive.Archiver;
+import ecu.se.archive.TimeRecords;
+import ecu.se.assetManager.AssetManager;
 import ecu.se.map.Map;
 import ecu.se.objects.ActiveItem;
 import ecu.se.objects.ItemObject;
-import stats.Stats;
+import ecu.se.stats.Stats;
 
 public class Window_HUD extends Window {
 	public Window_HUD(GUI gui) {

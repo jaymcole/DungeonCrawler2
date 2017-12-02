@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 
-import actors.Player;
 import ecu.se.Game;
+import ecu.se.actors.Player;
 
 public class GUI {
 
