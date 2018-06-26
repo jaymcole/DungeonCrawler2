@@ -7,7 +7,7 @@ Eclipse Setup (Solves crashing on startup with "unable to load assets" messages)
 - Run Configurations
 - Arguments (tab)
 - Under "Working directory:"
--- Change from "Default" to "Other"
----"Workspace..." (button) 
----Select "DungeonCrawler2 > core > assets"
----"OK" (button)
+- Change from "Default" to "Other"
+- "Workspace..." (button) 
+- Select "DungeonCrawler2 > core > assets"
+- "OK" (button)
