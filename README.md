@@ -12,4 +12,6 @@ Eclipse Setup (Solves crashing on startup with "unable to load assets" messages)
 - Select "DungeonCrawler2 > core > assets"
 - "OK" (button)
 
-![alt text](https://github.com/jaymcole/DungeonCrawler2/blob/master/screenshots/dungeon_01.png)
+![alt text](https://github.com/jaymcole/DungeonCrawler2/blob/master/screenshots/dungeon_03.png)
+![alt text](https://github.com/jaymcole/DungeonCrawler2/blob/master/screenshots/dungeon_04.png)
+![alt text](https://github.com/jaymcole/DungeonCrawler2/blob/master/screenshots/dungeon_02.png)
