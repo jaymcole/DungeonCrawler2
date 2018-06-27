@@ -26,6 +26,7 @@
 10. Custom asset/resource manager
     - Ensures duplicate resources aren't loaded into memory.
     - Ensures resources are disposed of correctly.
+11. Custom Animations system
 
 ## Getting Started
 
