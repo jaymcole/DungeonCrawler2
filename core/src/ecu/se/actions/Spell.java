@@ -19,6 +19,11 @@ public abstract class Spell extends Action {
 	
 	protected int currentStage = -1;
 
+	protected String sound_cast;
+	protected String sound_loop;
+	protected String sound_end;
+	protected String texture_path;
+	
 	/**
 	 * Base stats for the spell.
 	 */

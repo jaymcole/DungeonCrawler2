@@ -14,6 +14,7 @@ import ecu.se.actors.BasicEnemy;
 import ecu.se.actors.RandomBasicEnemy;
 import ecu.se.actors.RangedBadGuy;
 import ecu.se.actors.TeleportEnemy;
+import ecu.se.assetManager.AssetManager;
 import ecu.se.gui.GUI;
 import ecu.se.gui.Window_Inventory;
 import ecu.se.objects.ActiveItem;
@@ -116,7 +117,7 @@ public class ObjectMaker {
 	 * @return (currently) a rangedBadGuy
 	 */
 	public static Actor createMob(float x, float y) {
-		return new RangedBadGuy(x,	y, 0,new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0 });
+		return new RangedBadGuy(x,	y, 0,new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0 }, AssetManager.getSound("sounds/effects/walking/shoes_01.mp3").getSound());
 	}
 	
 	/**
@@ -128,9 +129,9 @@ public class ObjectMaker {
 	public static Actor createTestMob(float x, float y) {
 		BasicEnemy mob;
 		if (Utils.randomBoolean()) {
-			mob = new BasicEnemy(x,	y, 0,new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0 });			
+			mob = new BasicEnemy(x,	y, 0,new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0 }, AssetManager.getSound("sounds/effects/walking/shoes_01.mp3").getSound());			
 		} else {
-			mob = new RandomBasicEnemy(x,	y, 0,new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0 });	
+			mob = new RandomBasicEnemy(x,	y, 0,new String[] { "texture/spritesheet/grayguys.png" }, new int[] { 0 }, AssetManager.getSound("sounds/effects/walking/shoes_01.mp3").getSound());	
 		}
 		
 		

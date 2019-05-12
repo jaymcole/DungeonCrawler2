@@ -235,6 +235,7 @@ public class ObjectManager {
 	 *            - GameObjkect to be removed.
 	 */
 	public static void remove(GameObject object) {
+		object.dispose();
 		remWaitList.add(object);
 	}
 
@@ -242,20 +243,29 @@ public class ObjectManager {
 	 * Cleanup all resources. Needs to be called before program is closed.
 	 */
 	public static void dispose() {
-		updater = addWaitList.iterator();
 		GameObject object;
 
+		updater = actors.iterator();
 		while (updater.hasNext()) {
 			object = updater.next();
-			object.kill();
+			object.dispose();
+		}
+		
+		updater = objects.iterator();
+		while (updater.hasNext()) {
+			object = updater.next();
+			object.dispose();
+		}
+		
+		updater = addWaitList.iterator();
+		while (updater.hasNext()) {
+			object = updater.next();
 			object.dispose();
 		}
 
 		updater = remWaitList.iterator();
-
 		while (updater.hasNext()) {
 			object = updater.next();
-			object.kill();
 			object.dispose();
 		}
 	}

@@ -18,7 +18,7 @@ public class DesktopLauncher {
 		config.foregroundFPS = 120;
 		config.backgroundFPS = 120;
 		config.fullscreen = false;
-		LwjglApplicationConfiguration.disableAudio=true;
+		LwjglApplicationConfiguration.disableAudio=false;
 		config.title = "Dungeon Crawler 2017";
 		new LwjglApplication(new Game(), config);
 	}

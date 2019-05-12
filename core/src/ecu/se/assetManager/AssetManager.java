@@ -72,6 +72,42 @@ public class AssetManager {
 		System.err.println("Failed to load sprite.");
 		return null;
 	}
+	
+	public static MusicAsset getMusic(String name) {
+		
+		System.out.println(name);
+		if(assets.containsKey(name))
+			return (MusicAsset)(assets.get(name));
+
+		MusicAsset temp = new MusicAsset(name);
+		if (temp.loadedSuccessfully()) {
+			Utils.println(AssetManager.class, "Adding a new sound for: " + name);
+
+			assets.put(name, temp);
+			return temp.getAsset();
+		}
+		System.err.println("Failed to load sprite.");
+		return null;
+		
+	}
+	
+	public static SoundAsset getSound(String name) {
+		
+		System.out.println(name);
+		if(assets.containsKey(name))
+			return (SoundAsset)(assets.get(name));
+
+		SoundAsset temp = new SoundAsset(name);
+		if (temp.loadedSuccessfully()) {
+			Utils.println(AssetManager.class, "Adding a new sound for: " + name);
+
+			assets.put(name, temp);
+			return temp.getAsset();
+		}
+		System.err.println("Failed to load sprite.");
+		return null;
+		
+	}
 
 	/**
 	 * Disposes resources.

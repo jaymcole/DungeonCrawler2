@@ -10,8 +10,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.Game;
+import ecu.se.GameObject;
 import ecu.se.Globals;
 import ecu.se.ObjectManager;
+import ecu.se.actors.Actor;
 
 /**
  * 
@@ -65,7 +67,15 @@ public class Map {
         }        
         
         if (currentFloor != null) 
-        	currentFloor.save();        
+        	currentFloor.save();
+        
+        //LinkedList<GameObject> actors = ObjectManager.getActors();
+        //for(GameObject go : actors) {
+        //	((Actor)go).dispose();
+        //}
+        
+        
+        ObjectManager.dispose();
         new ObjectManager();
         
         currentLevel = floor;

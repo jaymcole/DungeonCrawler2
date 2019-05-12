@@ -3,6 +3,7 @@ package ecu.se.actors;
 import java.util.LinkedList;
 import java.util.Random;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -36,8 +37,8 @@ public class TeleportEnemy extends BasicEnemy {
 	private int teleIndex;
 	private int teleWait = 0;
 
-	public TeleportEnemy(float x, float y, float z, String[] spriteSheet, int[] row) {
-		super(x, y, z, spriteSheet, row);
+	public TeleportEnemy(float x, float y, float z, String[] spriteSheet, int[] row, Sound soundMoving) {
+		super(x, y, z, spriteSheet, row, soundMoving);
 		currentSpeed = new Vector2(0, 0);
 		team = Team.MOB;
 		awake = false;

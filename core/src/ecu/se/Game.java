@@ -5,6 +5,8 @@ import java.util.Random;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -26,6 +28,7 @@ import ecu.se.archive.Archiver;
 import ecu.se.archive.TimeRecords;
 import ecu.se.archive.TotalRecords;
 import ecu.se.assetManager.AssetManager;
+import ecu.se.assetManager.SoundManager;
 import ecu.se.gui.GUI;
 import ecu.se.gui.Window_HUD;
 import ecu.se.map.Map;
@@ -120,7 +123,7 @@ public class Game extends ApplicationAdapter {
 		screenHeight = Gdx.graphics.getHeight();
 		screenWidth = Gdx.graphics.getWidth();
 		new ObjectManager();
-		player = new Player(0, 0, 0, camera, new String[] { "texture/spritesheet/player.png" }, new int[] { 0 });
+		player = new Player(0, 0, 0, camera, new String[] { "texture/spritesheet/player.png" }, new int[] { 0 }, AssetManager.getSound("sounds/effects/walking/shoes_02.mp3").getSound());
 
 		camera = new OrthographicCamera(screenWidth, screenHeight);
 		Lighting.init(camera, player);
@@ -143,6 +146,15 @@ public class Game extends ApplicationAdapter {
 
 		halfWidth = screenWidth * 0.5f;
 		halfHeight = screenHeight * 0.5f;
+		
+		
+		
+		
+		Gdx.audio.newAudioDevice(44100, false);
+		
+		Music music = AssetManager.getMusic("sounds/ambient/ambient_cave_01.mp3").getMusic();
+		music.setLooping(true);
+		music.play();
 	}
 
 	/**
@@ -157,6 +169,7 @@ public class Game extends ApplicationAdapter {
 			camera.update();
 			Lighting.updateLights(deltaTime, player.getPositionV2());
 			camera.zoom = zoom;
+			SoundManager.update(deltaTime);
 		}
 		Map.update(deltaTime, (int) player.x, (int) player.y);
 	}
@@ -333,6 +346,7 @@ public class Game extends ApplicationAdapter {
 	 * Starts anew game
 	 */
 	public void newGame() {
+		ObjectManager.dispose();
 		Archiver.dispose();
 		create();
 	}

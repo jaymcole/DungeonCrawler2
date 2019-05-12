@@ -3,6 +3,7 @@ package ecu.se.actors;
 import java.util.LinkedList;
 import java.util.Random;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -19,7 +20,7 @@ import ecu.se.stats.Stats;
 
 /**
  * 
- * The basic enemy ai. We like won't have anything better by the due date. 
+ * The basic enemy ai. We likely won't have anything better by the due date. 
  */
 public class BasicEnemy extends Actor {
 
@@ -30,8 +31,8 @@ public class BasicEnemy extends Actor {
 	private float friendWakeDistance = 200;
 	private float pathUpdateRate = 30;
 
-	public BasicEnemy(float x, float y, float z, String[] spriteSheet, int[] row) {
-		super(x, y, z, spriteSheet, row);
+	public BasicEnemy(float x, float y, float z, String[] spriteSheet, int[] row, Sound soundMoving) {
+		super(x, y, z, spriteSheet, row, soundMoving);
 		currentSpeed = new Vector2(0, 0);
 		team = Team.MOB;
 		awake = false;

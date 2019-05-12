@@ -2,6 +2,7 @@ package ecu.se.actors;
 
 import java.util.Random;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.Game;
@@ -16,8 +17,8 @@ public class RangedBadGuy extends Actor {
 	
 	private int maxDist = 115, minDist = 100;
 	
-	public RangedBadGuy(float x, float y, float z, String[] spriteSheet, int[] row) {
-		super(x, y, z, spriteSheet, row);
+	public RangedBadGuy(float x, float y, float z, String[] spriteSheet, int[] row , Sound soundMoving) {
+		super(x, y, z, spriteSheet, row, soundMoving);
 		 currentSpeed = new Vector2(0, 0);
 	     team = Team.MOB;
 	     

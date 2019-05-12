@@ -2,6 +2,7 @@ package ecu.se.actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 
@@ -12,6 +13,7 @@ import ecu.se.archive.Archiver;
 import ecu.se.archive.TimeRecords;
 import ecu.se.archive.TotalRecords;
 import ecu.se.assetManager.AssetManager;
+import ecu.se.assetManager.SoundConstants;
 import ecu.se.gui.GUI;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
@@ -27,8 +29,8 @@ public class Player extends Actor {
 	
 	
 	
-	public Player(float x, float y, float z, OrthographicCamera camera, String[] spriteSheet, int[] row) {
-		super(x, y, z, spriteSheet, row);
+	public Player(float x, float y, float z, OrthographicCamera camera, String[] spriteSheet, int[] row , Sound soundMoving) {
+		super(x, y, z, spriteSheet, row, soundMoving);
 		currentSpeed = new Vector2(0, 0);
 		Archiver.set(TimeRecords.TIME_IDLE, false);
 		currentHealth = 100;
@@ -74,6 +76,8 @@ public class Player extends Actor {
 		Game.currentState = Game.GAME_STATE_PAUSED;
 		Game.GAME_OVER = true;
 		GUI.setWindow(GUI.WINDOW_GAME_OVER);
+		deathSound = SoundConstants.getLaugh();
+		deathSoundID = deathSound.play();
 	}
 	
 	@Override

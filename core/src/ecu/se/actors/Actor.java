@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,6 +20,10 @@ import ecu.se.archive.Archiver;
 import ecu.se.archive.TotalRecords;
 import ecu.se.assetManager.Animation;
 import ecu.se.assetManager.AssetManager;
+import ecu.se.assetManager.SoundConstants;
+import ecu.se.assetManager.SoundManager;
+import ecu.se.assetManager.SoundManagerTask;
+import ecu.se.assetManager.SoundTask;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
 import ecu.se.objects.Decal;
@@ -44,6 +49,20 @@ public abstract class Actor extends GameObject {
 	protected boolean awake;
 	protected boolean invulnerable;
 	protected boolean invisible;
+	
+	protected Sound soundMoving;
+	protected long soundMovingID;
+	
+	protected Sound soundMovingStop;
+	protected long soundMovingStopID;
+	protected Sound soundMovingStart;
+	protected long soundMovingStartID;
+	
+	protected Sound deathSound;
+	protected long deathSoundID;
+	
+	protected Sound currentVoiceLine;
+	protected long currentVoiceLineID;
 
 	/**
 	 * Used for movement modifiers like explosions.
@@ -98,8 +117,8 @@ public abstract class Actor extends GameObject {
 	private Texture debugHealthBarTexture;
 	protected float scaleX, scaleY;
 	public Vector2 lookAt;
-
-	public Actor(float x, float y, float z, String[] spriteSheets, int[] row) {
+	
+	public Actor(float x, float y, float z, String[] spriteSheets, int[] row, Sound soundMoving) {
 		super(x, y, z);
 		for (int i = 0; i < Math.min(spriteSheets.length, row.length); i++) {
 			Animation animation = new Animation(0, 0, 0, AssetManager.getSpriteSheet(spriteSheets[i]));
@@ -128,6 +147,10 @@ public abstract class Actor extends GameObject {
 		currentHealth = random.nextInt(100);
 		this.awake = false;
 		lookAt = new Vector2(0, 0);
+		
+		this.soundMoving = soundMoving;
+		soundMovingID = soundMoving.loop();
+		soundMoving.pause(soundMovingID);
 	}
 
 	/**
@@ -147,6 +170,14 @@ public abstract class Actor extends GameObject {
 		updateActions(deltaTime);
 		if (currentHealth <= 0)
 			kill();
+		
+		if (oldx == x && oldy == y) {
+			soundMoving.pause(soundMovingID);
+		} else {
+			soundMoving.resume(soundMovingID);
+		}
+		oldx = x;
+		oldy = y;
 	}
 
 	/**
@@ -154,6 +185,7 @@ public abstract class Actor extends GameObject {
 	 */
 	public void onSleep() {
 		this.awake = false;
+		soundMoving.pause(soundMovingID);
 	}
 
 	/**
@@ -636,7 +668,7 @@ public abstract class Actor extends GameObject {
 	}
 
 	/**
-	 * Sets the chracter level.
+	 * Sets the character level.
 	 * 
 	 * @param level
 	 */
@@ -667,6 +699,10 @@ public abstract class Actor extends GameObject {
 					y + Utils.getRandomInt(50) - 25);
 			Map.getTile((int) mOrb.getX(), (int) mOrb.getY()).addObject(mOrb);
 		}
+		soundMoving.stop(soundMovingID);
+		
+		deathSound = SoundConstants.getScream();
+		deathSoundID = deathSound.play();
 	}
 
 	/**
@@ -709,6 +745,9 @@ public abstract class Actor extends GameObject {
 	 */
 	@Override
 	public void dispose() {
-
+		soundMoving.stop(soundMovingID);
+		if (deathSound != null)
+			SoundManager.addTask(new SoundManagerTask(deathSound, deathSoundID, 0.001f, 1, SoundTask.STOP));
+		System.err.println("Disposing Actor: " + name);
 	}
 }
