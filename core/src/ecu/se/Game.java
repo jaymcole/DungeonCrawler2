@@ -133,6 +133,7 @@ public class Game extends ApplicationAdapter {
 		light.setColor(new Color(135.0f/255f, 146.0f/255f, 218.0f/255f, 1.0f));
 		light.setIntensity(2500);
 		player.setLight(light);
+		player.setName("Player");
 
 		new Map();
 
@@ -202,27 +203,32 @@ public class Game extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		frameBuffer.begin();
-		batch.begin();
-		batch.setProjectionMatrix(camera.combined);
-		batch.draw(backgroundTexture, camera.position.x - Gdx.graphics.getWidth() * 0.5f,
-				camera.position.y - Gdx.graphics.getHeight() * 0.5f, Gdx.graphics.getWidth(),
-				(int) (Gdx.graphics.getHeight()));
-		Map.render(batch);
-		ObjectManager.render(deltaTime, batch);
-		batch.end();
-		frameBuffer.end();
+		{			
+			batch.begin();
+			batch.setProjectionMatrix(camera.combined);
+			batch.draw(backgroundTexture, camera.position.x - Gdx.graphics.getWidth() * 0.5f,
+					camera.position.y - Gdx.graphics.getHeight() * 0.5f, Gdx.graphics.getWidth(),
+					(int) (Gdx.graphics.getHeight()));
+			Map.render(batch);
+			ObjectManager.render(deltaTime, batch);
+			batch.end();
+			frameBuffer.end();
+	
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	
+		}
 
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		batch.begin();
-		batch.setProjectionMatrix(camera.combined);
-		Lighting.setShader(batch);
-		batch.draw(frameBufferRegion, camera.position.x - halfWidth, camera.position.y - halfHeight,
-				Gdx.graphics.getWidth(), (int) (Gdx.graphics.getHeight()));
-		batch.setShader(null);
-
-		batch.end();
-
+		{			
+			batch.begin();
+			batch.setProjectionMatrix(camera.combined);
+			Lighting.setShader(batch);
+			batch.draw(frameBufferRegion, camera.position.x - halfWidth, camera.position.y - halfHeight,
+					Gdx.graphics.getWidth(), (int) (Gdx.graphics.getHeight()));
+			batch.setShader(null);
+			batch.end();
+		}
+		
+		
 		frameBuffer.dispose();
 
 		if (Globals.DEBUG) {
@@ -238,9 +244,11 @@ public class Game extends ApplicationAdapter {
 			Utils.DrawDebugLine(new Vector2(-50, 0), new Vector2(50, 0), camera.combined);
 		}
 
-		batch.begin();
-		hud.render(batch);
-		batch.end();
+		{			
+			batch.begin();
+			hud.render(batch);
+			batch.end();
+		}
 
 		if (Globals.DEBUG) {
 			shapeRenderer.begin(ShapeType.Line);
@@ -290,10 +298,10 @@ public class Game extends ApplicationAdapter {
 		// Zoom camera
 		if (Gdx.input.isKeyPressed(Input.Keys.E)) {
 			zoom += 0.01f;
-			System.out.println("Zoom=" + zoom);
+			Logger.Debug("NA", "NA","Zoom=" + zoom);
 		} else if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
 			zoom -= 0.01f;
-			System.out.println("Zoom=" + zoom);
+			Logger.Debug("NA", "NA","Zoom=" + zoom);
 		} else if (Gdx.input.isKeyPressed(Input.Keys.R)) {
 			zoom = Globals.DEFAULT_CAMERA_ZOOM;
 		}
@@ -408,15 +416,17 @@ public class Game extends ApplicationAdapter {
 	 * Closes Dungeon Crawler
 	 */
 	public void close() {
-		System.out.println("Disposing Archiver");
+		Logger.Debug("Game", "close","Disposing Archiver");
 		Archiver.dispose();
-		System.out.println("Disposing Objects");
+		Logger.Debug("Game", "close","Disposing Objects");
 		ObjectManager.dispose();
-		System.out.println("Disposing Map");
+		Logger.Debug("Game", "close","Disposing Map");
 		Map.dispose();
-		System.out.println("Disposing Lighting");
+		Logger.Debug("Game", "close","Disposing Lighting");
 		Lighting.dispose();
-		System.out.println("Exiting");
+		Logger.Debug("Game", "close","Disposing Logger");
+		Logger.Debug("Game", "close","Exiting");
+		Logger.Dispose();
 		Gdx.app.exit();
 	}
 

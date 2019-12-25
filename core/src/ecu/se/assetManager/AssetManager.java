@@ -3,6 +3,7 @@ package ecu.se.assetManager;
 import java.util.HashMap;
 import java.util.Map;
 
+import ecu.se.Logger;
 import ecu.se.Utils;
 
 public class AssetManager {	
@@ -21,13 +22,13 @@ public class AssetManager {
 		
 		FontAsset temp = new FontAsset(name, size);
 		if (temp.loadedSuccessfully()) {
-			Utils.println(AssetManager.class, "Adding a new font for: " + name);
+			Logger.Debug(AssetManager.class.getName(), "getFont", "Adding a new font for: " + name);
 			assets.put(key, temp);
 			
 			
 			return temp.getAsset();
 		}
-		System.err.println("Failed to load font.");
+		Logger.Error(AssetManager.class.getName(), "getFont", "Failed to load font: \"" + name + "\"");
 		return null;
 	}
 
@@ -44,12 +45,12 @@ public class AssetManager {
 		TextureAsset temp = new TextureAsset(name);
 
 		if (temp.loadedSuccessfully()) {
-			Utils.println(AssetManager.class, "Adding a new texture for: " + name);
+			Logger.Debug(AssetManager.class.getName(), "getTexture", "Adding a new texture for: " + name);
 
 			assets.put(name, temp);
 			return temp.getAsset();
 		}
-		System.err.println("Failed to load texture.");
+		Logger.Error(AssetManager.class.getName(), "getTexture", "Failed to load texture: \"" + name + "\"");
 		return null;
 	}
 
@@ -64,47 +65,44 @@ public class AssetManager {
 
 		SpriteAsset temp = new SpriteAsset(name);
 		if (temp.loadedSuccessfully()) {
-			Utils.println(AssetManager.class, "Adding a new sprite for: " + name);
-
+			Logger.Debug(AssetManager.class.getName(), "getSpriteSheet", "Adding a new sprite for: " + name);
 			assets.put(name, temp);
 			return temp.getAsset();
 		}
-		System.err.println("Failed to load sprite.");
+		Logger.Error(AssetManager.class.getName(), "getSpriteSheet", "Failed to load sprite: \"" + name + "\"");
 		return null;
 	}
 	
 	public static MusicAsset getMusic(String name) {
 		
-		System.out.println(name);
+		Logger.Debug("NA", "NA",name);
 		if(assets.containsKey(name))
 			return (MusicAsset)(assets.get(name));
 
 		MusicAsset temp = new MusicAsset(name);
 		if (temp.loadedSuccessfully()) {
-			Utils.println(AssetManager.class, "Adding a new sound for: " + name);
-
+			Logger.Debug(AssetManager.class.getName(), "getMusic", "Adding a new sound for: " + name);
 			assets.put(name, temp);
 			return temp.getAsset();
 		}
-		System.err.println("Failed to load sprite.");
+		Logger.Error(AssetManager.class.getName(), "getMusic", "Failed to load music: \"" + name + "\"");
 		return null;
 		
 	}
 	
 	public static SoundAsset getSound(String name) {
 		
-		System.out.println(name);
+		Logger.Debug("NA", "NA",name);
 		if(assets.containsKey(name))
 			return (SoundAsset)(assets.get(name));
 
 		SoundAsset temp = new SoundAsset(name);
 		if (temp.loadedSuccessfully()) {
-			Utils.println(AssetManager.class, "Adding a new sound for: " + name);
-
+			Logger.Debug(AssetManager.class.getName(), "getSound", "Adding a new sound for: " + name);
 			assets.put(name, temp);
 			return temp.getAsset();
 		}
-		System.err.println("Failed to load sprite.");
+		Logger.Error(AssetManager.class.getName(), "getSound", "Failed to load sound: \"" + name + "\"");
 		return null;
 		
 	}

@@ -217,7 +217,7 @@ public class Utils {
      * @param string - The message to be printed.
      */
     public static void println(Object caller, String string) {
-        System.out.println("[" + caller.getClass().getSimpleName() + "] " + string);
+        Logger.Debug("NA", "NA","[" + caller.getClass().getSimpleName() + "] " + string);
     }
     
     /**
@@ -235,7 +235,7 @@ public class Utils {
      * @param string - The message to be printed.
      */
     public static void println(Class caller, String string) {
-        System.out.println("[" + caller.getSimpleName() + "] " + string);
+        Logger.Debug("NA", "NA","[" + caller.getSimpleName() + "] " + string);
     }
     
     /**

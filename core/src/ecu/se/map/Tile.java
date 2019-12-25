@@ -20,6 +20,7 @@ import ecu.se.objects.ItemObject;
  */
 public class Tile extends GameObject {
 	private int x, y, width, height;
+	//private float renderX, renderY;
 	private TextureRegion texture;
 
 	public boolean isWall;
@@ -33,6 +34,9 @@ public class Tile extends GameObject {
 		super(x, y);
 		this.x = x;
 		this.y = y;
+		//renderX = x;
+		//renderY = y;
+		
 		this.width = width;
 		this.height = height;
 		decals = new LinkedList<GameObject>();
@@ -172,6 +176,13 @@ public class Tile extends GameObject {
 	public void remove(GameObject object) {
 		objects.remove(object);
 	}
+	
+	/*
+	public void setRenderCoordinates(float x, float y) {
+		renderX = x;
+		renderY = y;
+	}
+	*/
 
 	/**
 	 * Load operation for when this tiles parent floor is loaded.

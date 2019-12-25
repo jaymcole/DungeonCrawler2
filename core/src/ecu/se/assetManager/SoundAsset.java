@@ -3,6 +3,8 @@ package ecu.se.assetManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 
+import ecu.se.Logger;
+
 public class SoundAsset extends Asset{
 
 	private Sound sound;
@@ -10,7 +12,7 @@ public class SoundAsset extends Asset{
 	
 	public SoundAsset(String name) {
 		this.name = name;
-		System.out.println(Gdx.files.internal(name));
+		Logger.Debug("NA", "NA", Gdx.files.internal(name));
 		sound = Gdx.audio.newSound(Gdx.files.internal(name));
 	}
 	

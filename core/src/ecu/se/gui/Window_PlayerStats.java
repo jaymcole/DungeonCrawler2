@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.Color;
 
 import ecu.se.Game;
+import ecu.se.Logger;
 import ecu.se.archive.Archiver;
 import ecu.se.archive.TimeRecords;
 import ecu.se.archive.TotalRecords;
@@ -51,7 +52,7 @@ public class Window_PlayerStats extends Window {
 		float currentX = 10;
 		float attrButtonSize = 15;
 		float xOffset = attrButtonSize * 1.25f;
-		System.out.println((halfwayY - backgroundY));
+		Logger.Debug("NA", "NA",(halfwayY - backgroundY));
 		Widget_Label lbl_AttrPoints = new Widget_Label(currentX + startLabelX, startLabelY - 20, 0, 0, this,
 				"Attribute Points: " + Game.player.getRemainingAttributePoints(), fontSize, Color.BLACK, Color.WHITE);
 		for (int i = 0; i < Stats.values().length; i++) {
@@ -84,7 +85,7 @@ public class Window_PlayerStats extends Window {
 
 			if (startLabelY - currentY < halfwayY - backgroundY) {
 				currentY = 40;
-				System.out.println("Passed bottoms");
+				Logger.Debug("NA", "NA","Passed bottoms");
 				currentX += 475;
 			}
 		}

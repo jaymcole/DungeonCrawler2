@@ -31,10 +31,10 @@ public class Globals {
     
     public static final float MIN_PATH_DENSITY = 0.3f;
     
-    public static final int MAP_TILE_WIDTH = 100;
-    public static final int MAP_TILE_HEIGHT = 100;
-    public static final int TILE_PIXEL_WIDTH = 128;
-    public static final int TILE_PIXEL_HEIGHT= 128;
+    public static final int MAP_TILE_WIDTH = 1000;
+    public static final int MAP_TILE_HEIGHT = 1000;
+    public static final int TILE_PIXEL_WIDTH = 128;//128;
+    public static final int TILE_PIXEL_HEIGHT= 128;//128;
     
     public static final String SPRITE_INFORMATION_EXTENSION = "spriteInfo";
 

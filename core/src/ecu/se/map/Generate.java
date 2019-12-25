@@ -13,6 +13,7 @@ import ecu.se.DecalPicker;
 import ecu.se.Game;
 import ecu.se.GameObject;
 import ecu.se.Globals;
+import ecu.se.Logger;
 import ecu.se.ObjectMaker;
 import ecu.se.ObjectManager;
 import ecu.se.Utils;
@@ -146,14 +147,14 @@ public class Generate {
 	 * Prints all tiles
 	 */
 	public static void printTiles() {
-		System.out.println("\n");
+		Logger.Debug("NA", "NA","\n");
 		for (int j = mapHeight - 1; j >= 0; j--) {
 			for (int i = 0; i < mapWidth; i++) {
 				System.out.print(tiles[i][j].pathNode.toString());
 			}
-			System.out.println(" ");
+			Logger.Debug("NA", "NA"," ");
 		}
-		System.out.println("\n");
+		Logger.Debug("NA", "NA","\n");
 	}
 
 	/**
@@ -564,7 +565,7 @@ public class Generate {
 	 * Prints the floor
 	 */
 	public static void printFloor() {
-		System.out.println("\n");
+		Logger.Debug("NA", "NA","\n");
 		for (int j = mapHeight - 1; j >= 0; j--) {
 			System.out.printf("%4s", "" + j);
 			System.out.print("    ");
@@ -584,9 +585,9 @@ public class Generate {
 				else
 					System.out.print(map[i][j]);
 			}
-			System.out.println("");
+			Logger.Debug("NA", "NA","");
 		}
-		System.out.println("\n");
+		Logger.Debug("NA", "NA","\n");
 	}
 
 	/**

@@ -2,6 +2,7 @@ package ecu.se.gui;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import ecu.se.Logger;
 import ecu.se.Utils;
 
 public class Widget_Slider extends Widget {
@@ -45,7 +46,7 @@ public class Widget_Slider extends Widget {
 	}
 	
 	public void onValueChange() {
-		System.out.println(newProgress);	};
+		Logger.Debug("NA", "NA",newProgress);	};
 
 	@Override
 	public void render(SpriteBatch batch) {

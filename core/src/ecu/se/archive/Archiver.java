@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import ecu.se.Logger;
+
 /**
  * 
  * Saves/Loads/Maintains all records.
@@ -70,7 +72,7 @@ public class Archiver {
 			set(tr, false);
 		}
 
-		System.out.println("[Archiver] Saving to: " + DIR);
+		Logger.Debug("NA", "NA","[Archiver] Saving to: " + DIR);
 		File file = new File(DIR);
 		try {
 			file.delete();
@@ -103,7 +105,7 @@ public class Archiver {
 	 * load() - Loads previous records from
 	 */
 	private static void load() {
-		System.out.println("[Archiver] Loading from: " + DIR);
+		Logger.Debug("NA", "NA","[Archiver] Loading from: " + DIR);
 		for (@SuppressWarnings("unused")
 		long rec : timeRecords) {
 			rec = 0;
@@ -132,7 +134,7 @@ public class Archiver {
 				} else if (parts[0].equals(TOTAL_RECORD)) {
 					totalRecords[TotalRecords.valueOf(parts[2]).ordinal() * 2] = Double.valueOf(parts[1]);
 				} else {
-					System.out.println("[X] " + line);
+					Logger.Debug("NA", "NA","[X] " + line);
 				}
 
 			}
@@ -222,7 +224,7 @@ public class Archiver {
 			if (timeRecords[i] != 0) {
 				set(TimeRecords.values()[counter], false);
 			}
-			System.out.println(
+			Logger.Debug("NA", "NA",
 					"[Archiver]" + TimeRecords.values()[counter].name() + " " + TimeRecords.print(timeRecords[i + 1]));
 			counter++;
 		}

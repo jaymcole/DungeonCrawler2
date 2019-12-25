@@ -53,7 +53,7 @@ public class Lighting {
 	 *            - Time since last render call.
 	 */
 	public static void updateLights(float deltaTime, Vector2 targetVector) {
-//		System.out.println("Total Lights=" + lights.size());
+//		Logger.Debug("NA", "NA","Total Lights=" + lights.size());
 		updater = lights.iterator();
 		
 		while (updater.hasNext()) {

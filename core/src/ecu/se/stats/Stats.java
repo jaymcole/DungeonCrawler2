@@ -1,5 +1,7 @@
 package ecu.se.stats;
 
+import ecu.se.Logger;
+
 public enum Stats {
 	//TODO: Add nice presentation text for all stats
 	
@@ -71,7 +73,7 @@ public enum Stats {
 	
 	public static void print(float[] stats) {
 		for(int i = 0; i < Stats.values().length; i++) {
-			System.out.println(Stats.values()[i].name() + ": " + stats[i]);
+			Logger.Debug("NA", "NA",Stats.values()[i].name() + ": " + stats[i]);
 		}
     }
 }

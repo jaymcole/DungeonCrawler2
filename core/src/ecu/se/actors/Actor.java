@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import ecu.se.DecalPicker;
 import ecu.se.Game;
 import ecu.se.GameObject;
+import ecu.se.Logger;
 import ecu.se.ObjectMaker;
 import ecu.se.Utils;
 import ecu.se.actions.Action;
@@ -279,6 +280,7 @@ public abstract class Actor extends GameObject {
 	public void render(SpriteBatch batch) {
 		for (Animation a : animations) {
 			a.render(batch);
+			Logger.Debug("Actor", "Render", "Rendering animation for: " + name);
 		}
 
 		// Renders a healthbar
@@ -322,9 +324,9 @@ public abstract class Actor extends GameObject {
 	 * @param xp
 	 */
 	public void addXP(int xp) {
-		System.out.println("Giving " + xp + " xp to " + this.getClass().getSimpleName());
+		Logger.Debug("NA", "NA","Giving " + xp + " xp to " + this.getClass().getSimpleName());
 		characterXP += xp;
-		System.out.println("XP: " + characterXP + " of " + xpToLevel);
+		Logger.Debug("NA", "NA","XP: " + characterXP + " of " + xpToLevel);
 		if (characterXP >= xpToLevel)
 			levelUp();
 	}
@@ -344,7 +346,7 @@ public abstract class Actor extends GameObject {
 		if (!awake)
 			onWake();
 		currentHealth -= damage;
-		System.err.println("Defending against " + attacker.getClass().getSimpleName() + " (" + damage + " damage)");
+		Logger.Info("Actor", "defend", "Defending against " + attacker.getClass().getSimpleName() + " (" + damage + " damage)"); 
 		if (currentHealth <= 0) {
 			this.kill();
 			if (attacker instanceof Actor && attacker.isAlive()) {

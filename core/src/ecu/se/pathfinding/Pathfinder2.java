@@ -43,7 +43,7 @@ public class Pathfinder2 {
 	}
 
 	private static boolean isEqual(Node n1, Node n2) {
-//		System.out.println(n1.toString() + "==" + n2.toString() + "   " + (n1.x == n2.x && n1.y == n2.y));
+//		Logger.Debug("NA", "NA",n1.toString() + "==" + n2.toString() + "   " + (n1.x == n2.x && n1.y == n2.y));
 		return n1.x == n2.x && n1.y == n2.y;
 	}
 
@@ -87,7 +87,7 @@ public class Pathfinder2 {
 			return null;
 		
 		while (openList != null && !openList.isEmpty()) { // openList.first() != null) {
-			// System.out.println("Current length: " + currentNode.length);
+			// Logger.Debug("NA", "NA","Current length: " + currentNode.length);
 			currentNode = openList.pop();
 
 			if (isEqual(currentNode, goalNode)) {

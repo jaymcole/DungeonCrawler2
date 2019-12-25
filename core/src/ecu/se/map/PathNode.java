@@ -3,6 +3,8 @@ package ecu.se.map;
 import java.util.LinkedList;
 import java.util.List;
 
+import ecu.se.Logger;
+
 /**
  *
  * UNUSED
@@ -59,7 +61,7 @@ public class PathNode {
 						tile.pathNode.costFromStart = costFromStart + tile.pathNode.getCost();
 						
 						nodes.add(tile.pathNode);
-						System.out.println("Adding new pathnode: " + tile.pathNode );
+						Logger.Debug("NA", "NA","Adding new pathnode: " + tile.pathNode );
 					} else {
 						System.err.println("PathNode is null");
 					}

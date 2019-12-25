@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import ecu.se.Game;
+import ecu.se.Logger;
 import ecu.se.ObjectManager;
 import ecu.se.map.Map;
 import ecu.se.objects.ActiveItem;
@@ -66,7 +67,7 @@ public class Widget_ItemSlot extends Widget_Button_Image {
 			act(mouseX, mouseY);
 		// Move item (to the ground, to a new slot, etc)
 		else if (item != null) {
-			System.out.println("Mouse Released");
+			Logger.Debug("NA", "NA","Mouse Released");
 			for (Window window : GUI.getActiveWindows()) {
 				for (Widget widget : window.getChildren()) {
 					if (widget.contains(mouseX, mouseY)) {

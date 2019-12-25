@@ -139,21 +139,21 @@ public class ObjectManager {
 	 *            - Used for rendering.
 	 */
 	public static void render(float deltaTime, SpriteBatch batch) {
-		updater = objects.iterator();
-		while (updater.hasNext()) {
-			object = updater.next();
-			if (object.isAlive()) {
-				object.render(batch);
-			}
-		}
-
-		updater = actors.iterator();
-		while (updater.hasNext()) {
-			actor1 = (Actor) updater.next();
-			if (actor1.isAlive()) {
-				actor1.render(batch);
-			}
-		}
+//		updater = objects.iterator();
+//		while (updater.hasNext()) {
+//			object = updater.next();
+//			if (object.isAlive()) {
+//				object.render(batch);
+//			}
+//		}
+//
+//		updater = actors.iterator();
+//		while (updater.hasNext()) {
+//			actor1 = (Actor) updater.next();
+//			if (actor1.isAlive()) {
+//				actor1.render(batch);
+//			}
+//		}
 
 		Game.player.render(batch);
 

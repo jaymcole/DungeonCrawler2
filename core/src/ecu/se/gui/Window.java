@@ -3,6 +3,7 @@ package ecu.se.gui;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import ecu.se.Logger;
 import ecu.se.archive.Archiver;
 import ecu.se.archive.TimeRecords;
 
@@ -137,7 +138,7 @@ public abstract class Window {
 	
 	public void toggleBackground() {
 		this.useBackground ^= true;
-		System.out.println("Toggle background");
+		Logger.Debug("NA", "NA","Toggle background");
 		if (this.background == null) {
 			this.useBackground = false;
 			System.err.println("[FAILED] " + windowName + " does not have a background to display." );

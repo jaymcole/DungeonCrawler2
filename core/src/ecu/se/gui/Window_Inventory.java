@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import ecu.se.Logger;
 import ecu.se.ObjectManager;
 import ecu.se.assetManager.AssetManager;
 import ecu.se.objects.ItemObject;
@@ -61,7 +62,7 @@ public class Window_Inventory extends Window {
 		float buttonHeight = 40;
 		float xMargin = 5;
 		float yMargin = 1;
-		System.out.println((halfwayY - backgroundY));
+		Logger.Debug("NA", "NA",(halfwayY - backgroundY));
 		for(int i = 0 ; i < slotRows; i++) {
 			for(int j = 0; j < slotColumns; j++) {
 				buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);

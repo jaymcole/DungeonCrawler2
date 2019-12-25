@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 
 import ecu.se.Game;
+import ecu.se.Logger;
 import ecu.se.actors.Player;
 
 public class GUI {
@@ -242,7 +243,7 @@ public class GUI {
 			return;
 		}
 
-		System.out.println("Switch window from " + currentWindow + " to " + changeTo);
+		Logger.Debug("NA", "NA","Switch window from " + currentWindow + " to " + changeTo);
 
 		if (changeTo == currentWindow) {
 			return;

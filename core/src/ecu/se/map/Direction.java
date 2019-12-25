@@ -4,6 +4,8 @@ import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 
+import ecu.se.Logger;
+
 /**
  *
  * A utility class used through Dungeon Crawler.
@@ -81,7 +83,7 @@ public enum Direction {
     	Direction newboi = Direction.values()[(directionValues + dir.ordinal()+1)%directionValues];
 //    	System.out.print(dir.name );
 //    	System.out.print(" --> ");
-//    	System.out.println(newboi.name);
+//    	Logger.Debug("NA", "NA",newboi.name);
     	return newboi;
     }
     
@@ -95,7 +97,7 @@ public enum Direction {
     	Direction newboi = Direction.values()[(directionValues + dir.ordinal()-1)%directionValues];
 //    	System.out.print(dir.name );
 //    	System.out.print(" --> ");
-//    	System.out.println(newboi.name);
+//    	Logger.Debug("NA", "NA",newboi.name);
     	return newboi;
     }
     
@@ -260,7 +262,7 @@ public enum Direction {
     	int degree = (int) Math.toDegrees(rads);
     	degree %= 360;
     	degree = Math.abs(((int)((degree-22.5-90) / 45) % Direction.directionValues));
-    	System.out.println("Returnning " + degree);
+    	Logger.Debug("NA", "NA","Returnning " + degree);
     	return Direction.values()[degree];
     }
     
