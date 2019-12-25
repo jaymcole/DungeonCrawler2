@@ -280,7 +280,6 @@ public abstract class Actor extends GameObject {
 	public void render(SpriteBatch batch) {
 		for (Animation a : animations) {
 			a.render(batch);
-			Logger.Debug("Actor", "Render", "Rendering animation for: " + name);
 		}
 
 		// Renders a healthbar
