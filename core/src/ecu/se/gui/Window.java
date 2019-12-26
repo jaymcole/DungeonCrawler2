@@ -138,7 +138,7 @@ public abstract class Window {
 	
 	public void toggleBackground() {
 		this.useBackground ^= true;
-		Logger.Debug("NA", "NA","Toggle background");
+		Logger.Debug(this.getClass(), "toggleBackground","Toggle background");
 		if (this.background == null) {
 			this.useBackground = false;
 			System.err.println("[FAILED] " + windowName + " does not have a background to display." );

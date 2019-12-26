@@ -46,7 +46,7 @@ public class Widget_Slider extends Widget {
 	}
 	
 	public void onValueChange() {
-		Logger.Debug("NA", "NA",newProgress);	};
+		Logger.Debug(this.getClass(), "onValueChange",newProgress);	};
 
 	@Override
 	public void render(SpriteBatch batch) {

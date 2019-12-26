@@ -212,51 +212,6 @@ public class Utils {
     }
     
     /**
-     * Prints string to stdout along with the class that's printing (caller). 
-     * @param caller - The object that's printing.
-     * @param string - The message to be printed.
-     */
-    public static void println(Object caller, String string) {
-        Logger.Debug("NA", "NA","[" + caller.getClass().getSimpleName() + "] " + string);
-    }
-    
-    /**
-     * Prints string to stdout along with the class that's printing (caller). 
-     * @param caller - The object that's printing.
-     * @param string - The message to be printed.
-     */
-    public static void print(Object caller, String string ) {
-        System.out.print("[" + caller.getClass().getSimpleName() + "] " + string);
-    }
-    
-    /**
-     * Prints string to stdout along with the class that's printing (caller). 
-     * @param caller - The class that's printing.
-     * @param string - The message to be printed.
-     */
-    public static void println(Class caller, String string) {
-        Logger.Debug("NA", "NA","[" + caller.getSimpleName() + "] " + string);
-    }
-    
-    /**
-     * Prints string to stdout along with the class that's printing (caller). 
-     * @param caller - The class that's printing.
-     * @param string - The message to be printed.
-     */
-    public static void print(Class caller, String string ) {
-        System.out.print("[" + caller.getSimpleName() + "] " + string);
-    }
-    
-    /**
-     * Prints string to stdout along with the class that's printing (caller). 
-     * @param caller - The class that's printing.
-     * @param string - The message to be printed.
-     */
-    public static void print(String string ) {
-        System.out.print(string);
-    }
-    
-    /**
      * 
      * @param currentLevel
      * @return The xp required to reach the next level.

@@ -61,7 +61,7 @@ public class PathNode {
 						tile.pathNode.costFromStart = costFromStart + tile.pathNode.getCost();
 						
 						nodes.add(tile.pathNode);
-						Logger.Debug("NA", "NA","Adding new pathnode: " + tile.pathNode );
+						Logger.Debug(this.getClass(), "getNeighbors","Adding new pathnode: " + tile.pathNode );
 					} else {
 						System.err.println("PathNode is null");
 					}

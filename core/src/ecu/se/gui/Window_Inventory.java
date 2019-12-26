@@ -62,7 +62,7 @@ public class Window_Inventory extends Window {
 		float buttonHeight = 40;
 		float xMargin = 5;
 		float yMargin = 1;
-		Logger.Debug("NA", "NA",(halfwayY - backgroundY));
+		Logger.Debug(this.getClass(), "buildWindow",(halfwayY - backgroundY));
 		for(int i = 0 ; i < slotRows; i++) {
 			for(int j = 0; j < slotColumns; j++) {
 				buttonDefault =   new TextureRegion(buttonTexture, 0, 0,   149, 159);

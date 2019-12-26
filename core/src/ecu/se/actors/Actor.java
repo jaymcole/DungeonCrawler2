@@ -323,9 +323,9 @@ public abstract class Actor extends GameObject {
 	 * @param xp
 	 */
 	public void addXP(int xp) {
-		Logger.Debug("NA", "NA","Giving " + xp + " xp to " + this.getClass().getSimpleName());
+		Logger.Debug(this.getClass(), "addXP","Giving " + xp + " xp to " + this.getClass().getSimpleName());
 		characterXP += xp;
-		Logger.Debug("NA", "NA","XP: " + characterXP + " of " + xpToLevel);
+		Logger.Debug(this.getClass(), "addXP","XP: " + characterXP + " of " + xpToLevel);
 		if (characterXP >= xpToLevel)
 			levelUp();
 	}
@@ -345,7 +345,7 @@ public abstract class Actor extends GameObject {
 		if (!awake)
 			onWake();
 		currentHealth -= damage;
-		Logger.Info("Actor", "defend", "Defending against " + attacker.getClass().getSimpleName() + " (" + damage + " damage)"); 
+		Logger.Info(this.getClass(), "defend", "Defending against " + attacker.getClass().getSimpleName() + " (" + damage + " damage)"); 
 		if (currentHealth <= 0) {
 			this.kill();
 			if (attacker instanceof Actor && attacker.isAlive()) {

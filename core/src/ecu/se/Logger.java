@@ -9,9 +9,6 @@ import java.nio.file.FileSystem;
 import java.util.Date;
 
 public class Logger {
-
-	private static final String TAG = "Logger";
-
 	private static boolean DebugEnabled = true;
 
 	// Controls printing to system.out
@@ -34,6 +31,9 @@ public class Logger {
 	private static File LogFile;
 	private static BufferedWriter fileWriter;
 	private static StringBuilder sb = new StringBuilder();
+	
+	private static int BufferClass = 0;
+	private static int BufferMethod = 0;
 
 	private static void Init() {
 		try {
@@ -44,51 +44,67 @@ public class Logger {
 			LogFile = new File(LogFileName);
 			if (!LogFile.exists()) {
 				LogFile.createNewFile();
-				Debug(TAG, "Init", "Creating a new log file.");
+				Debug(Logger.class, "Init", "Creating a new log file.");
 			}
 			Writer writer = new FileWriter(LogFileName);
 			fileWriter = new BufferedWriter(writer);
 			LoggerReady = true;
 
-			Debug(TAG, "Init", "Log file at: " + LogFileName);
+			Debug(Logger.class, "Init", "Log file at: " + LogFileName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void Error(String className, String method, String message) {
+	public static void Error(Class caller, String method, String message) {
 		if (!LoggingEnabled && !AlwaysSaveErrorLogs)
 			return;
-		WriteLog(ComposeLogMessage(className, method, "ERROR", message));
+		WriteLog(ComposeLogMessage(caller, method, "ERROR", message));
 	}
 
-	public static void Debug(String className, String method, Object message) {
-		Debug(className, method, message.toString());
+	public static void Debug(Class caller, String method, Object message) {
+		Debug(caller, method, message.toString());
 	}
 	
-	public static void Debug(String className, String method, String message) {
+	public static void Debug(Class caller, String method, String message) {
 		if (!DebugEnabled || !LoggingEnabled)
 			return;
-		WriteLog(ComposeLogMessage(className, method, "DEBUG", message));
+		WriteLog(ComposeLogMessage(caller, method, "DEBUG", message));
 	}
 
-	public static void Info(String className, String method, String message) {
+	public static void Info(Class caller, String method, String message) {
 		if (!LoggingEnabled)
 			return;
-		WriteLog(ComposeLogMessage(className, method, "INFO", message));
+		WriteLog(ComposeLogMessage(caller, method, "INFO", message));
 	}
 
-	private static String ComposeLogMessage(String className, String method, String type, String message) {
+	private static String ComposeLogMessage(Class caller, String method, String type, String message) {
 		sb = new StringBuilder();
 
+		String className = caller.getSimpleName();
+		if (className.length() > BufferClass)
+			BufferClass = className.length();
+		if (method.length() > BufferMethod)
+			BufferMethod = method.length();
+		
 		sb.append("[" + GetTimestamp() + "]");
-		sb.append("[" + className + "]");
-		sb.append("[" + method + "]");
+		sb.append("[" + center(className, BufferClass) + "]");
+		sb.append("[" + center(method, BufferMethod) + "]");
 		sb.append("[" + type + "] ");
 		sb.append("" + message + "\n");
 
 		return sb.toString();
 	}
+	
+	public static String center(String text, int len){
+        if (len <= text.length())
+            return text.substring(0, len);
+        int before = (len - text.length())/2;
+        if (before == 0)
+            return String.format("%-" + len + "s", text);
+        int rest = len - before;
+        return String.format("%" + before + "s%-" + rest + "s", "", text);  
+    }
 
 	private static String GetTimestamp() {
 		Date date = new Date(System.currentTimeMillis());
@@ -128,7 +144,7 @@ public class Logger {
 	public static void SetLogFileDirectory(String directory) {
 		File dir = new File(directory);
 		if (dir.exists()) {
-			Error(TAG, "SetLogFileDirectory", "Directory \"" + directory + "\" does not exist.");
+			Error(Logger.class, "SetLogFileDirectory", "Directory \"" + directory + "\" does not exist.");
 			return;
 		}
 		WorkingDirectory = directory;

@@ -298,10 +298,10 @@ public class Game extends ApplicationAdapter {
 		// Zoom camera
 		if (Gdx.input.isKeyPressed(Input.Keys.E)) {
 			zoom += 0.01f;
-			Logger.Debug("NA", "NA","Zoom=" + zoom);
+			Logger.Debug(this.getClass(), "cameraControls","Zoom=" + zoom);
 		} else if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
 			zoom -= 0.01f;
-			Logger.Debug("NA", "NA","Zoom=" + zoom);
+			Logger.Debug(this.getClass(), "cameraControls","Zoom=" + zoom);
 		} else if (Gdx.input.isKeyPressed(Input.Keys.R)) {
 			zoom = Globals.DEFAULT_CAMERA_ZOOM;
 		}
@@ -416,16 +416,16 @@ public class Game extends ApplicationAdapter {
 	 * Closes Dungeon Crawler
 	 */
 	public void close() {
-		Logger.Debug("Game", "close","Disposing Archiver");
+		Logger.Debug(this.getClass(), "close","Disposing Archiver");
 		Archiver.dispose();
-		Logger.Debug("Game", "close","Disposing Objects");
+		Logger.Debug(this.getClass(), "close","Disposing Objects");
 		ObjectManager.dispose();
-		Logger.Debug("Game", "close","Disposing Map");
+		Logger.Debug(this.getClass(), "close","Disposing Map");
 		Map.dispose();
-		Logger.Debug("Game", "close","Disposing Lighting");
+		Logger.Debug(this.getClass(), "close","Disposing Lighting");
 		Lighting.dispose();
-		Logger.Debug("Game", "close","Disposing Logger");
-		Logger.Debug("Game", "close","Exiting");
+		Logger.Debug(this.getClass(), "close","Disposing Logger");
+		Logger.Debug(this.getClass(), "close","Exiting");
 		Logger.Dispose();
 		Gdx.app.exit();
 	}

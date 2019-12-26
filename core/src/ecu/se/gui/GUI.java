@@ -243,7 +243,7 @@ public class GUI {
 			return;
 		}
 
-		Logger.Debug("NA", "NA","Switch window from " + currentWindow + " to " + changeTo);
+		Logger.Debug(GUI.class, "setWindow","Switch window from " + currentWindow + " to " + changeTo);
 
 		if (changeTo == currentWindow) {
 			return;

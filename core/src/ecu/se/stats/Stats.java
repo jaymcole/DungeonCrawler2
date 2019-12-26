@@ -73,7 +73,7 @@ public enum Stats {
 	
 	public static void print(float[] stats) {
 		for(int i = 0; i < Stats.values().length; i++) {
-			Logger.Debug("NA", "NA",Stats.values()[i].name() + ": " + stats[i]);
+			Logger.Debug(Stats.class, "print",Stats.values()[i].name() + ": " + stats[i]);
 		}
     }
 }

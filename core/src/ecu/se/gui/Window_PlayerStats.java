@@ -52,7 +52,7 @@ public class Window_PlayerStats extends Window {
 		float currentX = 10;
 		float attrButtonSize = 15;
 		float xOffset = attrButtonSize * 1.25f;
-		Logger.Debug("NA", "NA",(halfwayY - backgroundY));
+		Logger.Debug(this.getClass(), "buildWindow",(halfwayY - backgroundY));
 		Widget_Label lbl_AttrPoints = new Widget_Label(currentX + startLabelX, startLabelY - 20, 0, 0, this,
 				"Attribute Points: " + Game.player.getRemainingAttributePoints(), fontSize, Color.BLACK, Color.WHITE);
 		for (int i = 0; i < Stats.values().length; i++) {
@@ -85,7 +85,7 @@ public class Window_PlayerStats extends Window {
 
 			if (startLabelY - currentY < halfwayY - backgroundY) {
 				currentY = 40;
-				Logger.Debug("NA", "NA","Passed bottoms");
+				Logger.Debug(this.getClass(), "buildWindow","Passed bottoms");
 				currentX += 475;
 			}
 		}

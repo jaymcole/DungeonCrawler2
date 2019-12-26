@@ -262,7 +262,7 @@ public enum Direction {
     	int degree = (int) Math.toDegrees(rads);
     	degree %= 360;
     	degree = Math.abs(((int)((degree-22.5-90) / 45) % Direction.directionValues));
-    	Logger.Debug("NA", "NA","Returnning " + degree);
+    	Logger.Debug(Direction.class, "getExpandedDirection", "Returnning " + degree);
     	return Direction.values()[degree];
     }
     

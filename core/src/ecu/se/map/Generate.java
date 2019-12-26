@@ -147,14 +147,14 @@ public class Generate {
 	 * Prints all tiles
 	 */
 	public static void printTiles() {
-		Logger.Debug("NA", "NA","\n");
+		Logger.Debug(Generate.class, "printTiles","\n");
 		for (int j = mapHeight - 1; j >= 0; j--) {
 			for (int i = 0; i < mapWidth; i++) {
 				System.out.print(tiles[i][j].pathNode.toString());
 			}
-			Logger.Debug("NA", "NA"," ");
+			Logger.Debug(Generate.class, "printTiles"," ");
 		}
-		Logger.Debug("NA", "NA","\n");
+		Logger.Debug(Generate.class, "printTiles","\n");
 	}
 
 	/**
@@ -558,14 +558,14 @@ public class Generate {
 				}
 			}
 		}
-		Utils.print("Light Count: " + totalLights + "\n");
+		Logger.Info(Generate.class, "finalizeFloor", "Light Count: " + totalLights);
 	}
 
 	/**
 	 * Prints the floor
 	 */
 	public static void printFloor() {
-		Logger.Debug("NA", "NA","\n");
+		Logger.Debug(Generate.class, "printFloor","\n");
 		for (int j = mapHeight - 1; j >= 0; j--) {
 			System.out.printf("%4s", "" + j);
 			System.out.print("    ");
@@ -585,9 +585,9 @@ public class Generate {
 				else
 					System.out.print(map[i][j]);
 			}
-			Logger.Debug("NA", "NA","");
+			Logger.Debug(Generate.class, "printFloor","");
 		}
-		Logger.Debug("NA", "NA","\n");
+		Logger.Debug(Generate.class, "printFloor","\n");
 	}
 
 	/**

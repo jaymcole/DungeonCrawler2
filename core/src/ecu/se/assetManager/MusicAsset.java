@@ -14,7 +14,7 @@ public class MusicAsset extends Asset{
 	
 	public MusicAsset(String name) {
 		this.name = name;
-		Logger.Debug("NA", "NA",Gdx.files.internal(name));
+		Logger.Debug(MusicAsset.class, "MusicAsset",Gdx.files.internal(name));
 		
 		sound = Gdx.audio.newMusic(Gdx.files.internal(name));
 	}

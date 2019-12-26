@@ -12,7 +12,7 @@ public class SoundAsset extends Asset{
 	
 	public SoundAsset(String name) {
 		this.name = name;
-		Logger.Debug("NA", "NA", Gdx.files.internal(name));
+		Logger.Debug(this.getClass(), "SoundAsset", Gdx.files.internal(name));
 		sound = Gdx.audio.newSound(Gdx.files.internal(name));
 	}
 	

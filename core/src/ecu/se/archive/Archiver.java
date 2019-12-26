@@ -72,7 +72,7 @@ public class Archiver {
 			set(tr, false);
 		}
 
-		Logger.Debug("NA", "NA","[Archiver] Saving to: " + DIR);
+		Logger.Debug(Archiver.class, "save","[Archiver] Saving to: " + DIR);
 		File file = new File(DIR);
 		try {
 			file.delete();
@@ -105,7 +105,7 @@ public class Archiver {
 	 * load() - Loads previous records from
 	 */
 	private static void load() {
-		Logger.Debug("NA", "NA","[Archiver] Loading from: " + DIR);
+		Logger.Debug(Archiver.class, "load","[Archiver] Loading from: " + DIR);
 		for (@SuppressWarnings("unused")
 		long rec : timeRecords) {
 			rec = 0;
@@ -134,7 +134,7 @@ public class Archiver {
 				} else if (parts[0].equals(TOTAL_RECORD)) {
 					totalRecords[TotalRecords.valueOf(parts[2]).ordinal() * 2] = Double.valueOf(parts[1]);
 				} else {
-					Logger.Debug("NA", "NA","[X] " + line);
+					Logger.Debug(Archiver.class, "load","[X] " + line);
 				}
 
 			}
@@ -224,8 +224,7 @@ public class Archiver {
 			if (timeRecords[i] != 0) {
 				set(TimeRecords.values()[counter], false);
 			}
-			Logger.Debug("NA", "NA",
-					"[Archiver]" + TimeRecords.values()[counter].name() + " " + TimeRecords.print(timeRecords[i + 1]));
+			Logger.Debug(Archiver.class, "dispose", TimeRecords.values()[counter].name() + " " + TimeRecords.print(timeRecords[i + 1]));
 			counter++;
 		}
 		save();

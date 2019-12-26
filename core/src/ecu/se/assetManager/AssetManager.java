@@ -22,13 +22,13 @@ public class AssetManager {
 		
 		FontAsset temp = new FontAsset(name, size);
 		if (temp.loadedSuccessfully()) {
-			Logger.Debug(AssetManager.class.getName(), "getFont", "Adding a new font for: " + name);
+			Logger.Debug(AssetManager.class, "getFont", "Adding a new font for: " + name);
 			assets.put(key, temp);
 			
 			
 			return temp.getAsset();
 		}
-		Logger.Error(AssetManager.class.getName(), "getFont", "Failed to load font: \"" + name + "\"");
+		Logger.Error(AssetManager.class, "getFont", "Failed to load font: \"" + name + "\"");
 		return null;
 	}
 
@@ -45,12 +45,12 @@ public class AssetManager {
 		TextureAsset temp = new TextureAsset(name);
 
 		if (temp.loadedSuccessfully()) {
-			Logger.Debug(AssetManager.class.getName(), "getTexture", "Adding a new texture for: " + name);
+			Logger.Debug(AssetManager.class, "getTexture", "Adding a new texture for: " + name);
 
 			assets.put(name, temp);
 			return temp.getAsset();
 		}
-		Logger.Error(AssetManager.class.getName(), "getTexture", "Failed to load texture: \"" + name + "\"");
+		Logger.Error(AssetManager.class, "getTexture", "Failed to load texture: \"" + name + "\"");
 		return null;
 	}
 
@@ -65,44 +65,44 @@ public class AssetManager {
 
 		SpriteAsset temp = new SpriteAsset(name);
 		if (temp.loadedSuccessfully()) {
-			Logger.Debug(AssetManager.class.getName(), "getSpriteSheet", "Adding a new sprite for: " + name);
+			Logger.Debug(AssetManager.class, "getSpriteSheet", "Adding a new sprite for: " + name);
 			assets.put(name, temp);
 			return temp.getAsset();
 		}
-		Logger.Error(AssetManager.class.getName(), "getSpriteSheet", "Failed to load sprite: \"" + name + "\"");
+		Logger.Error(AssetManager.class, "getSpriteSheet", "Failed to load sprite: \"" + name + "\"");
 		return null;
 	}
 	
 	public static MusicAsset getMusic(String name) {
 		
-		Logger.Debug("NA", "NA",name);
+		Logger.Debug(AssetManager.class, "MusicAsset",name);
 		if(assets.containsKey(name))
 			return (MusicAsset)(assets.get(name));
 
 		MusicAsset temp = new MusicAsset(name);
 		if (temp.loadedSuccessfully()) {
-			Logger.Debug(AssetManager.class.getName(), "getMusic", "Adding a new sound for: " + name);
+			Logger.Debug(AssetManager.class, "getMusic", "Adding a new sound for: " + name);
 			assets.put(name, temp);
 			return temp.getAsset();
 		}
-		Logger.Error(AssetManager.class.getName(), "getMusic", "Failed to load music: \"" + name + "\"");
+		Logger.Error(AssetManager.class, "getMusic", "Failed to load music: \"" + name + "\"");
 		return null;
 		
 	}
 	
 	public static SoundAsset getSound(String name) {
 		
-		Logger.Debug("NA", "NA",name);
+		Logger.Debug(AssetManager.class, "getSound", name);
 		if(assets.containsKey(name))
 			return (SoundAsset)(assets.get(name));
 
 		SoundAsset temp = new SoundAsset(name);
 		if (temp.loadedSuccessfully()) {
-			Logger.Debug(AssetManager.class.getName(), "getSound", "Adding a new sound for: " + name);
+			Logger.Debug(AssetManager.class, "getSound", "Adding a new sound for: " + name);
 			assets.put(name, temp);
 			return temp.getAsset();
 		}
-		Logger.Error(AssetManager.class.getName(), "getSound", "Failed to load sound: \"" + name + "\"");
+		Logger.Error(AssetManager.class, "getSound", "Failed to load sound: \"" + name + "\"");
 		return null;
 		
 	}

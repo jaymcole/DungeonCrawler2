@@ -45,12 +45,12 @@ public class PathFinder {
 	 */
 	protected LinkedList<Vector2> constructPath(PathNode node, PathNode goal) {
 		LinkedList<Vector2> path = new LinkedList<Vector2>();
-		Logger.Debug("NA", "NA","Starting construction");
+		Logger.Debug(this.getClass(), "constructPath","Starting construction");
 		while (node.pathParent != null) {
-			Logger.Debug("NA", "NA","Adding " + node.toString());
+			Logger.Debug(this.getClass(), "constructPath","Adding " + node.toString());
 			path.addFirst(new Vector2(node.x * Globals.TILE_PIXEL_WIDTH + (Globals.TILE_PIXEL_WIDTH * 0.5f),
 					node.y * Globals.TILE_PIXEL_HEIGHT + (Globals.TILE_PIXEL_HEIGHT * 0.5f)));
-			Logger.Debug("NA", "NA","Setting " + node.toString() + " to " + node.pathParent.toString());
+			Logger.Debug(this.getClass(), "constructPath","Setting " + node.toString() + " to " + node.pathParent.toString());
 
 			PathNode temp = node.pathParent;
 			node.pathParent = null;
@@ -72,7 +72,7 @@ public class PathFinder {
 			}
 		}
 
-		Logger.Debug("NA", "NA","Find Path");
+		Logger.Debug(this.getClass(), "findPath","Find Path");
 		PriorityList openList = new PriorityList();
 		LinkedList closedList = new LinkedList();
 
@@ -80,7 +80,7 @@ public class PathFinder {
 		startNode.estimatedCostToGoal = startNode.getEstimatedCost(goalNode);
 		startNode.pathParent = null;
 		openList.add(startNode);
-		Logger.Debug("NA", "NA","Start Loop");
+		Logger.Debug(this.getClass(), "findPath","Start Loop");
 		counter = 0;
 
 		if (Map.getTileByIndex(startNode.x, startNode.y) == null
@@ -89,7 +89,7 @@ public class PathFinder {
 		}
 
 		while (!openList.isEmpty()) {
-			Logger.Debug("NA", "NA","Loop iteration " + counter);
+			Logger.Debug(this.getClass(), "findPath","Loop iteration " + counter);
 			counter++;
 
 			if (counter > 1000)
@@ -104,7 +104,7 @@ public class PathFinder {
 				return constructPath(goalNode, startNode);
 			}
 
-			Logger.Debug("NA", "NA",node.toString());
+			Logger.Debug(this.getClass(), "findPath",node.toString());
 			List neighbors = node.getNeighbors();
 			for (int i = 0; i < neighbors.size(); i++) {
 				PathNode neighborNode = (PathNode) neighbors.get(i);
@@ -117,16 +117,16 @@ public class PathFinder {
 				// check if the neighbor node has not been
 				// traversed or if a shorter path to this
 				// neighbor node is found.
-				Logger.Debug("NA", "NA","isOpen=" + isOpen + "   isClosed=" + isClosed);
+				Logger.Debug(this.getClass(), "findPath","isOpen=" + isOpen + "   isClosed=" + isClosed);
 
-				Logger.Debug("NA", "NA","\t" + neighborNode.toString());
+				Logger.Debug(this.getClass(), "findPath","\t" + neighborNode.toString());
 				if ((!isOpen && !isClosed) || costFromStart < neighborNode.costFromStart) {
 					neighborNode.pathParent = node;
 					neighborNode.costFromStart = costFromStart;
 					neighborNode.estimatedCostToGoal = neighborNode.getEstimatedCost(goalNode);
 					if (isClosed) {
 						boolean removed = closedList.remove(neighborNode);
-						Logger.Debug("NA", "NA","node removed=" + removed);
+						Logger.Debug(this.getClass(), "findPath","node removed=" + removed);
 					}
 					if (!isOpen) {
 						openList.add(neighborNode);

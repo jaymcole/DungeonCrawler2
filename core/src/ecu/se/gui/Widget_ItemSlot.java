@@ -67,7 +67,7 @@ public class Widget_ItemSlot extends Widget_Button_Image {
 			act(mouseX, mouseY);
 		// Move item (to the ground, to a new slot, etc)
 		else if (item != null) {
-			Logger.Debug("NA", "NA","Mouse Released");
+			Logger.Debug(this.getClass(), "mouseReleased","Mouse Released");
 			for (Window window : GUI.getActiveWindows()) {
 				for (Widget widget : window.getChildren()) {
 					if (widget.contains(mouseX, mouseY)) {
