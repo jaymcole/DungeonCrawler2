@@ -22,6 +22,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import ecu.se.actions.Spell_Fireball;
+import ecu.se.actions.Spell_FlameThrower;
 import ecu.se.actions.Spell_Teleport;
 import ecu.se.actors.Player;
 import ecu.se.archive.Archiver;
@@ -32,6 +33,7 @@ import ecu.se.assetManager.SoundManager;
 import ecu.se.gui.GUI;
 import ecu.se.gui.Window_HUD;
 import ecu.se.map.Map;
+import ecu.se.objects.ActiveItem;
 import ecu.se.objects.Light;
 
 
@@ -140,7 +142,8 @@ public class Game extends ApplicationAdapter {
 		hud = new GUI(player, screenWidth, screenHeight, this);
 		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD)).setPrimary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Fireball(player)));
 		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD)).setSecondary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Teleport(player)));
-		
+		ActiveItem spell = ObjectMaker.createActiveItem(0, 0, new Spell_FlameThrower(player));
+		spell.onClick(player);
 		
 		shapeRenderer = new ShapeRenderer();
 		backgroundTexture = AssetManager.getTexture(backgroundTextureName).getTexture();
@@ -337,13 +340,13 @@ public class Game extends ApplicationAdapter {
 		Vector3 pos = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 		if (!hud.mouseUsed() && currentState != GAME_STATE_PAUSED) {
 
-			if (leftMouseState == MOUSE_PRESSED)
+			if (leftMouseState == MOUSE_DOWN)
 				if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
 					ObjectManager.mouseClick((int) pos.x, (int) pos.y);
 				else
 					player.primaryAction((int) pos.x, (int) pos.y);
 
-			if (rightMouseState == MOUSE_PRESSED)
+			if (rightMouseState == MOUSE_DOWN)
 				player.secondaryAction((int) pos.x, (int) pos.y);
 		}
 		player.lookAt = new Vector2(pos.x, pos.y);

@@ -45,7 +45,6 @@ public class Animation extends GameObject {
 
 		scaleX = 1;
 		scaleY = 1;
-
 	}
 
 	/**

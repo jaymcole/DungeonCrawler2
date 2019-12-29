@@ -16,8 +16,14 @@ public class Spell_Teleport extends Spell{
 	public Spell_Teleport(Actor caster) {
 		super(caster);
 		baseCastSpeed 	= 0;
-		baseCooldown 	= 0;
+		baseCooldown 	= 1;
 		baseManaCost 	= 0.1f;
+		
+//		sound_cast = "sounds/effects/fire/fire_throw_03.mp3";
+//		sound_loop = "sounds/effects/fire/fire_burning_01.mp3";
+//		sound_end = "sounds/effects/explosion/explosion_01.mp3";
+		texture_path = "texture/spritesheet/starburst.png";
+		
 	}
 
 	@Override

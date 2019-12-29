@@ -63,7 +63,8 @@ public class Logger {
 	}
 
 	public static void Debug(Class caller, String method, Object message) {
-		Debug(caller, method, message.toString());
+		if (message != null)
+			Debug(caller, method, message.toString());
 	}
 	
 	public static void Debug(Class caller, String method, String message) {

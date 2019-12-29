@@ -1,7 +1,14 @@
 package ecu.se.assetManager;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
 import ecu.se.Globals;
+import ecu.se.Logger;
 
 /**
  * 
@@ -25,20 +32,31 @@ public class SpriteAsset extends Asset {
 		numCol = 2;
 		spriteW = 1;
 		spriteH = 1;
-		frameTimeLength = 1;
+		frameTimeLength = 1;		
+		
+		JarFile jarFile = null;
+		BufferedReader reader = null;
+		
+		try {					
+			String jarPath = SpriteAsset.class.getProtectionDomain().getCodeSource().getLocation().toString();
+			jarPath = SpriteAsset.class.getProtectionDomain().getCodeSource().getLocation().toString();
 
-		File file = new File(name);
-		try {
-			file.createNewFile();
-			FileReader fileReader = new FileReader(file);
-			BufferedReader reader = new BufferedReader(fileReader);
-
+			jarPath = jarPath.replace("file:", "");
+			jarPath = jarPath.replace("jar:", "");
+			
+			jarFile = new JarFile(jarPath);
+			
+	       JarEntry entry = jarFile.getJarEntry(name);
+	       InputStream input = jarFile.getInputStream(entry);
+	       
+	       InputStreamReader isr = new InputStreamReader(input);
+	        reader = new BufferedReader(isr);
+			
 			String line = null;
 			String[] parts = null;
 			while ((line = reader.readLine()) != null) {
 				parts = line.split(" ");
 				if (parts.length > 1) {
-
 					if (parts[0].startsWith("#ROWS")) {
 						numRows = Integer.parseInt(parts[1].trim());
 					} else if (parts[0].startsWith("#COLUMNS")) {
@@ -54,14 +72,31 @@ public class SpriteAsset extends Asset {
 					}
 				}
 			}
-			reader.close();
-
+			
 		} catch (IOException e) {
-			System.err.println("[Archiver] Failed to load records :'(");
+			Logger.Error(this.getClass(), "Constructor", "Failed to load spritesheet info from "+name);
+			Logger.Error(this.getClass(), "Constructor", e.getMessage());
+
+			numRows = 1;
+			numCol = 1;
+			spriteW = sprite.getTexture().getWidth();
+			spriteH = sprite.getTexture().getHeight();
+			frameTimeLength = 1;
+			
+			sprite = AssetManager.getTexture("");
 			e.printStackTrace();
+		} finally {
+			try {
+				reader.close();
+				jarFile.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				Logger.Error(getClass(), "Constructor", "Failed to close jarfile/reader: " + e.getMessage() );
+				e.printStackTrace();
+			}		
 		}
 	}
-
+	
 	/**
 	 * 
 	 * @return true if loaded correctly

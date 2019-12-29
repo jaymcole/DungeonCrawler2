@@ -8,21 +8,15 @@ import ecu.se.assetManager.AssetManager;
 import ecu.se.objects.Projectile;
 import ecu.se.stats.Stats;
 
-/**
- * 
- * A spell that creates a fireball.
- */
-public class Spell_Fireball extends Spell{
-
-	
-	
-	public Spell_Fireball(Actor caster) {
+public class Spell_FlameThrower extends Spell {
+	public Spell_FlameThrower(Actor caster) {
 		super(caster);
 		
 		baseCastSpeed 	= 0;
-		baseCooldown 	= 100.0f;
-		baseManaCost 	= 5f;
-		baseDamage 		= 25f;
+		baseCooldown 	= 0.1f;
+		baseManaCost 	= 0.2f;
+		baseDamage 		= 2f;
+		instantCast = true;
 		
 		sound_cast = "sounds/effects/fire/fire_throw_03.mp3";
 		sound_loop = "sounds/effects/fire/fire_burning_01.mp3";
@@ -30,16 +24,15 @@ public class Spell_Fireball extends Spell{
 		texture_path = "texture/spritesheet/fireball_spritesheet.png";
 		
 	}
+	Random random = new Random();
 
-	
 	@Override
 	protected void cast(float deltaTime) {
-		double angleInRadians = Math.atan2(targetY - caster.getY(), targetX - caster.getX()) - Math.atan2(0, 0);
-		ObjectManager.add(new Projectile(caster.getX(), caster.getY(), angleInRadians,  caster, caster.getStat(Stats.KNOCKBACK) * 100, baseDamage, 700f, texture_path, 
+		double angleInRadians = Math.atan2(targetY - caster.getY(), targetX - caster.getX()) - Math.atan2(0, 0)  + random.nextDouble() + (random.nextDouble() * 0.1f) - 0.55f;
+		ObjectManager.add(new Projectile(caster.getX(), caster.getY(), angleInRadians,  caster, caster.getStat(Stats.KNOCKBACK) * 25, baseDamage, 700f, texture_path, 
 				AssetManager.getSound(sound_cast).getSound(), 
 				AssetManager.getSound(sound_loop).getSound(), 
 				AssetManager.getSound(sound_end).getSound()));
 		currentStage++;
 	}
-
 }
