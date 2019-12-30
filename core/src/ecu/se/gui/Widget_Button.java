@@ -49,9 +49,9 @@ public abstract class Widget_Button extends Widget{
 		texture = AssetManager.getTexture("texture/misc/white.png").getTexture();
 		setText(text);
 		activeWidget = false;
-		defaultColor = Color.MAGENTA;
-		highlightColor = Color.BROWN;
-		activeColor = Color.SKY;
+		defaultColor = Color.GRAY;
+		highlightColor = Color.SKY;
+		activeColor = Color.GREEN;
 		hasHotkey = false;
 	}
 	

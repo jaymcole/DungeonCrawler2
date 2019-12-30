@@ -1,5 +1,6 @@
 package ecu.se;
 
+import java.util.Iterator;
 import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 import ecu.se.actions.Spell_Fireball;
 import ecu.se.actions.Spell_FlameThrower;
+import ecu.se.actions.Spell_Light;
 import ecu.se.actions.Spell_Teleport;
 import ecu.se.actors.Player;
 import ecu.se.archive.Archiver;
@@ -32,9 +34,9 @@ import ecu.se.assetManager.AssetManager;
 import ecu.se.assetManager.SoundManager;
 import ecu.se.gui.GUI;
 import ecu.se.gui.Window_HUD;
+import ecu.se.lights.Light;
 import ecu.se.map.Map;
 import ecu.se.objects.ActiveItem;
-import ecu.se.objects.Light;
 
 
 /**
@@ -142,7 +144,15 @@ public class Game extends ApplicationAdapter {
 		hud = new GUI(player, screenWidth, screenHeight, this);
 		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD)).setPrimary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Fireball(player)));
 		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD)).setSecondary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Teleport(player)));
+		
+		
 		ActiveItem spell = ObjectMaker.createActiveItem(0, 0, new Spell_FlameThrower(player));
+		spell.onClick(player);
+		spell = ObjectMaker.createActiveItem(0, 0, new Spell_Light(player));
+		spell.onClick(player);
+		spell = ObjectMaker.createActiveItem(0, 0, new Spell_Fireball(player));
+		spell.onClick(player);
+		spell = ObjectMaker.createActiveItem(0, 0, new Spell_Teleport(player));
 		spell.onClick(player);
 		
 		shapeRenderer = new ShapeRenderer();
@@ -245,6 +255,27 @@ public class Game extends ApplicationAdapter {
 
 			Utils.DrawDebugLine(new Vector2(0, -50), new Vector2(0, 50), camera.combined);
 			Utils.DrawDebugLine(new Vector2(-50, 0), new Vector2(50, 0), camera.combined);
+			
+			Random random = new Random();
+			for(Light light : Lighting.getLights()) {
+				
+				for(int i=0; i < light.positions.size()-2; i++)
+				{
+					Vector3 one = light.positions.get(i);
+					Vector3 two = light.positions.get(i+1);
+					
+					
+					Utils.DrawDebugLine(new Vector2(one.x, one.y), new Vector2(two.x, two.y), camera.combined);
+
+				}
+		
+				
+//				Utils.DrawDebugLine(player.getPositionV2(), new Vector2(light.getPos().x + random.nextInt(45), light.getPos().y + random.nextInt(45)), camera.combined);
+
+			}
+			
+			
+			
 		}
 
 		{			

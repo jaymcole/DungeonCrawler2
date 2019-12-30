@@ -11,6 +11,10 @@ public class SoundAsset extends Asset{
 	private String name;	
 	
 	public SoundAsset(String name) {
+		if (name == null) {
+			Logger.Error(getClass(), "Constructor", "Failed to load SoundAsset. File path is null.");
+			return;
+		}
 		this.name = name;
 		Logger.Debug(this.getClass(), "SoundAsset", Gdx.files.internal(name));
 		sound = Gdx.audio.newSound(Gdx.files.internal(name));

@@ -9,8 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import ecu.se.actors.Team;
+import ecu.se.lights.Light;
 import ecu.se.objects.ItemObject;
-import ecu.se.objects.Light;
 import ecu.se.stats.Stats;
 
 /**

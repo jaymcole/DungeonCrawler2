@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import ecu.se.objects.Light;
+import ecu.se.lights.Light;
 
 public class Lighting {
 
@@ -30,8 +30,8 @@ public class Lighting {
 	private static boolean lightsOn;
 	// private static GameObject renderTarget;
 	
-	private static float attenuationA = 10f;
-	private static float attenuationB = 2.29857f;
+	private static float attenuationA = 0.5562134f;
+	private static float attenuationB = 2.1183434f;
 
 	public static void init(OrthographicCamera cam, GameObject rt) {
 		camera = cam;
@@ -53,7 +53,6 @@ public class Lighting {
 	 *            - Time since last render call.
 	 */
 	public static void updateLights(float deltaTime, Vector2 targetVector) {
-//		Logger.Debug("NA", "NA","Total Lights=" + lights.size());
 		updater = lights.iterator();
 		
 		while (updater.hasNext()) {
@@ -78,6 +77,7 @@ public class Lighting {
 				shader.setUniformi("lights[" + counter + "].type", light.type);
 				shader.setUniformf("lights[" + counter + "].color", color.r, color.g, color.b, color.a);
 				shader.setUniformf("lights[" + counter + "].position", position.x, position.y);
+//				Logger.Debug(Lighting.class, "updateLights", "Position: " + position.toString());
 				shader.setUniformf("lights[" + counter + "].intensity", light.intensity);
 				counter++;
 			}
@@ -114,8 +114,11 @@ public class Lighting {
 		for (Light l : waitlist) {
 			if (l.delete) 
 				lights.remove(l);
-			else 
+			else {
+				Logger.Debug(Lighting.class, "setLights", "Adding new light to render list");
+				Logger.Debug(Lighting.class, "setLights", "\t" + l.getPos().toString());
 				lights.add(l);
+			}
 		}
 
 		waitlist.clear();
@@ -123,12 +126,16 @@ public class Lighting {
 		wipeWaitlist = false;
 	}
 
+	public static LinkedList<Light> getLights() {
+		return lights;
+	}
+	
 	/**
 	 * Sets the light list to newLights and clears the old list.
 	 * @param newLights
 	 */
 	public static void setLights(LinkedList<Light> newLights) {
-		System.err.println("Adding " + newLights.size() + " new lights");
+		Logger.Debug(Lighting.class, "setLights", "Adding " + newLights.size() + " new lights");
 		if(waitlist != null)
 			waitlist.clear();
 		else
@@ -143,6 +150,10 @@ public class Lighting {
 	 * @param light
 	 */
 	public static void addLight(Light light) {
+		Logger.Debug(Lighting.class, "setLights", "Adding new light to waitlist");
+		Logger.Debug(Lighting.class, "setLights", "\t" + light.getPos().toString());
+		
+		
 		light.delete = false;
 		waitlist.add(light);
 	}

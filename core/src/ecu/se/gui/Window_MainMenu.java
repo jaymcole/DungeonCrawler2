@@ -16,11 +16,11 @@ public class Window_MainMenu extends Window{
 		int halfwayY = (int)(GUI.defaultHeight * 0.5f);
 		int backgroundX = (int)(halfwayX * 0.5f);
 		int backgroundY = (int)(halfwayY * 0.5f);
-		int bufferX = 50;
+		int bufferX = 90;
 		
 		
-		Widget_Image img_background = new Widget_Image(backgroundX, backgroundY, halfwayX, halfwayY, this, "texture/misc/white.png");
-		img_background.setDefaultColor(new Color(Color.CHARTREUSE.r,Color.CHARTREUSE.g,Color.CHARTREUSE.b,0.5f));
+		Widget_Image img_background = new Widget_Image(backgroundX, backgroundY, halfwayX, halfwayY, this, "texture/misc/paper.jpg");
+		img_background.setDefaultColor(Color.WHITE);
 		
 		Widget_Label lbl_title = new Widget_Label(backgroundX + bufferX, backgroundY + halfwayY - 25, 0, 0, parent, this.windowName, 50, Color.CLEAR, Color.BLACK);
 		

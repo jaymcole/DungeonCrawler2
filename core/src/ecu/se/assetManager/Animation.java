@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import ecu.se.GameObject;
+import ecu.se.Logger;
 
 /**
  * 
@@ -11,16 +12,25 @@ import ecu.se.GameObject;
  */
 public class Animation extends GameObject {
 	private boolean hold = true;
-	private int spriteHeight, spriteWidth, spriteX, spriteY, totalCol, currentCol;
+	private int totalFramesPassed = 0;
+	private int totalFramesAvailable;
+	private int spriteHeight, spriteWidth, spriteX, spriteY, totalCol, totalRow, currentCol, currentRow;
 	private TextureRegion textureRegion;
 	private float rotation = 0;
 	private int offsetX;
 	private int offsetY;
 	private float x, y;
 	private float scaleX, scaleY;
+	
 
 	private float speed = 0.05f;
 	private float time = 0;
+	
+	private boolean useAllRows = false;
+	
+	// -1 cycles means loop forever
+	private float cycles = -1;
+	private int endingFrame = -1;
 
 	public Animation(float x, float y, float z) {
 		super(x, y, z);
@@ -32,13 +42,15 @@ public class Animation extends GameObject {
 	public Animation(float x, float y, float z, SpriteAsset spriteAsset) {
 		super(x, y, z);
 		totalCol = spriteAsset.getSpriteColumns();
+		totalRow = spriteAsset.getSpriteRows();
 		spriteHeight = spriteAsset.getSpriteHeight();
 		spriteWidth = spriteAsset.getSpriteWidth();
 		textureRegion = new TextureRegion(spriteAsset.getTexture().getTexture());
 		currentCol = 0;
+		currentRow = 0;
 
-		offsetX = 0;
-		offsetY = 0;
+		
+		totalFramesAvailable = totalCol * totalRow;
 
 		offsetX = -(int) (spriteWidth * 0.5);
 		offsetY = -(int) (spriteHeight * 0.5);
@@ -73,17 +85,31 @@ public class Animation extends GameObject {
 			time = 0;
 		} else if (time >= speed) {
 			currentCol++;
-
-			currentCol %= totalCol;
-
+			
+			if (currentCol > totalCol) {
+				if (useAllRows) {
+					currentRow++;
+					currentCol = 0;
+					currentRow %= totalRow;
+				}
+				currentCol %= totalCol;
+			}
+			
 			time -= speed;
+			totalFramesPassed++;
+			
+			if (totalFramesPassed > endingFrame)
+				this.kill();
+
 			spriteX = currentCol * spriteWidth;
+			spriteY = currentRow * spriteHeight;
 		}
 		textureRegion.setRegion(spriteX, spriteY, spriteWidth, spriteHeight);
 	}
 
 	@Override
 	public void render(SpriteBatch batch) {
+		
 		offsetX = 0;
 		offsetY = 0;
 
@@ -172,6 +198,34 @@ public class Animation extends GameObject {
 	 */
 	public int getTotalColumns() {
 		return totalCol;
+	}
+	
+	/**
+	 * Sets the number of times the animation should play before completion;
+	 * -1 cycles means loops forever.
+	 * @param cycles - the number of times this animation should play
+	 */
+	public void setLoopCycles(float cycles) {
+		
+		if (useAllRows) {
+			endingFrame = (int)(totalFramesAvailable * cycles);			
+		} else {
+			endingFrame = (int)(totalCol * cycles);
+		}
+		
+	}
+	
+	/**
+	 * Determines if the animation should move to the next row or go back to the beginning of the current row.
+	 * @param useAllRows
+	 */
+	public void setUseAllRows(boolean useAllRows) {
+		this.useAllRows = useAllRows;
+		setLoopCycles(cycles);
+	}
+	
+	public void setSpeed(float speed) {
+		this.speed = speed;
 	}
 
 	@Override

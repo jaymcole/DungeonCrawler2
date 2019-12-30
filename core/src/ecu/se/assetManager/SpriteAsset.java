@@ -1,6 +1,8 @@
 package ecu.se.assetManager;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -36,21 +38,35 @@ public class SpriteAsset extends Asset {
 		
 		JarFile jarFile = null;
 		BufferedReader reader = null;
+		FileReader fileReader = null;
+		File file = null;
 		
-		try {					
-			String jarPath = SpriteAsset.class.getProtectionDomain().getCodeSource().getLocation().toString();
-			jarPath = SpriteAsset.class.getProtectionDomain().getCodeSource().getLocation().toString();
-
-			jarPath = jarPath.replace("file:", "");
-			jarPath = jarPath.replace("jar:", "");
+		try {
 			
-			jarFile = new JarFile(jarPath);
+			if (true) {
+				//file.createNewFile();
+				file = new File(name);
+				fileReader = new FileReader(file);
+				reader = new BufferedReader(fileReader);				
+			} else {
+				String jarPath = SpriteAsset.class.getProtectionDomain().getCodeSource().getLocation().toString();
+				jarPath = SpriteAsset.class.getProtectionDomain().getCodeSource().getLocation().toString();
+				
+				jarPath = jarPath.replace("file:", "");
+				jarPath = jarPath.replace("jar:", "");
+				
+				jarFile = new JarFile(jarPath);
+				
+				JarEntry entry = jarFile.getJarEntry(name);
+				InputStream input = jarFile.getInputStream(entry);
+				
+				InputStreamReader isr = new InputStreamReader(input);
+				reader = new BufferedReader(isr);
+			}
 			
-	       JarEntry entry = jarFile.getJarEntry(name);
-	       InputStream input = jarFile.getInputStream(entry);
-	       
-	       InputStreamReader isr = new InputStreamReader(input);
-	        reader = new BufferedReader(isr);
+			
+			
+			
 			
 			String line = null;
 			String[] parts = null;
@@ -87,8 +103,12 @@ public class SpriteAsset extends Asset {
 			e.printStackTrace();
 		} finally {
 			try {
-				reader.close();
-				jarFile.close();
+				if (reader != null)
+					reader.close();
+				if (jarFile != null)
+					jarFile.close();
+				if (fileReader != null)
+					fileReader.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				Logger.Error(getClass(), "Constructor", "Failed to close jarfile/reader: " + e.getMessage() );

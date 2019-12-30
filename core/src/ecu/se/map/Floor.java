@@ -11,8 +11,8 @@ import ecu.se.GameObject;
 import ecu.se.Globals;
 import ecu.se.Lighting;
 import ecu.se.ObjectManager;
+import ecu.se.lights.Light;
 import ecu.se.objects.InteractableItem;
-import ecu.se.objects.Light;
 
 /**
  * 

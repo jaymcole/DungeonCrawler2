@@ -64,10 +64,6 @@ public class ItemObject extends GameObject {
 	public void render(SpriteBatch batch) {
 		batch.setColor(Color.WHITE);
 		batch.draw(textureRegion, x - width*0.5f, y - height*0.5f, width, height);
-		
-//		batch.setColor(Color.MAGENTA);
-//		batch.draw(textureRegion, x - width, y - height, width, height);
-//		batch.draw(textureRegion, x, y, width, height);
 	}
 
 	public void dispose() {

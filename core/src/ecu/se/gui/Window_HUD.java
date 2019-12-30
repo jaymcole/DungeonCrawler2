@@ -43,7 +43,7 @@ public class Window_HUD extends Window {
 		ArrayList<Widget> widgetsList = new ArrayList<Widget>();
 		int extra = 14;
 		// Player Health bar
-		prgbar_health = new Widget_ProgressBar(254, 1014 + extra, 606, 45, this, Color.FIREBRICK, Color.RED) {
+		prgbar_health = new Widget_ProgressBar_Image(254, 1014 + extra, 606, 45, this, Color.DARK_GRAY, Color.RED, "texture/misc/skulls.png", TextureBehavior.Tile, "texture/misc/skulls.png", TextureBehavior.Tile) {
 			@Override
 			public void updateBar() {
 				progress = Game.player.getHealth();
@@ -61,7 +61,7 @@ public class Window_HUD extends Window {
 		};
 
 		// Player XP Bar
-		prgbar_xp = new Widget_ProgressBar_Image(8, 874, 200, 200, this, new Color(0.3f,0.3f,0.3f,0.5f), Color.ORANGE, "texture/misc/circle.png") {
+		prgbar_xp = new Widget_ProgressBar_Image(8, 874, 200, 200, this, new Color(0.3f,0.3f,0.3f,0.5f), Color.ORANGE, "texture/misc/circle.png", TextureBehavior.Tile, "texture/misc/circle.png", TextureBehavior.Tile) {
 			@Override
 			public void updateBar() {
 				progress = Game.player.getXP();

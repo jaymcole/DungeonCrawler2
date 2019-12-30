@@ -4,17 +4,12 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.Game;
 import ecu.se.GameObject;
-import ecu.se.Globals;
 import ecu.se.ObjectManager;
 import ecu.se.map.Direction;
-import ecu.se.map.Map;
-import ecu.se.map.PathNode;
 import ecu.se.pathfinding.Pathfinder2;
 import ecu.se.stats.Stats;
 

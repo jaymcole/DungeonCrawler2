@@ -69,8 +69,6 @@ public class Player extends Actor {
 	@Override
 	protected void die() {
 		Archiver.set(TotalRecords.DEATHS, 1);
-		
-		
 		Map.getTile((int) x, (int) y).addObject(
 				new Decal(x, y, "ass", AssetManager.getTexture(DecalPicker.getActorCorpse()).getTextureRegion()));
 		Game.currentState = Game.GAME_STATE_PAUSED;

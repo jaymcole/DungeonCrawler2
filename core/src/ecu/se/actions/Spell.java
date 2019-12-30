@@ -1,11 +1,14 @@
 package ecu.se.actions;
 
+import com.badlogic.gdx.audio.Sound;
+
 import ecu.se.Game;
 import ecu.se.GameObject;
 import ecu.se.actors.Actor;
 import ecu.se.actors.Team;
 import ecu.se.archive.Archiver;
 import ecu.se.archive.TotalRecords;
+import ecu.se.assetManager.SpriteAsset;
 import ecu.se.stats.Stats;
 
 /**
@@ -19,10 +22,10 @@ public abstract class Spell extends Action {
 	
 	protected int currentStage = -1;
 
-	protected String sound_cast;
-	protected String sound_loop;
-	protected String sound_end;
-	protected String texture_path;
+	protected Sound sound_cast;
+	protected Sound sound_loop;
+	protected Sound sound_end;
+	protected SpriteAsset spritesheet;
 	
 	/**
 	 * Base stats for the spell.
@@ -101,6 +104,7 @@ public abstract class Spell extends Action {
 	
 	@Override
 	public void update(float deltaTime) {
+		timer += deltaTime;
 		switch (currentStage) {
 		case CHANNEL:
 			channel(deltaTime);
@@ -119,6 +123,7 @@ public abstract class Spell extends Action {
 			break;
 		default:
 			active = false;
+			currentStage = 0;
 			break;
 		}
 	}
@@ -128,7 +133,6 @@ public abstract class Spell extends Action {
 	 * Override if an animation or something needs to happen while channeling, ignore otherwise.
 	 */
 	protected void channel(float deltaTime) {
-		timer += deltaTime;
 		if(timer >= currentCastSpeed) {
 			currentStage++;
 			timer = 0;
@@ -146,7 +150,6 @@ public abstract class Spell extends Action {
 	 * @param deltaTime
 	 */
 	protected void cooldown(float deltaTime) {
-		timer += deltaTime;
 		if (timer >= currentCooldown) {
 			timer = 0;
 			active = false;

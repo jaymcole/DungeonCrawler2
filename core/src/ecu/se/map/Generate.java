@@ -21,9 +21,9 @@ import ecu.se.actions.Potion;
 import ecu.se.archive.Archiver;
 import ecu.se.archive.TotalRecords;
 import ecu.se.assetManager.AssetManager;
+import ecu.se.lights.Light;
 import ecu.se.objects.Decal;
 import ecu.se.objects.InteractableItem;
-import ecu.se.objects.Light;
 
 /**
  *

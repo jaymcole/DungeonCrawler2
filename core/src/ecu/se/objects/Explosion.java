@@ -44,8 +44,8 @@ public class Explosion extends GameObject {
 	public void update(float deltaTime) {
 		if (animation.getCurrentColumn() >= animation.getTotalColumns() - 1) {
 			this.kill();
-			
 		}
+		animation.setXY((int)x, (int)y);
 		animation.update(deltaTime);
 	}
 	

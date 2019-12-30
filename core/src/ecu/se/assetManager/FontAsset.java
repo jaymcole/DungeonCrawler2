@@ -28,7 +28,7 @@ public class FontAsset extends Asset{
             font = generator.generateFont(parameter);
             generator.dispose();    
         } catch (GdxRuntimeException e) {
-            System.err.println("Unable to load texture \""+ name +"\"");
+            System.err.println("Unable to load font \""+ name +"\"");
         }        
     }
     

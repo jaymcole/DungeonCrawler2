@@ -17,10 +17,10 @@ import ecu.se.actors.TeleportEnemy;
 import ecu.se.assetManager.AssetManager;
 import ecu.se.gui.GUI;
 import ecu.se.gui.Window_Inventory;
+import ecu.se.lights.Light;
+import ecu.se.lights.LightFading;
 import ecu.se.objects.ActiveItem;
-import ecu.se.objects.FadingLight;
 import ecu.se.objects.InteractableItem;
-import ecu.se.objects.Light;
 import ecu.se.stats.Stats;
 
 public class ObjectMaker {
@@ -55,7 +55,7 @@ public class ObjectMaker {
 			@Override
 			public void die() {
 				Lighting.removeLight(light);
-				FadingLight fadeLight = new FadingLight(new Vector3(x, y, 0), Color.RED, ORB_BRIGHTNESS * 3, 0.99f, 2);
+				LightFading fadeLight = new LightFading(new Vector3(x, y, 0), Color.RED, ORB_BRIGHTNESS * 3, 0.99f, 2);
 				Lighting.addLight(fadeLight);
 			}
 		};
@@ -94,7 +94,7 @@ public class ObjectMaker {
 			@Override
 			public void die() {
 				Lighting.removeLight(light);
-				FadingLight fadeLight = new FadingLight(new Vector3(x, y, 0), Color.BLUE, ORB_BRIGHTNESS * 3, 0.99f, 2);
+				LightFading fadeLight = new LightFading(new Vector3(x, y, 0), Color.BLUE, ORB_BRIGHTNESS * 3, 0.99f, 2);
 				Lighting.addLight(fadeLight);
 			}
 		};

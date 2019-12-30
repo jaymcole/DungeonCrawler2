@@ -39,6 +39,7 @@ public class Window_Settings extends Window{
 			}
 		};
 		
+		
 		Widget_Slider sld_attn_b = new Widget_Slider(backgroundX + bufferX, backgroundY + halfwayY - 300, halfwayX - bufferX * 2, 50, this, -10, 10, Lighting.getAttnB()) {
 			@Override
 			public void onValueChange() {
