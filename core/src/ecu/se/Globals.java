@@ -1,5 +1,9 @@
 package ecu.se;
 
+import ecu.se.assetManager.AssetManager;
+import ecu.se.assetManager.FontAsset;
+import ecu.se.gui.GUI;
+
 /**
  *
  * Globals Settings - provides a convenient centralized locations for global setting values.
@@ -55,6 +59,11 @@ public class Globals {
     public static boolean USE_TEXTURE_MANAGER = true;
     
     
-    
+    private static FontAsset _defaultFontAsset;
+    public static FontAsset defaultFontAsset() {
+    	if (_defaultFontAsset == null)
+    		_defaultFontAsset = AssetManager.getFont("font/font_jay.ttf", (int) (400 * GUI.conversionX));
+    	return _defaultFontAsset;
+    }
     
 }

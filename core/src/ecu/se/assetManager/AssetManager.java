@@ -16,7 +16,7 @@ public class AssetManager {
 	 * @returns a FontAsset
 	 */
 	public static FontAsset getFont(String name, int size) {
-		String key =name + size + "g";
+		String key =name + size;
 		if(assets.containsKey(key)) 
 			return (FontAsset)(assets.get(key));
 		

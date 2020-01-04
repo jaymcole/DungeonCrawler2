@@ -287,6 +287,7 @@ public class Game extends ApplicationAdapter {
 		if (Globals.DEBUG) {
 			shapeRenderer.begin(ShapeType.Line);
 			hud.debugRender(shapeRenderer);
+			
 			shapeRenderer.end();
 		}
 
@@ -347,6 +348,11 @@ public class Game extends ApplicationAdapter {
 	private void guiControls() {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P))
 			pauseGame();
+		
+		if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
+			GUI.renderGui2Test = !GUI.renderGui2Test;
+			Logger.Debug(getClass(), "guiControls", "Test GUI enabled: " + GUI.renderGui2Test);
+		}
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.I) && !GAME_OVER) {
 			if (GUI.currentWindow != GUI.WINDOW_INVENTORY) {

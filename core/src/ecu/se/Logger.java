@@ -56,10 +56,17 @@ public class Logger {
 		}
 	}
 
+	
 	public static void Error(Class caller, String method, String message) {
 		if (!LoggingEnabled && !AlwaysSaveErrorLogs)
 			return;
 		WriteLog(ComposeLogMessage(caller, method, "ERROR", message));
+	}
+
+	public static void Warning(Class caller, String method, String message) {
+		if (!DebugEnabled || !LoggingEnabled)
+			return;
+		WriteLog(ComposeLogMessage(caller, method, "WARN", message));
 	}
 
 	public static void Debug(Class caller, String method, Object message) {

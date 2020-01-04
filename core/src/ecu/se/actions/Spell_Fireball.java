@@ -28,7 +28,7 @@ public class Spell_Fireball extends Spell{
 		super(caster);
 		
 		baseCastSpeed 	= 0;
-		baseCooldown 	= 50.0f;
+		baseCooldown 	= 15.0f;
 		baseManaCost 	= 5f;
 		baseDamage 		= 25f;
 		

@@ -5,11 +5,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import ecu.se.Game;
 import ecu.se.Logger;
 import ecu.se.actors.Player;
+import ecu.se.gui2.Container;
+import ecu.se.gui2.GuiLabel;
+import ecu.se.gui2.GuiUtils;
 
 public class GUI {
 
@@ -61,10 +65,59 @@ public class GUI {
 		conversionY = screenHeight / defaultHeight;
 
 		hudCamera = new OrthographicCamera(screenWidth, screenHeight);
-
+//		hudCamera.projection.translate(-halfWidth, -halfHeight, 0);
+		
 		windows = new Window[] { new Window_PauseScreen(this), new Window_HUD(this), new Window_MainMenu(this),
 				new Window_Settings(this), new Window_Inventory(this), new Window_PlayerStats(this), new Window_DeathScreen(this) };
 		setWindow(WINDOW_MAIN_MENU);
+		
+		createTestGUI();
+	}
+	
+	private void createTestGUI() {
+//		test = new Container();
+//		test.setLayout(GuiUtils.Layout.Horizontal);
+//		
+//		Container leftColumn = new Container(), rightColumn = new Container();
+//		leftColumn.setLayout(GuiUtils.Layout.Vertical);
+//		leftColumn.addChild(new GuiLabel("Left Column Start"));
+//		leftColumn.addChild(new GuiLabel("Row 1"));
+//		leftColumn.addChild(new GuiLabel("Row 2"));
+//		leftColumn.addChild(new GuiLabel("Row 3"));
+//		leftColumn.addChild(new GuiLabel("Row 4"));
+//		leftColumn.addChild(new GuiLabel("Left Column End"));
+//		
+//		rightColumn.setLayout(GuiUtils.Layout.Vertical);
+//		rightColumn.addChild(new GuiLabel("Right Column Start"));
+//		rightColumn.addChild(new GuiLabel("Row 1"));
+//		
+//		Container subColumn = new Container();
+//		subColumn.setLayout(GuiUtils.Layout.Horizontal);
+//		subColumn.addChild(new GuiLabel("WOW"));
+//		subColumn.addChild(new GuiLabel("WOW2"));
+//		subColumn.addChild(new GuiLabel("WOW3"));
+//		rightColumn.addChild(subColumn);
+//		
+//		
+//		rightColumn.addChild(new GuiLabel("Row 2"));
+//		rightColumn.addChild(new GuiLabel("Row 3"));
+//		rightColumn.addChild(new GuiLabel("Row 4"));
+//		rightColumn.addChild(new GuiLabel("Right Column End"));
+//		
+//		
+//
+//		test.addChild(leftColumn);
+//		test.addChild(rightColumn);
+//		test.addChild(new GuiLabel("Seven"));
+//		test.addChild(new GuiLabel("Three"));
+//		test.setPadding(45);
+//		test.setWidth(800);
+//		test.setHeight(800);
+//		test.calculateMinDimensions();
+//		test.setOriginX(-test.getWidth() * .5f);
+//		test.setOriginY(-test.getHeight() * .5f);
+//		
+//		test.resize();
 	}
 
 	/**
@@ -78,6 +131,10 @@ public class GUI {
 	 */
 	boolean inputUsed;
 
+	
+	public static boolean renderGui2Test = false;
+	public static Container test;
+	
 	/**
 	 * Updates the active windows.
 	 * 
@@ -99,6 +156,9 @@ public class GUI {
 		if (currentWindow != WINDOW_HUD)
 			if (windows[WINDOW_HUD].update(deltaTime, mouseX, mouseY) || inputUsed)
 				inputUsed = true;
+		
+//		if (test.update(deltaTime, mouseX, mouseY))
+//			inputUsed = true;
 	}
 
 	/**
@@ -107,9 +167,8 @@ public class GUI {
 	 * 
 	 * @param batch
 	 */
-	public void render(SpriteBatch batch) {
+	public void render(SpriteBatch batch) {		
 		batch.setProjectionMatrix(hudCamera.projection);
-
 		if (Game.currentState == Game.GAME_STATE_PAUSED)
 			windows[WINDOW_PAUSED].render(batch);
 
@@ -119,7 +178,15 @@ public class GUI {
 			windows[currentWindow].render(batch);
 
 		batch.setColor(Color.WHITE);
+		
+		
+//		if (renderGui2Test) {
+//		test.render(batch);
+//		}
 	}
+
+	
+	GuiLabel label = new GuiLabel("TEST LABEL");
 
 	/**
 	 * Renders the debug view. i.e., widget bounds + widget (x,y)
@@ -135,6 +202,14 @@ public class GUI {
 
 		if (Game.currentState == Game.GAME_STATE_PAUSED)
 			windows[WINDOW_PAUSED].debugRender(renderer);
+		
+		
+//		renderer.line(-Gdx.graphics.getWidth(), -Gdx.graphics.getHeight(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//		test.debugRender(renderer);
+//		renderer.setColor(Color.MAGENTA);
+//		renderer.circle(0, 0, 50);
+//		renderer.line(0, 0, test.getChildX(), test.getChildY());
+		
 	}
 
 	/**

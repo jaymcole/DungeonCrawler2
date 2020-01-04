@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
+import ecu.se.Logger;
+import ecu.se.Utils;
 import ecu.se.gui.GUI;
 
 /**
@@ -18,17 +20,21 @@ public class FontAsset extends Asset{
     private String name;
      
     public FontAsset(String name, int size) {
-    	size = (int)(size * (GUI.conversionX + GUI.conversionY) * 0.5f);
+    	size = (int)(size * ((GUI.conversionX + GUI.conversionY) * 0.5f));
+    	size = Utils.clamp(12, Integer.MAX_VALUE, size);
+    	Logger.Debug(getClass(), "Constructor", "Font size is: " + size);
     	this.name = name;
         try {
             FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(name));
             parameter = new FreeTypeFontParameter();
             parameter.size = size;
-            parameter.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"'()+,-./";
+//            parameter.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"'()+,-./";
+            parameter.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890.:,;\'\"(!?)+-*/=";
             font = generator.generateFont(parameter);
             generator.dispose();    
         } catch (GdxRuntimeException e) {
-            System.err.println("Unable to load font \""+ name +"\"");
+        	Logger.Error(getClass(), "Constructor", "Unable to load font \""+ name +"\"");
+        	Logger.Error(getClass(), "Constructor", e.toString());	
         }        
     }
     
