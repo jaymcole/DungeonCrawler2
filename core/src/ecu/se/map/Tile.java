@@ -1,11 +1,16 @@
 package ecu.se.map;
 
+import java.awt.Polygon;
+import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Shape2D;
+import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.GameObject;
 import ecu.se.Lighting;
@@ -29,6 +34,8 @@ public class Tile extends GameObject {
 
 	private LinkedList<GameObject> objects;
 	private LinkedList<GameObject> decals;
+	
+	public LineSegment[] Boundinglines;
 
 	public Tile(int x, int y, int width, int height) {
 		super(x, y);
@@ -41,7 +48,7 @@ public class Tile extends GameObject {
 		this.height = height;
 		decals = new LinkedList<GameObject>();
 		objects = new LinkedList<GameObject>();
-		bounds = Utils.getRectangleBounds(x, y, width, height, Utils.ALIGN_BOTTOM_LEFT);
+		CreateBounds();
 		texture = new TextureRegion();
 		texture.setRegion(AssetManager.getTexture("texture/misc/black.jpg").getTexture());
 	}
@@ -70,7 +77,33 @@ public class Tile extends GameObject {
 		}
 
 	}
-
+	
+	private void CreateBounds() {
+		bounds = Utils.getRectangleBounds(x, y, width, height, Utils.ALIGN_BOTTOM_LEFT);
+		
+		if (Boundinglines == null)
+			Boundinglines = new LineSegment[4];
+		
+		Boundinglines[0] = new LineSegment(x,y,x, y+height);
+		Boundinglines[1] = new LineSegment(x,y+height,x + width, y + height);
+		Boundinglines[2] = new LineSegment(x+width,y+height,x+width, y+height);
+		Boundinglines[3] = new LineSegment(x,y,x+width, y);
+	}
+	
+	public LinkedList<Vector2> getAllIntersections(LineSegment line) {
+		LinkedList<Vector2> intersections = new LinkedList<Vector2>(); 
+		Vector2 intersection = null;
+		
+		for (int i = 0 ; i < Boundinglines.length; i++) {
+			LineSegment bline = Boundinglines[i];
+			Intersector.intersectSegments(line.x1, line.y1, line.x2, line.y2, bline.x1, bline.y1, bline.x2, bline.y2, intersection);
+			if (intersection != null) {
+				intersections.add(intersection);
+			}
+		}
+		return intersections;	
+	}
+	
 	/**
 	 * Renders the decals on this tile
 	 * 
@@ -96,7 +129,20 @@ public class Tile extends GameObject {
 			renderer.setColor(Color.FOREST);
 
 		renderer.polygon(bounds.getTransformedVertices());
+		
+//		renderer.setColor(Color.CYAN);
+//		renderer.line(Boundinglines[0].x1, Boundinglines[0].y1, Boundinglines[0].x2-5, Boundinglines[0].y2);
+//		
+//		renderer.setColor(Color.RED);
+//		renderer.line(Boundinglines[1].x1, Boundinglines[1].y1, Boundinglines[1].x2, Boundinglines[1].y2 + 5);
+//		
+//		renderer.setColor(Color.GREEN);
+//		renderer.line(Boundinglines[2].x1, Boundinglines[2].y1, Boundinglines[2].x2+5, Boundinglines[2].y2);
+//		
+//		renderer.setColor(Color.YELLOW);
+//		renderer.line(Boundinglines[3].x1, Boundinglines[3].y1-5, Boundinglines[3].x2, Boundinglines[3].y2);
 
+		
 		for (GameObject g : decals) {
 			g.debugRender(renderer);
 		}
@@ -176,13 +222,7 @@ public class Tile extends GameObject {
 	public void remove(GameObject object) {
 		objects.remove(object);
 	}
-	
-	/*
-	public void setRenderCoordinates(float x, float y) {
-		renderX = x;
-		renderY = y;
-	}
-	*/
+
 
 	/**
 	 * Load operation for when this tiles parent floor is loaded.

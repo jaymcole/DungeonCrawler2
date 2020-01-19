@@ -7,7 +7,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.collision.Ray;
 
 import ecu.se.Game;
 import ecu.se.GameObject;
@@ -141,6 +143,29 @@ public class Map {
         	t.render(batch);
         	t.renderDecals(batch);
         }
+    }
+    
+    public static void TestRenderShadows(ShapeRenderer rend, int cameraX, int cameraY) {
+    
+    	visibleTiles = currentFloor.getAdjacent(cameraX, cameraY, tilesHorizontal, tilesVertical);
+        for(int i = 0; i < tilesHorizontal; i++) {
+            for(int j = 0; j < tilesVertical; j++) {
+                if(visibleTiles[i][j] != null) {               	 
+                	if (visibleTiles[i][j].isWall) {
+                		
+                		Tile tile = visibleTiles[i][j];
+                		for (int k = 0; k < tile.Boundinglines.length; k++) {
+                			
+                				
+                		}
+                		
+                		
+                		
+                	}
+                }
+            }
+        }
+
     }
     
     /** 

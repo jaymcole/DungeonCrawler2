@@ -3,7 +3,12 @@ package ecu.se.map;
 import java.util.LinkedList;
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.Game;
@@ -24,6 +29,7 @@ public class Floor {
 	private long seed;
 	private Random random;
 	private boolean generated = false;
+	private FrameBuffer occludersFBO;
 
 	private int mapWidth = Globals.MAP_TILE_WIDTH;
 	private int mapHeight = Globals.MAP_TILE_HEIGHT;
@@ -73,6 +79,7 @@ public class Floor {
 	public void save() {
 		floorObjects = ObjectManager.getAllMapObjects();
 	}
+	
 
 	/**
 	 * Spawns this floor.
@@ -241,8 +248,12 @@ public class Floor {
 		if (inBounds(xCoord, yCoord) && tiles[xCoord][yCoord] != null) {
 			return tiles[xCoord][yCoord];
 		} else {
-			return tiles[0][0];
+			return null;//return tiles[0][0];
 		}
+	}
+
+	public Tile getTile(float x, float y) {
+		return getTile((int)x, (int)y);
 	}
 
 	/**
@@ -282,9 +293,28 @@ public class Floor {
 
 	/**
 	 * 
-	 * @return the list of light this floor has
+	 * @return the list of lights on this floor
 	 */
 	public LinkedList<Light> getlights() {
 		return lights;
+	}
+	
+	public Tile[][] getTiles() {
+		return tiles;
+	}
+	
+	public Tile[][] getRenderTiles(int x, int y, int width, int height) {
+		int horiTiles = (tileWidth / width) + 2;
+		int vertTiles = (tileHeight / height) + 2;
+		Tile[][] renderTiles = new Tile[vertTiles][horiTiles];
+		float tileX = x - ((horiTiles/2) * tileWidth);
+		float tileY = y - ((vertTiles/2) * tileHeight);
+		
+		for (int i = 0; i < renderTiles.length; i++) {
+			for( int j = 0; j < renderTiles[i].length; j++) {
+				renderTiles[i][j] = getTile(tileX + (tileWidth * i), tileY + (tileHeight*j));
+			}
+		}
+		return renderTiles;
 	}
 }

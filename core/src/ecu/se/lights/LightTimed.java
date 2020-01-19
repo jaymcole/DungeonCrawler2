@@ -31,7 +31,9 @@ public class LightTimed extends Light{
 			intensityPosition++;
 			intensityPosition %= flickerTest.length;
 		}
-		intensity = baseIntensity * (flickerTest[intensityPosition] * 0.5f);
+//		intensity = baseIntensity * (flickerTest[intensityPosition] * 0.5f);
+		intensity = flickerTest[intensityPosition];
+
 
 		if (timeAlive >= lifespanInSeconds) {
 			if (lightOnDeath != null) {

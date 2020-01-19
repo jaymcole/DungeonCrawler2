@@ -3,6 +3,7 @@ package ecu.se.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import ecu.se.Game;
+import ecu.se.GpuShadows;
 /**
  * 
  * Launches the game on desktop.
@@ -21,5 +22,8 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration.disableAudio=false;
 		config.title = "Dungeon Crawler 2017";
 		new LwjglApplication(new Game(), config);
+//		new LwjglApplication(new GpuShadows(), config);
+		
+		
 	}
 }

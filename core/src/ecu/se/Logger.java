@@ -90,6 +90,9 @@ public class Logger {
 		sb = new StringBuilder();
 
 		String className = caller.getSimpleName();
+		if (className.length() <= 0)
+			className = "(InAn)" + caller.getSuperclass().getSimpleName();
+		
 		if (className.length() > BufferClass)
 			BufferClass = className.length();
 		if (method.length() > BufferMethod)

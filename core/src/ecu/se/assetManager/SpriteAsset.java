@@ -43,7 +43,7 @@ public class SpriteAsset extends Asset {
 		
 		try {
 			
-			if (false) {
+			if (true) {
 				//file.createNewFile();
 				file = new File(name);
 				fileReader = new FileReader(file);

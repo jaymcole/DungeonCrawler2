@@ -3,22 +3,27 @@ package ecu.se.gui2;
 
 public class GuiUtils {
 
-	public static enum Justify {
+	public enum Justify {
 		Left,
 		Center,
 		Right
-		
-		
 	}
 	
-	public static enum Scroll {
+	public enum Scroll {
 		Horizonta,
 		Vertical
 	}
 	
-	public static enum Layout {
+	public enum Layout {
 		Horizontal,
 		Vertical,	
+	}
+	
+	public enum Expand {
+		Expand,
+		Fill,
+		ExpandAndFill,
+		UseMinimumSize
 	}
 	
 	

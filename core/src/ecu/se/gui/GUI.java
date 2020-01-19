@@ -1,5 +1,9 @@
 package ecu.se.gui;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.LinkedList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -11,9 +15,19 @@ import com.badlogic.gdx.math.Vector3;
 import ecu.se.Game;
 import ecu.se.Logger;
 import ecu.se.actors.Player;
+import ecu.se.archive.Archiver;
+import ecu.se.archive.TotalRecords;
+import ecu.se.assetManager.AssetManager;
+import ecu.se.gui2.Component;
 import ecu.se.gui2.Container;
+import ecu.se.gui2.GuiButton;
+import ecu.se.gui2.GuiDropDownMenu;
+import ecu.se.gui2.GuiItemSlot;
 import ecu.se.gui2.GuiLabel;
+import ecu.se.gui2.GuiProgressBar;
 import ecu.se.gui2.GuiUtils;
+import ecu.se.gui2.Windows;
+import ecu.se.objects.ActiveItem;
 
 public class GUI {
 
@@ -42,6 +56,8 @@ public class GUI {
 	public static final int WINDOW_INVENTORY = 4;
 	public static final int WINDOW_PLAYER_STATS = 5;
 	public static final int WINDOW_GAME_OVER = 6;
+	public static final int WINDOW_GAME_STATS = 7;
+	public static final int WINDOW_COMPONENT_TEST = 8;
 	public static int currentWindow;
 
 	/**
@@ -52,9 +68,13 @@ public class GUI {
 	/**
 	 * All windows used
 	 */
-	private static Window[] windows;
+	private static Container[] windows;
 
 	public static Game game;
+	
+	public static Container tooltipContainer;
+	public static GuiLabel tooltip;
+	public static boolean RenderToolTip;
 
 	public GUI(Player player, int screenWidth, int screenHeight, Game game) {
 		GUI.game = game;
@@ -65,61 +85,34 @@ public class GUI {
 		conversionY = screenHeight / defaultHeight;
 
 		hudCamera = new OrthographicCamera(screenWidth, screenHeight);
-//		hudCamera.projection.translate(-halfWidth, -halfHeight, 0);
 		
-		windows = new Window[] { new Window_PauseScreen(this), new Window_HUD(this), new Window_MainMenu(this),
-				new Window_Settings(this), new Window_Inventory(this), new Window_PlayerStats(this), new Window_DeathScreen(this) };
+		windows = new Container[] {
+				Windows.CreatePauseWindow(this), 
+				Windows.CreateHUD(this), 
+				Windows.CreateMainMenu(this), 
+				Windows.CreateSettings(this), 
+				Windows.CreateInventory(this), 
+				Windows.CreatePlayerStats(this), 
+				Windows.CreateGameOver(this), 
+				Windows.CreateGameStats(this),
+				Windows.CreateComponentTest(this)
+		};
+		
 		setWindow(WINDOW_MAIN_MENU);
-		
-		createTestGUI();
+		Windows.createTooltip(this);
 	}
 	
-	private void createTestGUI() {
-//		test = new Container();
-//		test.setLayout(GuiUtils.Layout.Horizontal);
-//		
-//		Container leftColumn = new Container(), rightColumn = new Container();
-//		leftColumn.setLayout(GuiUtils.Layout.Vertical);
-//		leftColumn.addChild(new GuiLabel("Left Column Start"));
-//		leftColumn.addChild(new GuiLabel("Row 1"));
-//		leftColumn.addChild(new GuiLabel("Row 2"));
-//		leftColumn.addChild(new GuiLabel("Row 3"));
-//		leftColumn.addChild(new GuiLabel("Row 4"));
-//		leftColumn.addChild(new GuiLabel("Left Column End"));
-//		
-//		rightColumn.setLayout(GuiUtils.Layout.Vertical);
-//		rightColumn.addChild(new GuiLabel("Right Column Start"));
-//		rightColumn.addChild(new GuiLabel("Row 1"));
-//		
-//		Container subColumn = new Container();
-//		subColumn.setLayout(GuiUtils.Layout.Horizontal);
-//		subColumn.addChild(new GuiLabel("WOW"));
-//		subColumn.addChild(new GuiLabel("WOW2"));
-//		subColumn.addChild(new GuiLabel("WOW3"));
-//		rightColumn.addChild(subColumn);
-//		
-//		
-//		rightColumn.addChild(new GuiLabel("Row 2"));
-//		rightColumn.addChild(new GuiLabel("Row 3"));
-//		rightColumn.addChild(new GuiLabel("Row 4"));
-//		rightColumn.addChild(new GuiLabel("Right Column End"));
-//		
-//		
-//
-//		test.addChild(leftColumn);
-//		test.addChild(rightColumn);
-//		test.addChild(new GuiLabel("Seven"));
-//		test.addChild(new GuiLabel("Three"));
-//		test.setPadding(45);
-//		test.setWidth(800);
-//		test.setHeight(800);
-//		test.calculateMinDimensions();
-//		test.setOriginX(-test.getWidth() * .5f);
-//		test.setOriginY(-test.getHeight() * .5f);
-//		
-//		test.resize();
+	
+	public static GuiItemSlot primaryItemSlot;
+	public static GuiItemSlot secondaryItemSlot;
+	public void setPrimaryItem(ActiveItem item) {
+		primaryItemSlot.setItem(item);
 	}
-
+	
+	public void setSecondaryItem(ActiveItem item) {
+		secondaryItemSlot.setItem(item);
+	}
+	
 	/**
 	 * Mouse coordinates corrected for the screen position
 	 */
@@ -130,6 +123,7 @@ public class GUI {
 	 * True if a widget used to mouse input
 	 */
 	boolean inputUsed;
+	Component consumer;
 
 	
 	public static boolean renderGui2Test = false;
@@ -141,25 +135,38 @@ public class GUI {
 	 * @param deltaTime
 	 */
 	public void update(float deltaTime) {
+		RenderToolTip = false;
 		Vector3 mouse = hudCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 		mouseX = (int) mouse.x;
 		mouseY = (int) mouse.y;
+
 		inputUsed = false;
+		consumer = null;
 
-		// Updates the currently displayed window.
-		inputUsed = windows[currentWindow].update(deltaTime, mouseX, mouseY);
+		consumer = windows[currentWindow].update(consumer, deltaTime, mouseX, mouseY);
+		if (consumer != null) {
+			inputUsed = true;
+			processInput(consumer, mouseX, mouseY);
 
-		if (Game.currentState == Game.GAME_STATE_PAUSED)
-			windows[WINDOW_PAUSED].update(deltaTime, mouseX, mouseY);
-
-		// Updates the HUD IF it wasn't already updated AND
-		if (currentWindow != WINDOW_HUD)
-			if (windows[WINDOW_HUD].update(deltaTime, mouseX, mouseY) || inputUsed)
-				inputUsed = true;
+		}
 		
-//		if (test.update(deltaTime, mouseX, mouseY))
-//			inputUsed = true;
+		if (RenderToolTip) {
+			tooltipContainer.pack(mouseX, mouseY);
+		}			
 	}
+	
+	private void processInput(Component consumer, int mouseX, int mouseY) {
+		if (Game.leftMouseState == Game.MOUSE_PRESSED) {
+			consumer.mousePressed(mouseX, mouseY);
+		} else if (Game.leftMouseState == Game.MOUSE_RELEASED) {
+			consumer.mouseReleased(mouseX, mouseY);
+		} else if (Game.leftMouseState == Game.MOUSE_DOWN) {
+			consumer.mouseDown(mouseX, mouseY);
+		}
+	}
+	
+	
+	
 
 	/**
 	 * Renders the appropriate window(s). May render more than one at a time.
@@ -169,25 +176,24 @@ public class GUI {
 	 */
 	public void render(SpriteBatch batch) {		
 		batch.setProjectionMatrix(hudCamera.projection);
-		if (Game.currentState == Game.GAME_STATE_PAUSED)
-			windows[WINDOW_PAUSED].render(batch);
+//		if (Game.currentState == Game.GAME_STATE_PAUSED)
+//			windows[WINDOW_PAUSED].render(batch);
 
-		windows[WINDOW_HUD].render(batch);
-
+//		windows[WINDOW_HUD].render(batch);
+//
 		if (currentWindow != WINDOW_HUD)
 			windows[currentWindow].render(batch);
 
 		batch.setColor(Color.WHITE);
 		
-		
-//		if (renderGui2Test) {
-//		test.render(batch);
-//		}
+		if (RenderToolTip)
+			tooltipContainer.render(batch);
 	}
+
 
 	
 	GuiLabel label = new GuiLabel("TEST LABEL");
-
+	public static int density = 45;
 	/**
 	 * Renders the debug view. i.e., widget bounds + widget (x,y)
 	 * 
@@ -200,8 +206,8 @@ public class GUI {
 			windows[currentWindow].debugRender(renderer);
 		}
 
-		if (Game.currentState == Game.GAME_STATE_PAUSED)
-			windows[WINDOW_PAUSED].debugRender(renderer);
+//		if (Game.currentState == Game.GAME_STATE_PAUSED)
+//			windows[WINDOW_PAUSED].debugRender(renderer);
 		
 		
 //		renderer.line(-Gdx.graphics.getWidth(), -Gdx.graphics.getHeight(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -209,8 +215,37 @@ public class GUI {
 //		renderer.setColor(Color.MAGENTA);
 //		renderer.circle(0, 0, 50);
 //		renderer.line(0, 0, test.getChildX(), test.getChildY());
+		if (RenderToolTip)
+			tooltipContainer.debugRender(renderer);
+//		}
+		
+		
+		
+//		renderGrid(renderer);
+		
+		
+		renderer.setColor(Color.CYAN);
+//		float testX = -test.getWidth() * .5f;
+//		float testY = -test.getHeight() * .5f;
+//		renderer.line(offsetX, offsetY, testX, testY);
 		
 	}
+	
+	private void renderGrid(ShapeRenderer renderer) {
+		float hori = Gdx.graphics.getWidth() / density;
+		float vert = Gdx.graphics.getHeight() / density;
+		float offsetX = -Gdx.graphics.getWidth() * 0.5f;
+		float offsetY = -Gdx.graphics.getHeight() * 0.5f;
+		renderer.setColor(Color.GOLD);
+		for (int i = 0; i < hori; i++) {
+			renderer.line(i * density + offsetX, offsetY, i * density + offsetX, Gdx.graphics.getHeight());
+		}
+		
+		for (int i = 0; i < vert; i++) {
+			renderer.line(offsetX, i * density + offsetY, Gdx.graphics.getWidth() +offsetX, i * density + offsetY);
+		}
+	}
+	
 
 	/**
 	 * @param x
@@ -325,7 +360,8 @@ public class GUI {
 		}
 
 		windows[changeTo].onResume();
-		windows[currentWindow].onPause();
+		//if (windows[currentWindow] != null)
+			windows[currentWindow].onPause();
 		currentWindow = changeTo;
 	}
 
@@ -334,7 +370,7 @@ public class GUI {
 	 * @param windowIndex
 	 * @return The window corresponding to windowIndex.
 	 */
-	public static Window getWindow(int windowIndex) {
+	public static Container getWindow(int windowIndex) {
 		if (windowIndex < windows.length && windows != null)
 			return windows[windowIndex];
 		return null;
@@ -367,10 +403,10 @@ public class GUI {
 	 * 
 	 * @return All visible windows Note: Window_HUD is always returned last.
 	 */
-	public static Window[] getActiveWindows() {
+	public static Container[] getActiveWindows() {
 		if (currentWindow == WINDOW_HUD)
-			return new Window[] { windows[WINDOW_HUD] };
-		return new Window[] { windows[WINDOW_HUD], windows[currentWindow] };
+			return new Container[] { windows[WINDOW_HUD] };
+		return new Container[] { windows[WINDOW_HUD], windows[currentWindow] };
 	}
 
 }

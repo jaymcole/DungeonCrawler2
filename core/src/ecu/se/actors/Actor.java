@@ -529,7 +529,7 @@ public abstract class Actor extends GameObject {
 		}
 
 		baseStats[Stats.HEALTH.ordinal()] = 100;
-		baseStats[Stats.MANA.ordinal()] = 100;
+		baseStats[Stats.MANA.ordinal()] = 100000;
 		baseStats[Stats.MOVEMENT_DRAG.ordinal()] = 0.3f;
 		baseStats[Stats.MOVEMENT_SPEED.ordinal()] = 50f;
 		baseStats[Stats.MOVEMENT_ACCELERATION.ordinal()] = 200f;

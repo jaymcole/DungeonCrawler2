@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import ecu.se.GameObject;
 import ecu.se.Lighting;
+import ecu.se.Logger;
 
 public class LightFading extends Light {
 
@@ -35,6 +36,9 @@ public class LightFading extends Light {
 
 		baseIntensity *= decay;
 		intensity = baseIntensity * (flickerTest[intensityPosition] * 0.5f);
+//		intensity = flickerTest[intensityPosition] * decay;
+
+		
 		if (intensity < 0.00001f) {
 			kill();
 		}

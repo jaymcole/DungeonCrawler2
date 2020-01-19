@@ -7,17 +7,26 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import ecu.se.Logger;
 import ecu.se.assetManager.AssetManager;
+import ecu.se.gui2.GuiUtils.Expand;
 
 public class Container extends Component{
-	private LinkedList<Component> children;
-	private GuiUtils.Layout layout;
-//	private int Columns = 1, Rows = 1;
+	protected LinkedList<Component> children;
+	protected GuiUtils.Layout layout;
 	
 	public Container() {
 		super();
 		setBackgroundTexture(AssetManager.getTexture("texture/misc/white.png").getTexture());
 		layout = GuiUtils.Layout.Horizontal;
 		children = new LinkedList<Component>();
+		canConsumeUI = true;
+	}
+		
+	@Override
+	protected Component updateComponent(Component consumer, float deltaTime, int mouseX, int mouseY) {
+		for (Component child : children) {
+			consumer = child.update(consumer, deltaTime, mouseX, mouseY);
+		}	
+		return consumer;
 	}
 	
 	public void addChild(Component child) {
@@ -46,71 +55,104 @@ public class Container extends Component{
 		return valid;
 	}
 	
+	public void pack(float x, float y) {
+		calculateMinDimensions();
+		this.setOriginX(x);
+		this.setOriginY(y);
+		resize();
+	}
 
 	public void resize() {	
-//		if (parent == null)
-//			calculateMinDimensions();
-		LogComponentData();
-
 		if (parent != null) {
 			if (minimumWidth > parent.getChildAvailableWidth())
 				Logger.Warning(getClass(), "resize", "Minimum Width is greater than parent's available space");
 			if (minimumHeight > parent.getChildAvailableHeight())
-				Logger.Warning(getClass(), "resize", "Minimum Width is greater than parent's available space");			
+				Logger.Warning(getClass(), "resize", "Minimum Height is greater than parent's available space");			
 		}
 		
+		calculateMinComponentDimensions();
+						
 		switch (layout) {
-			case Horizontal:
-				resizeHorizontal(children);
-				break;
-			case Vertical:
-				resizeVertical(children);
-				break;
-			default:
-				Logger.Error(getClass(), "Resize", "Missing case for \"" + layout.toString() + "\". Defaulting to " + GuiUtils.Layout.Horizontal );
+		case Horizontal:
+			resizeHorizontal(children);
+			break;
+		case Vertical:
+			resizeVertical(children);
+			break;
+		default:
+			Logger.Error(getClass(), "Resize", "Missing case for \"" + layout.toString() + "\". Defaulting to " + GuiUtils.Layout.Horizontal );
 		}
-		Logger.Debug(getClass(), "resize", "Resizing components");
-		LogComponentData();
-	}
-	
+	}	
 	
 	public void resizeHorizontal(LinkedList<Component> children) {
 		float previousX = getChildX();
 		float previousY = getChildY();
-		for (Component child : children) {
-			child.setOriginX(previousX);
-			child.setOriginY(previousY);
-			child.setHeight(getChildAvailableHeight());
-			child.setWidth(getChildAvailableWidth() / children.size());
+		
+		float availableHorizontalSpace = getChildAvailableWidth();
+		int autoExpandingChildren = 0;
+		for(Component child : children) {
+			if (child.expandSettings == GuiUtils.Expand.UseMinimumSize) {
+				availableHorizontalSpace -= child.getMinimumWidth();
+			} else {
+				autoExpandingChildren++;
+			}
+		}
+		calculateMinDimensions();
+		for (Component child : children) {			
+			if (child.expandSettings == GuiUtils.Expand.UseMinimumSize) {
+				child.setOriginY(previousY + (contentHeight() * 0.5f) - (child.getHeight() * 0.5f));
+				child.setOriginX(previousX);
+				
+				child.setMaxWidth(child.minimumWidth);
+				child.setMaxHeight(getChildAvailableHeight());
+			}else {
+				child.setOriginY(previousY);
+				child.setOriginX(previousX);
+				child.setMaxWidth(availableHorizontalSpace / autoExpandingChildren);
+				child.setMaxHeight(getChildAvailableHeight());
+			}
 			previousX += child.getWidth();
+			
 			if (child instanceof Container)
 				((Container)child).resize();
-			Logger.Debug(getClass(), "resizeHorizontal", "Placing child at:");
-			Logger.Debug(getClass(), "resizeHorizontal", "\t X:" + child.getX() +", Y:" + child.getY());
-		}		
+		}
 	}
 	
 	public void resizeVertical(LinkedList<Component> children) {
 		float previousX = getChildX();
 		float previousY = getChildY();
+		
+		
+		float availableVerticalSpace = getChildAvailableHeight();
+		int autoExpandingChildren = 0;
+		for(Component child : children) {
+			if (child.expandSettings == GuiUtils.Expand.UseMinimumSize) {
+				availableVerticalSpace -= child.getMinimumHeight();
+			} else {
+				autoExpandingChildren++;
+			}
+		}
+		
 		for (Component child : children) {
-			child.setOriginX(previousX);
-			child.setOriginY(previousY);
-			child.setHeight(getChildAvailableHeight() / children.size());
-			child.setWidth(getChildAvailableWidth());
+			if (child.expandSettings == GuiUtils.Expand.UseMinimumSize) {
+				child.setOriginX(previousX + (contentWidth() * 0.5f) - (child.getWidth() * 0.5f));
+				child.setOriginY(previousY);
+				
+				child.setMaxHeight(child.minimumHeight);
+				child.setMaxWidth(getChildAvailableWidth());
+			}else {
+				child.setOriginX(previousX);
+				child.setOriginY(previousY);
+				child.setMaxHeight(availableVerticalSpace / autoExpandingChildren);
+				child.setMaxWidth(getChildAvailableWidth());
+			}
 			previousY += child.getHeight();
+			
 			if (child instanceof Container)
 				((Container)child).resize();
-			
-			Logger.Debug(getClass(), "resizeVertical", "Placing child at:");
-			Logger.Debug(getClass(), "resizeVertical", "\t X:" + child.getX() +", Y:" + child.getY());
-
 		}		
 	}
 	
-//	private float calculateCenter(float componentLength, float availableLength) {
-//		return (availableLength * 0.5f) - (componentLength * 0.5f);
-//	}
 	
 	
 	@Override
@@ -134,47 +176,58 @@ public class Container extends Component{
 		
 	}
 
-	@Override
-	public boolean update(float deltaTime, int mouseX, int mouseY) {
-		if (!isVisible)
-			return false;
-		boolean consumeUI = false;
-		for (Component child : children) {
-			if (child.update(deltaTime, mouseX, mouseY))
-				consumeUI = true;
-		}	
-		return getBounds().contains(mouseX, mouseY) || consumeUI;
-	}
+	
 	
 
 	@Override
 	public void calculateMinComponentDimensions() {
-		minimumWidth = 0;
-		minimumHeight = 0;
+		minimumWidth = 5;
+		minimumHeight = 5;
 		if (children == null)
 			return;
 		
 		for (Component child : children) {
 			child.calculateMinDimensions();
-		switch (layout) {
+			switch (layout) {
 			case Horizontal:		
-				minimumWidth += child.getWidth();
-				if (child.getHeight() > minimumHeight)
-					minimumHeight = child.getHeight();
+				if (child.getMinimumHeight() > minimumHeight)
+					minimumHeight = child.getMinimumHeight();
+				minimumWidth += child.getMinimumWidth();
 				break;
 			case Vertical:
-				if (child.getWidth() > minimumWidth)
-					minimumWidth = child.getWidth();
-				minimumHeight += child.getHeight();
+				if (child.getMinimumWidth() > minimumWidth)
+					minimumWidth = child.getMinimumWidth();
+				minimumHeight += child.getMinimumHeight();
 				break;
-			default:
-				Logger.Error(getClass(), "calculateMinDimensions", "Missing case for \"" + layout.toString() + "\". Setting minimum dimensions to 0." );
+//				case Horizontal:		
+//					if (child.getHeight() > minimumHeight)
+//						minimumHeight = child.getHeight();
+//					minimumWidth += child.getWidth();
+//					break;
+//				case Vertical:
+//					if (child.getWidth() > minimumWidth)
+//						minimumWidth = child.getWidth();
+//					minimumHeight += child.getHeight();
+//					break;
+				default:
+					Logger.Error(getClass(), "calculateMinDimensions", "Missing case for \"" + layout.toString() + "\". Setting minimum dimensions to 0." );
+			}
 		}
+		
+		minimumWidth += getSurroundingWidth();
+		minimumHeight += getSurroundingHeight();
+		
 	}
-		
-		
-		
+
+	public LinkedList<Component> getChildren() {
+		return children;
 	}
+
+	@Override
+	public void mouseReleased(int mouseX, int mouseY) {
+		// TODO Auto-generated method stub
+	}
+
 
 
 }

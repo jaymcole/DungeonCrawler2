@@ -76,8 +76,10 @@ public class Game extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	public static Player player;
 	private GUI hud;
+	private Lighting lighting;
 
-	private FrameBuffer frameBuffer;
+	private FrameBuffer sceneFBO;
+	private FrameBuffer lightingFBO;
 	private TextureRegion frameBufferRegion;
 
 	private float zoom = Globals.DEFAULT_CAMERA_ZOOM;
@@ -130,8 +132,9 @@ public class Game extends ApplicationAdapter {
 		player = new Player(0, 0, 0, camera, new String[] { "texture/spritesheet/player.png" }, new int[] { 0 }, AssetManager.getSound("sounds/effects/walking/shoes_02.mp3").getSound());
 
 		camera = new OrthographicCamera(screenWidth, screenHeight);
-		Lighting.init(camera, player);
-		Lighting.setShader(batch);
+		lighting = new Lighting();
+//		Lighting.init(camera, player);
+//		Lighting.setShader(batch);
 		light = new Light(player);
 //		light.setColor(new Color(167.0f/255f, 220.0f/255f, 201.0f/255f, 1.0f));
 		light.setColor(new Color(135.0f/255f, 146.0f/255f, 218.0f/255f, 1.0f));
@@ -142,8 +145,10 @@ public class Game extends ApplicationAdapter {
 		new Map();
 
 		hud = new GUI(player, screenWidth, screenHeight, this);
-		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD)).setPrimary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Fireball(player)));
-		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD)).setSecondary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Teleport(player)));
+//		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD)).setPrimary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Fireball(player)));
+//		((Window_HUD) GUI.getWindow(GUI.WINDOW_HUD)).setSecondary(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Teleport(player)));
+		hud.setPrimaryItem(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Fireball(player)));
+		hud.setSecondaryItem(ObjectMaker.createActiveItem(player.x, player.y, new Spell_Teleport(player)));
 		
 		
 		ActiveItem spell = ObjectMaker.createActiveItem(0, 0, new Spell_FlameThrower(player));
@@ -191,7 +196,13 @@ public class Game extends ApplicationAdapter {
 	private static Random rand = new Random();
 	private float halfWidth;
 	private float halfHeight;
-
+	
+	boolean additive = true;
+	boolean softShadows = true;
+	/**
+	 * Renders everything
+	 */
+	
 	/**
 	 * Renders everything
 	 */
@@ -206,92 +217,123 @@ public class Game extends ApplicationAdapter {
 
 		update();
 
-		// TEST
-		frameBuffer = new FrameBuffer(Format.RGBA8888, screenWidth, screenHeight, false);
-		frameBufferRegion = new TextureRegion(frameBuffer.getColorBufferTexture(), Gdx.graphics.getWidth(),
+//		batch.disableBlending();
+		
+		camera.setToOrtho(false);
+		camera.position.set(player.getPosition());
+		camera.update();
+		
+		// RENDER SCENE TO FRAMEBUFFER
+		sceneFBO = new FrameBuffer(Format.RGBA8888, screenWidth, screenHeight, false);
+		frameBufferRegion = new TextureRegion(sceneFBO.getColorBufferTexture(), Gdx.graphics.getWidth(),
 				(int) (Gdx.graphics.getHeight()));
 		frameBufferRegion.flip(false, true);
 
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		sceneFBO.begin();
+		batch.begin();
+		batch.setProjectionMatrix(camera.combined);
+		batch.draw(backgroundTexture, camera.position.x - Gdx.graphics.getWidth() * 0.5f,
+				camera.position.y - Gdx.graphics.getHeight() * 0.5f, Gdx.graphics.getWidth(),
+				(int) (Gdx.graphics.getHeight()));
+		Map.render(batch);
+		ObjectManager.render(deltaTime, batch);
+		batch.end();
+		sceneFBO.end();
 
-		frameBuffer.begin();
-		{			
-			batch.begin();
-			batch.setProjectionMatrix(camera.combined);
-			batch.draw(backgroundTexture, camera.position.x - Gdx.graphics.getWidth() * 0.5f,
-					camera.position.y - Gdx.graphics.getHeight() * 0.5f, Gdx.graphics.getWidth(),
-					(int) (Gdx.graphics.getHeight()));
-			Map.render(batch);
-			ObjectManager.render(deltaTime, batch);
-			batch.end();
-			frameBuffer.end();
-	
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-	
-		}
+		
+		// RENDER SCENE FRAMEBUFFER
+		batch.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.draw(frameBufferRegion, camera.position.x - halfWidth, camera.position.y - halfHeight,
+				Gdx.graphics.getWidth(), (int) (Gdx.graphics.getHeight()));
+		batch.end();	
+		sceneFBO.dispose();
 
-		{			
-			batch.begin();
-			batch.setProjectionMatrix(camera.combined);
-			Lighting.setShader(batch);
-			batch.draw(frameBufferRegion, camera.position.x - halfWidth, camera.position.y - halfHeight,
-					Gdx.graphics.getWidth(), (int) (Gdx.graphics.getHeight()));
-			batch.setShader(null);
-			batch.end();
-		}
+		//RENDER LIGHTING+SHADOWS				
+//		if (additive)
+		batch.enableBlending();
+//		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+//		batch.setBlendFunction(options[srcPointer], options[dstPointer]);
+		lightingFBO = new FrameBuffer(Format.RGBA8888, screenWidth, screenHeight, false);
+//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//		Gdx.gl.glClearColor(1f,1f,1f,.4f);
+		frameBufferRegion = new TextureRegion(lightingFBO.getColorBufferTexture(), Gdx.graphics.getWidth(),
+				(int) (Gdx.graphics.getHeight()));
+		frameBufferRegion.flip(false, true);
+		lighting.RenderLights(batch, lightingFBO);
+		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		batch.setShader(null);
 		
 		
-		frameBuffer.dispose();
-
-		if (Globals.DEBUG) {
-			shapeRenderer.begin(ShapeType.Line);
-
-			shapeRenderer.setProjectionMatrix(camera.combined);
-
-			Map.debugRender(shapeRenderer, (int) player.x, (int) player.y);
-			ObjectManager.debugRender(shapeRenderer);
-			shapeRenderer.end();
-
-			Utils.DrawDebugLine(new Vector2(0, -50), new Vector2(0, 50), camera.combined);
-			Utils.DrawDebugLine(new Vector2(-50, 0), new Vector2(50, 0), camera.combined);
-			
-			Random random = new Random();
-			for(Light light : Lighting.getLights()) {
-				
-				for(int i=0; i < light.positions.size()-2; i++)
-				{
-					Vector3 one = light.positions.get(i);
-					Vector3 two = light.positions.get(i+1);
-					
-					
-					Utils.DrawDebugLine(new Vector2(one.x, one.y), new Vector2(two.x, two.y), camera.combined);
-
-				}
+		batch.begin();
+		batch.enableBlending();
+//		batch.setBlendFunction(GL20.GL_ONE_MINUS_SRC_ALPHA, GL20.GL_DST_COLOR);
+		batch.setBlendFunction(options[srcPointer], options[dstPointer]);
+		batch.draw(frameBufferRegion, camera.position.x - halfWidth, camera.position.y - halfHeight,
+				Gdx.graphics.getWidth(), (int) (Gdx.graphics.getHeight()));
+		batch.end();	
+		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		sceneFBO.dispose();
 		
-				
-//				Utils.DrawDebugLine(player.getPositionV2(), new Vector2(light.getPos().x + random.nextInt(45), light.getPos().y + random.nextInt(45)), camera.combined);
-
-			}
-			
-			
-			
-		}
-
-		{			
-			batch.begin();
-			hud.render(batch);
-			batch.end();
-		}
-
-		if (Globals.DEBUG) {
-			shapeRenderer.begin(ShapeType.Line);
-			hud.debugRender(shapeRenderer);
-			
-			shapeRenderer.end();
-		}
-
+		// RENDER LIGHTING FRAMEBUFFER
+		lightingFBO.dispose();
+		
+		// REDNER GUI
+		batch.begin();
+		hud.render(batch);
+		batch.end();
+		
+//		shapeRenderer.begin(ShapeType.Line);
+//		lighting.debugRender(shapeRenderer);		
+//		shapeRenderer.end();
 	}
+	
+	private int srcPointer = 0;
+	private int dstPointer = 10;
+	
+	private static int[] options = new int[] {
+			GL20.GL_ZERO,					//0
+			GL20.GL_ONE,					//1
+			GL20.GL_ONE_MINUS_SRC_COLOR,	//2
+			GL20.GL_ONE_MINUS_SRC_ALPHA,	//3
+			GL20.GL_ONE_MINUS_DST_ALPHA,	//4
+			GL20.GL_ONE_MINUS_DST_COLOR,	//5
+
+			GL20.GL_DST_COLOR,				//6
+			GL20.GL_DST_ALPHA,				//7
+			GL20.GL_BLEND_DST_ALPHA,		//8
+			GL20.GL_BLEND_DST_RGB,			//9
+			
+			GL20.GL_SRC_COLOR,				//10
+			GL20.GL_SRC_ALPHA,				//11
+			GL20.GL_BLEND_SRC_ALPHA,		//12
+			GL20.GL_BLEND_SRC_RGB			//13
+	};
+	
+	private static String[]  optionNames = new String[] {
+			"GL20.GL_ZERO",
+			"GL20.GL_ONE",
+			"GL20.GL_ONE_MINUS_SRC_COLOR",
+			"GL20.GL_ONE_MINUS_SRC_ALPHA",
+			"GL20.GL_ONE_MINUS_DST_ALPHA",
+			"GL20.GL_ONE_MINUS_DST_COLOR",
+
+			"GL20.GL_DST_COLOR",
+			"GL20.GL_DST_ALPHA",
+			"GL20.GL_BLEND_DST_ALPHA",
+			"GL20.GL_BLEND_DST_RGB",
+			
+			"GL20.GL_SRC_COLOR",
+			"GL20.GL_SRC_ALPHA",
+			"GL20.GL_BLEND_SRC_ALPHA",
+			"GL20.GL_BLEND_SRC_RGB"
+	};
+	
+	
+	
+	
 
 	int floor = 0;
 	// game is paused and things that should be blocked)
@@ -303,7 +345,7 @@ public class Game extends ApplicationAdapter {
 		// MOUSE INPUT
 		leftMouseState = checkMouseButton(leftMouseState, Gdx.input.isButtonPressed(Input.Buttons.LEFT));
 		rightMouseState = checkMouseButton(rightMouseState, Gdx.input.isButtonPressed(Input.Buttons.RIGHT));
-		camera.position.set(player.x, player.y, 0);
+//		camera.position.set(player.x, player.y, 0);
 
 		debugControls();
 		guiControls();
@@ -318,7 +360,7 @@ public class Game extends ApplicationAdapter {
 	 */
 	private void debugControls() {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-			Lighting.toggleLights();
+//			Lighting.toggleLights();
 		}
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
@@ -341,6 +383,10 @@ public class Game extends ApplicationAdapter {
 			zoom = Globals.DEFAULT_CAMERA_ZOOM;
 		}
 	}
+	
+	private void printBlendingStatus() {
+		Logger.Debug(this.getClass(), "BLENDING", "SRC: " + optionNames[srcPointer] + " / DST: " + optionNames[dstPointer]);
+	}
 
 	/**
 	 * Handles gui input
@@ -349,6 +395,36 @@ public class Game extends ApplicationAdapter {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P))
 			pauseGame();
 		
+		
+		
+		if (Gdx.input.isButtonPressed(Input.Keys.SHIFT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.LEFT_BRACKET)) {
+			srcPointer--;
+		} else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT_BRACKET)) {
+			srcPointer++;
+		}
+		
+		
+		if (Gdx.input.isButtonPressed(Input.Keys.SHIFT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.RIGHT_BRACKET)) {
+			dstPointer--;
+		} if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT_BRACKET)) {
+			dstPointer++;
+		}	
+		
+		if (srcPointer >= options.length)
+			srcPointer -= options.length;
+		if (srcPointer < 0)
+			srcPointer += options.length;
+		
+		if (dstPointer >= options.length)
+			dstPointer -= options.length;
+		if (dstPointer < 0)
+			dstPointer += options.length;
+		
+		if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT_BRACKET) || Gdx.input.isKeyJustPressed(Input.Keys.RIGHT_BRACKET)) {
+			printBlendingStatus();
+		}
+			
+			
 		if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
 			GUI.renderGui2Test = !GUI.renderGui2Test;
 			Logger.Debug(getClass(), "guiControls", "Test GUI enabled: " + GUI.renderGui2Test);

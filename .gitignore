@@ -121,3 +121,4 @@ Thumbs.db
 !/ios-moe/xcode/*.xcodeproj/project.pbxproj
 /ios-moe/xcode/native/
 core/assets/Log.txt
+core/src/ecu/se/gui2/Component_old.java

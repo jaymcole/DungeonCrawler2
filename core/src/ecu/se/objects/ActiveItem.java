@@ -24,7 +24,7 @@ public class ActiveItem extends InteractableItem{
 			action.setCaster((Actor)otherObject);
 		
 		if (otherObject == Game.player) {
-			((Window_Inventory)GUI.getWindow(GUI.WINDOW_INVENTORY)).insertItem(this);
+//			((Window_Inventory)GUI.getWindow(GUI.WINDOW_INVENTORY)).insertItem(this);
 		}
 	}
 	

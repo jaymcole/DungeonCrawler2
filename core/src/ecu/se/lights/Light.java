@@ -109,8 +109,9 @@ public class Light implements Comparable<Light> {
 //			intensityPosition++;
 //			intensityPosition %= flickerTest.length;
 //		}
-		intensity = baseIntensity * (flickerTest[intensityPosition] * 0.5f);
-		
+//		intensity = baseIntensity * (flickerTest[intensityPosition] * 0.5f);
+		intensity = flickerTest[intensityPosition];
+//		color = new Color(color.r, color.g, color.b, intensity);
 		if (hasParent) {
 			if (parent == null)
 				kill();

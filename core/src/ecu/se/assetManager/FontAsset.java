@@ -20,7 +20,8 @@ public class FontAsset extends Asset{
     private String name;
      
     public FontAsset(String name, int size) {
-    	size = (int)(size * ((GUI.conversionX + GUI.conversionY) * 0.5f));
+//    	size = (int)(size);// * ((GUI.conversionX + GUI.conversionY) * 0.5f));
+//    	size = GUI.convertX(size);
     	size = Utils.clamp(12, Integer.MAX_VALUE, size);
     	Logger.Debug(getClass(), "Constructor", "Font size is: " + size);
     	this.name = name;
@@ -29,7 +30,7 @@ public class FontAsset extends Asset{
             parameter = new FreeTypeFontParameter();
             parameter.size = size;
 //            parameter.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"'()+,-./";
-            parameter.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890.:,;\'\"(!?)+-*/=";
+            parameter.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890.:,;\'\"(!?)+-*/=%$";
             font = generator.generateFont(parameter);
             generator.dispose();    
         } catch (GdxRuntimeException e) {

@@ -22,10 +22,8 @@ public class AssetManager {
 		
 		FontAsset temp = new FontAsset(name, size);
 		if (temp.loadedSuccessfully()) {
-			Logger.Debug(AssetManager.class, "getFont", "Adding a new font for: " + name);
+			Logger.Debug(AssetManager.class, "getFont", "Adding a new font for: " + name + " (" + size + ")");
 			assets.put(key, temp);
-			
-			
 			return temp.getAsset();
 		}
 		Logger.Error(AssetManager.class, "getFont", "Failed to load font: \"" + name + "\"");

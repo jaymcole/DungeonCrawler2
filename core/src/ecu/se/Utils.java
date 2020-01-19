@@ -20,6 +20,8 @@ import ecu.se.assetManager.AssetManager;
  */
 public class Utils {
     
+	public Utils() {}
+	
     private static ShapeRenderer debugRenderer = new ShapeRenderer();
     private static Random random = new Random();
     
@@ -278,6 +280,10 @@ public class Utils {
             return max;
         }
         return val;
+    }
+    
+    public static boolean NullOrEmpty(String s) {
+    	return (s == null || s.length() <= 0);
     }
     
 }

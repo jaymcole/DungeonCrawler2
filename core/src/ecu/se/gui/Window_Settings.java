@@ -32,20 +32,20 @@ public class Window_Settings extends Window{
 		};
 		
 		
-		Widget_Slider sld_attn_a = new Widget_Slider(backgroundX + bufferX, backgroundY + halfwayY - 200, halfwayX - bufferX * 2, 50, this, -10, 10, Lighting.getAttnA()) {
-			@Override
-			public void onValueChange() {
-				Lighting.setAttnA(this.getProgress());
-			}
-		};
-		
-		
-		Widget_Slider sld_attn_b = new Widget_Slider(backgroundX + bufferX, backgroundY + halfwayY - 300, halfwayX - bufferX * 2, 50, this, -10, 10, Lighting.getAttnB()) {
-			@Override
-			public void onValueChange() {
-				Lighting.setAttnB(this.getProgress());
-			}
-		};
+//		Widget_Slider sld_attn_a = new Widget_Slider(backgroundX + bufferX, backgroundY + halfwayY - 200, halfwayX - bufferX * 2, 50, this, -10, 10, Lighting.getAttnA()) {
+//			@Override
+//			public void onValueChange() {
+////				Lighting.setAttnA(this.getProgress());
+//			}
+//		};
+//		
+//		
+//		Widget_Slider sld_attn_b = new Widget_Slider(backgroundX + bufferX, backgroundY + halfwayY - 300, halfwayX - bufferX * 2, 50, this, -10, 10, Lighting.getAttnB()) {
+//			@Override
+//			public void onValueChange() {
+////				Lighting.setAttnB(this.getProgress());
+//			}
+//		};
 		
 		Widget_Button btn_back = new Widget_Button(backgroundX + bufferX, backgroundY + halfwayY - 400, (halfwayX - bufferX * 2) * 0.25f, 50, this, "Back") {
 			@Override
@@ -66,8 +66,8 @@ public class Window_Settings extends Window{
 //				img_background,
 				lbl_title,
 				btn_play,
-				sld_attn_a,
-				sld_attn_b,
+//				sld_attn_a,
+//				sld_attn_b,
 				btn_back,
 				btn_toggleBackground
 		};

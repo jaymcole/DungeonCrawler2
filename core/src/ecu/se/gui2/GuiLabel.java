@@ -14,55 +14,32 @@ import com.badlogic.gdx.math.Rectangle;
 import ecu.se.Game;
 import ecu.se.Globals;
 import ecu.se.Logger;
+import ecu.se.Utils;
 import ecu.se.assetManager.AssetManager;
 
 public class GuiLabel extends Component{
-
-	private String text;
-	private BitmapFont font;
-	public Color textColor;
 	
-	private float textWidth;
-	private float textHeight;
-	private GlyphLayout layout;
-	
-	private Color debugColor;
-	private Random random;
+	protected Color debugColor;
+	protected Random random;
 //	private Texture test;
-	private boolean isHovering = false;
+	protected boolean isHovering = false;
 	
-	private float xOffset, yOffset;
-	private GuiUtils.Justify justify;
+	protected float xOffset, yOffset;
+	
+	
+	
 	public GuiLabel(String text) {
-		super();
-		setMargin(5);
-		
-		setBackgroundTexture(AssetManager.getTexture("texture/misc/skulls.png").getTexture());
+		super();		
+		setBackgroundTexture(AssetManager.getTexture("texture/misc/white.png").getTexture());
 		setBackgroundColor(Color.RED);
 		setBackgroundColor(Color.CYAN);
 		setRenderBackground(true);
-		
-		textColor = Color.RED;
-		layout = new GlyphLayout();
-		font = AssetManager.getFont("font/OpenSansRegular.ttf", 150).getFont();
 		setText(text);
-		justify = GuiUtils.Justify.Right;
+		renderText = true;
+		name = "\"" + text + "\"";
 	}
 	
-	@Override
-	public boolean update(float deltaTime, int mouseX, int mouseY) {
-		if (!isVisible)
-			return false;
-		isHovering = getBounds().contains(mouseX, mouseY);
-		return getBounds().contains(mouseX, mouseY);
-	}
 	
-	public void setText(String text) {
-		this.text = text;
-		layout.setText(font, text);
-		textWidth = layout.width;
-		textHeight = layout.height;
-	}
 
 	@Override
 	protected void renderComponent(SpriteBatch batch) {
@@ -70,27 +47,28 @@ public class GuiLabel extends Component{
 			Logger.Error(getClass(), "render", "Font is null"); 
 			return;
 		}
-		
-		font.setColor(Color.MAGENTA);
 		// Center Text
 		setTextJustify(justify);
-		font.draw(batch, text, getX() + xOffset, getY()  + yOffset);
+		font.setColor(textColor);
+
+		font.draw(batch, text, getChildX() + xOffset, getChildY()  + yOffset);
 	}
 
-	private void setTextJustify(GuiUtils.Justify mode) {
-		yOffset = (getComponentHeight() * 0.5f) - (textHeight * 0.5f);
+	@Override
+	public void setTextJustify(GuiUtils.Justify mode) {
+		justify = mode;
+		yOffset = (contentHeight() * 0.5f) + (textHeight * 0.5f);
 		switch (mode) {
 		case Center:
-			xOffset = (getComponentWidth() * 0.5f) - (textWidth * 0.5f);
+			xOffset = (contentWidth() * 0.5f) - (textWidth * 0.5f);
 			break;
 		case Left:
 			xOffset = 0;
 			break;
 		case Right:
-			xOffset = getComponentWidth() - textWidth;
+			xOffset = contentWidth() - textWidth;
 			break;
 		}
-		
 	}
 	
 	@Override
@@ -114,5 +92,17 @@ public class GuiLabel extends Component{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	protected String debugTooltipTextComponent() {
+		return toString() + "\n" +
+				"Justify: " + justify.toString() + "\n"
+				+ "Font Size: " + getFontSize() + "\n"
+				+ "Font Ascent: " + font.getAscent();
+	}
 
+	@Override
+	protected Component updateComponent(Component consumer, float deltaTime, int mouseX, int mouseY) {
+		return null;
+	}
 }
