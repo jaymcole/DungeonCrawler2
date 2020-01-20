@@ -20,10 +20,9 @@ public class SoundManager {
 	
 	public static void addTask(SoundManagerTask task) {
 		tasks.add(task);
-	}
+	}	
 	
-	
-	private static void stopAll() {
+	public static void stopAll() {
 		SoundManagerTask task;
 		for(int i = 0 ; i < tasks.size(); i++) {
 			task = tasks.get(i);

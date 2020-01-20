@@ -27,7 +27,7 @@ public class Window_MainMenu extends Window{
 		Widget_Button btn_play = new Widget_Button(backgroundX + bufferX, backgroundY + halfwayY - 100, halfwayX - bufferX * 2, 50, this, "Play") {
 			@Override
 			public void mouseReleased(int mouseX, int mouseY) {
-				gui.setWindow(GUI.WINDOW_HUD);
+				GUI.setWindow(GUI.WINDOW_HUD);
 			}
 		};
 		
@@ -35,14 +35,14 @@ public class Window_MainMenu extends Window{
 			@Override
 			public void mouseReleased(int mouseX, int mouseY) {
 				gui.getGame().newGame();
-				gui.setWindow(GUI.WINDOW_HUD);
+				GUI.setWindow(GUI.WINDOW_HUD);
 			}
 		};
 		
 		Widget_Button btn_settings = new Widget_Button(backgroundX + bufferX, backgroundY + halfwayY - 300, halfwayX - bufferX * 2, 50, this, "Settings") {
 			@Override
 			public void mouseReleased(int mouseX, int mouseY) {
-				gui.setWindow(GUI.WINDOW_SETTINGS);
+				GUI.setWindow(GUI.WINDOW_SETTINGS);
 			}
 		};
 		

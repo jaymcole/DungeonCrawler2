@@ -4,17 +4,11 @@ package ecu.se.gui2;
 import java.util.Random;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
-import ecu.se.Game;
-import ecu.se.Globals;
 import ecu.se.Logger;
-import ecu.se.Utils;
 import ecu.se.assetManager.AssetManager;
 
 public class GuiLabel extends Component{
@@ -25,8 +19,6 @@ public class GuiLabel extends Component{
 	protected boolean isHovering = false;
 	
 	protected float xOffset, yOffset;
-	
-	
 	
 	public GuiLabel(String text) {
 		super();		

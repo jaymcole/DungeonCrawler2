@@ -4,8 +4,6 @@ import com.badlogic.gdx.math.Vector3;
 
 import ecu.se.Game;
 import ecu.se.GameObject;
-import ecu.se.gui.GUI;
-import ecu.se.gui.Window_Inventory;
 
 
 public class InteractableItem extends ItemObject {

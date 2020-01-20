@@ -18,7 +18,7 @@ public class Windows {
 	 * Convenience class for creating gui windows/elements
 	 */
 	
-	public static Container CreateMainMenu (GUI gui) {
+	public static Container CreateMainMenu (final GUI gui) {
 		Container mainMenu = new Container();
 		
 		GuiButton btn_play = new GuiButton("Play") {
@@ -147,7 +147,7 @@ public class Windows {
 		return statsContainer;
 	}
 	
-	public static Container CreateGameOver(GUI gui) {
+	public static Container CreateGameOver(final GUI gui) {
 		Container gameOver = new Container();
 		
 		
@@ -199,7 +199,7 @@ public class Windows {
 	public static Container CreateHUD(GUI gui) {
 		Container container = new Container();
 		
-		gui.primaryItemSlot = new GuiItemSlot("Primary") {
+		GUI.primaryItemSlot = new GuiItemSlot("Primary") {
 			@Override
 			public void onRemoveItem() {
 				Game.player.setPrimaryAction(null);
@@ -213,7 +213,7 @@ public class Windows {
 					onRemoveItem();
 			}
 		};
-		gui.secondaryItemSlot = new GuiItemSlot("Scondary") {
+		GUI.secondaryItemSlot = new GuiItemSlot("Scondary") {
 			@Override
 			public void onRemoveItem() {
 				Game.player.setSecondaryAction(null);
@@ -228,8 +228,8 @@ public class Windows {
 			}
 		};
 		
-		container.addChild(gui.primaryItemSlot);
-		container.addChild(gui.secondaryItemSlot);
+		container.addChild(GUI.primaryItemSlot);
+		container.addChild(GUI.secondaryItemSlot);
 		
 		
 		container.setLayout(GuiUtils.Layout.Vertical);

@@ -25,6 +25,8 @@ public class SpriteAsset extends Asset {
 	public int spriteW;
 	public int spriteH;
 	public float frameTimeLength;
+	
+	public boolean buildForIDE = true;
 
 	public SpriteAsset(String name) {
 		this.name = name;
@@ -43,7 +45,7 @@ public class SpriteAsset extends Asset {
 		
 		try {
 			
-			if (true) {
+			if (buildForIDE) {
 				//file.createNewFile();
 				file = new File(name);
 				fileReader = new FileReader(file);

@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import ecu.se.Logger;
 import ecu.se.assetManager.AssetManager;
-import ecu.se.gui2.GuiUtils.Expand;
 
 public class Container extends Component{
 	protected LinkedList<Component> children;

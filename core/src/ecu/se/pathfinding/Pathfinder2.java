@@ -1,11 +1,7 @@
 package ecu.se.pathfinding;
 
 import java.util.LinkedList;
-import java.util.List;
-
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Queue;
-
 import ecu.se.Globals;
 import ecu.se.Utils;
 import ecu.se.map.Direction;
@@ -19,7 +15,7 @@ public class Pathfinder2 {
 
 	private static void addAdjacent(Node parent, Node goal) {
 
-		LinkedList<Node> adjacent = new LinkedList<Node>();
+		new LinkedList<Node>();
 		for (Direction d : Direction.values()) {
 			if (inBounds(parent.x + d.x, parent.y + d.y)) {
 				if (!Direction.isExpanded(d)) {

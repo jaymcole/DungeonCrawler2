@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import ecu.se.Utils;
 import ecu.se.assetManager.AssetManager;
 
 public class Widget_Label extends Widget{

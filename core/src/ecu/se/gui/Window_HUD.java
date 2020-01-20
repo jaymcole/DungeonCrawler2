@@ -2,7 +2,6 @@ package ecu.se.gui;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -103,7 +102,7 @@ public class Window_HUD extends Window {
 				buttonHighlight, buttonActive) {
 			@Override
 			public void mouseReleased(int mouseX, int mouseY) {
-				gui.setWindow(GUI.WINDOW_PLAYER_STATS);
+				GUI.setWindow(GUI.WINDOW_PLAYER_STATS);
 			}
 		};
 
@@ -114,7 +113,7 @@ public class Window_HUD extends Window {
 				buttonHighlight, buttonActive) {
 			@Override
 			public void mouseReleased(int mouseX, int mouseY) {
-				gui.setWindow(GUI.WINDOW_INVENTORY);
+				GUI.setWindow(GUI.WINDOW_INVENTORY);
 			}
 		};
 
@@ -125,7 +124,7 @@ public class Window_HUD extends Window {
 				buttonHighlight, buttonActive) {
 			@Override
 			public void mouseReleased(int mouseX, int mouseY) {
-				gui.setWindow(GUI.WINDOW_MAIN_MENU);
+				GUI.setWindow(GUI.WINDOW_MAIN_MENU);
 			}
 		};
 

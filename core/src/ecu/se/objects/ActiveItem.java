@@ -4,8 +4,6 @@ import ecu.se.Game;
 import ecu.se.GameObject;
 import ecu.se.actions.Action;
 import ecu.se.actors.Actor;
-import ecu.se.gui.GUI;
-import ecu.se.gui.Window_Inventory;
 
 public class ActiveItem extends InteractableItem{
 

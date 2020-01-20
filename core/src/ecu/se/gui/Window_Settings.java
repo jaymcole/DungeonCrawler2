@@ -2,8 +2,6 @@ package ecu.se.gui;
 
 import com.badlogic.gdx.graphics.Color;
 
-import ecu.se.Lighting;
-
 public class Window_Settings extends Window{
 
 	public Window_Settings(GUI gui) {

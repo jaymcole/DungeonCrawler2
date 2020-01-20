@@ -1,13 +1,9 @@
 package ecu.se;
 
-import java.util.Iterator;
-import java.util.Random;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -16,8 +12,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -33,7 +27,6 @@ import ecu.se.archive.TotalRecords;
 import ecu.se.assetManager.AssetManager;
 import ecu.se.assetManager.SoundManager;
 import ecu.se.gui.GUI;
-import ecu.se.gui.Window_HUD;
 import ecu.se.lights.Light;
 import ecu.se.map.Map;
 import ecu.se.objects.ActiveItem;
@@ -88,7 +81,6 @@ public class Game extends ApplicationAdapter {
 	private Texture backgroundTexture;
 
 	// DEBUG OBJECT(S)
-	private ShapeRenderer shapeRenderer;
 	private Light light;
 	// END DEBUG OBJECT(S)
 
@@ -160,7 +152,6 @@ public class Game extends ApplicationAdapter {
 		spell = ObjectMaker.createActiveItem(0, 0, new Spell_Teleport(player));
 		spell.onClick(player);
 		
-		shapeRenderer = new ShapeRenderer();
 		backgroundTexture = AssetManager.getTexture(backgroundTextureName).getTexture();
 
 		halfWidth = screenWidth * 0.5f;
@@ -193,11 +184,9 @@ public class Game extends ApplicationAdapter {
 		Map.update(deltaTime, (int) player.x, (int) player.y);
 	}
 
-	private static Random rand = new Random();
 	private float halfWidth;
 	private float halfHeight;
 	
-	boolean additive = true;
 	boolean softShadows = true;
 	/**
 	 * Renders everything

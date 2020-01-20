@@ -11,7 +11,6 @@ import ecu.se.GameObject;
 import ecu.se.Globals;
 import ecu.se.Lighting;
 import ecu.se.Logger;
-import ecu.se.Utils;
 
 public class Light implements Comparable<Light> {
 

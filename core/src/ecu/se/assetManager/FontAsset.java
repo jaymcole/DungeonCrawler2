@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import ecu.se.Logger;
 import ecu.se.Utils;
-import ecu.se.gui.GUI;
 
 /**
  * 

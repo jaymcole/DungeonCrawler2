@@ -1,17 +1,13 @@
 package ecu.se.gui2;
 
-import java.util.Random;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import ecu.se.Logger;
 import ecu.se.Utils;
 import ecu.se.assetManager.AssetManager;
-import ecu.se.gui.GUI;
 
 public class GuiProgressBar extends Component{
 

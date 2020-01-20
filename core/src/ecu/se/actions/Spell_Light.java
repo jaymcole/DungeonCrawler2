@@ -3,17 +3,13 @@ package ecu.se.actions;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 
-import ecu.se.Lighting;
 import ecu.se.ObjectManager;
-import ecu.se.Utils;
 import ecu.se.actors.Actor;
 import ecu.se.assetManager.AssetManager;
 import ecu.se.lights.Light;
 import ecu.se.lights.LightFading;
 import ecu.se.lights.LightTimed;
-import ecu.se.objects.Explosion;
 import ecu.se.objects.Projectile;
-import ecu.se.stats.Stats;
 
 public class Spell_Light extends Spell{
 

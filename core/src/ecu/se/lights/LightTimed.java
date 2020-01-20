@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import ecu.se.Lighting;
-import ecu.se.Logger;
 
 public class LightTimed extends Light{
 	public float lifespanInSeconds;

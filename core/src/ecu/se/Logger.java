@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.nio.file.FileSystem;
 import java.util.Date;
 
 public class Logger {
@@ -56,36 +55,41 @@ public class Logger {
 		}
 	}
 
-	
+	@SuppressWarnings("rawtypes")
 	public static void Error(Class caller, String method, String message) {
 		if (!LoggingEnabled && !AlwaysSaveErrorLogs)
 			return;
 		WriteLog(ComposeLogMessage(caller, method, "ERROR", message));
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static void Warning(Class caller, String method, String message) {
 		if (!DebugEnabled || !LoggingEnabled)
 			return;
 		WriteLog(ComposeLogMessage(caller, method, "WARN", message));
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static void Debug(Class caller, String method, Object message) {
 		if (message != null)
 			Debug(caller, method, message.toString());
 	}
-	
+
+	@SuppressWarnings("rawtypes")
 	public static void Debug(Class caller, String method, String message) {
 		if (!DebugEnabled || !LoggingEnabled)
 			return;
 		WriteLog(ComposeLogMessage(caller, method, "DEBUG", message));
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static void Info(Class caller, String method, String message) {
 		if (!LoggingEnabled)
 			return;
 		WriteLog(ComposeLogMessage(caller, method, "INFO", message));
 	}
 
+	@SuppressWarnings("rawtypes")
 	private static String ComposeLogMessage(Class caller, String method, String type, String message) {
 		sb = new StringBuilder();
 

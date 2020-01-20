@@ -1,7 +1,5 @@
 package ecu.se.gui2;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 import ecu.se.Game;
 import ecu.se.Logger;
 import ecu.se.ObjectManager;
@@ -12,8 +10,6 @@ import ecu.se.objects.ItemObject;
 public class GuiItemSlot extends GuiButton{
 
 	protected ItemObject item;
-	private TextureRegion itemTexture;
-	private float itemX, itemY;
 	private int MPCX, MPCY; // Mouse Pressed Coordinates X and Y
 	private boolean full;
 	
@@ -25,15 +21,11 @@ public class GuiItemSlot extends GuiButton{
 	public void mousePressed(int mouseX, int mouseY) {
 		MPCX = mouseX;
 		MPCY = mouseY;
-		itemX = mouseX + mouseOffsetX;
-		itemY = mouseY + mouseOffsetY;
 	}
 
 	@Override
 	public void mouseDown(int mouseX, int mouseY) {
 		if (isActive) {
-			itemX = mouseX + mouseOffsetX;
-			itemY = mouseY + mouseOffsetY;
 		}
 	}
 
@@ -77,8 +69,6 @@ public class GuiItemSlot extends GuiButton{
 //			}
 			// dropItem(mouseX, mouseY);
 		}
-		itemX = getChildX();
-		itemY = getChildY();
 	}
 	
 	/**
@@ -100,7 +90,6 @@ public class GuiItemSlot extends GuiButton{
 	 */
 	public void removeItem() {
 		item = null;
-		itemTexture = null;
 		full = false;
 		onRemoveItem();
 	}
@@ -119,9 +108,6 @@ public class GuiItemSlot extends GuiButton{
 
 		ObjectManager.remove(item);
 		this.item = item;
-		itemX = getChildX();
-		itemY = getChildY();
-		this.itemTexture = item.getTextureRegion();
 		full = true;
 		onSetItem();
 	}

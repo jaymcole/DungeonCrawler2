@@ -7,15 +7,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.collision.Ray;
-
 import ecu.se.Game;
-import ecu.se.GameObject;
 import ecu.se.Globals;
 import ecu.se.ObjectManager;
-import ecu.se.actors.Actor;
 
 /**
  * 

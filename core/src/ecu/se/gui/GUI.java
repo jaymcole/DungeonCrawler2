@@ -1,31 +1,19 @@
 package ecu.se.gui;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.LinkedList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import ecu.se.Game;
 import ecu.se.Logger;
 import ecu.se.actors.Player;
-import ecu.se.archive.Archiver;
-import ecu.se.archive.TotalRecords;
-import ecu.se.assetManager.AssetManager;
 import ecu.se.gui2.Component;
 import ecu.se.gui2.Container;
-import ecu.se.gui2.GuiButton;
-import ecu.se.gui2.GuiDropDownMenu;
 import ecu.se.gui2.GuiItemSlot;
 import ecu.se.gui2.GuiLabel;
-import ecu.se.gui2.GuiProgressBar;
-import ecu.se.gui2.GuiUtils;
 import ecu.se.gui2.Windows;
 import ecu.se.objects.ActiveItem;
 
@@ -231,20 +219,20 @@ public class GUI {
 		
 	}
 	
-	private void renderGrid(ShapeRenderer renderer) {
-		float hori = Gdx.graphics.getWidth() / density;
-		float vert = Gdx.graphics.getHeight() / density;
-		float offsetX = -Gdx.graphics.getWidth() * 0.5f;
-		float offsetY = -Gdx.graphics.getHeight() * 0.5f;
-		renderer.setColor(Color.GOLD);
-		for (int i = 0; i < hori; i++) {
-			renderer.line(i * density + offsetX, offsetY, i * density + offsetX, Gdx.graphics.getHeight());
-		}
-		
-		for (int i = 0; i < vert; i++) {
-			renderer.line(offsetX, i * density + offsetY, Gdx.graphics.getWidth() +offsetX, i * density + offsetY);
-		}
-	}
+//	private void renderGrid(ShapeRenderer renderer) {
+//		float hori = Gdx.graphics.getWidth() / density;
+//		float vert = Gdx.graphics.getHeight() / density;
+//		float offsetX = -Gdx.graphics.getWidth() * 0.5f;
+//		float offsetY = -Gdx.graphics.getHeight() * 0.5f;
+//		renderer.setColor(Color.GOLD);
+//		for (int i = 0; i < hori; i++) {
+//			renderer.line(i * density + offsetX, offsetY, i * density + offsetX, Gdx.graphics.getHeight());
+//		}
+//		
+//		for (int i = 0; i < vert; i++) {
+//			renderer.line(offsetX, i * density + offsetY, Gdx.graphics.getWidth() +offsetX, i * density + offsetY);
+//		}
+//	}
 	
 
 	/**

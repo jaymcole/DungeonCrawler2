@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ecu.se.Logger;
-import ecu.se.Utils;
 
 public class AssetManager {	
 	public static HashMap<String, Asset> assets = new HashMap<String, Asset>();

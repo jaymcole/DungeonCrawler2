@@ -357,7 +357,7 @@ public abstract class Component {
 	public void setBorderThickness (float thicc) {
 		borderThickness = thicc;
 	}
-	private float getBorderThickness() {
+	public float getBorderThickness() {
 		return borderThickness;
 	}
 	

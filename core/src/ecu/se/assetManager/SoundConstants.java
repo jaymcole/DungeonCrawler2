@@ -22,19 +22,6 @@ public class SoundConstants {
 			"sounds/voice/laughing/hyena_01.mp3"			
 	};
 	
-	private static String[] pain = new String[] {
-			"sounds/voice/pain_male_human_01.mp3",
-			"sounds/voice/pain_male_human_02.mp3"			
-	};
-	
-	private static String[] grunt_human = new String[] {
-			"sounds/voice/pain_male_human_01.mp3",
-			"sounds/voice/pain_male_human_02.mp3"			
-	};
-	
-
-	
-	
 	public static Sound getScream() {
 		return AssetManager.getSound(screams[random.nextInt(screams.length)]).getSound();
 		

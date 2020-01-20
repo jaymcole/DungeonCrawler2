@@ -1,14 +1,13 @@
 package ecu.se.gui2;
 
-import java.awt.MenuItem;
 import java.util.LinkedList;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import ecu.se.Logger;
 import ecu.se.assetManager.AssetManager;
+import ecu.se.gui2.GuiUtils.Expand;
 import ecu.se.gui2.GuiUtils.Layout;
 
 public class GuiDropDownMenu extends Container{
@@ -28,7 +27,7 @@ public class GuiDropDownMenu extends Container{
 		
 		GuiLabel iconPlaceHolder = new GuiLabel("[*]");
 		iconPlaceHolder.setTextJustify(GuiUtils.Justify.Center);
-		iconPlaceHolder.setExpandSettings(expandSettings.UseMinimumSize);
+		iconPlaceHolder.setExpandSettings(Expand.UseMinimumSize);
 		children.add(iconPlaceHolder);
 	}
 		
@@ -47,7 +46,7 @@ public class GuiDropDownMenu extends Container{
 	}
 	
 	public void addChild(Component child) {
-		child.setExpandSettings(expandSettings.UseMinimumSize);
+		child.setExpandSettings(Expand.UseMinimumSize);
 		MenuItems.addChild(child);
 	}
 	

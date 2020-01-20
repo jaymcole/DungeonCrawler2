@@ -4,11 +4,9 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
 
-import ecu.se.Game;
 import ecu.se.archive.Archiver;
 import ecu.se.archive.TimeRecords;
 import ecu.se.archive.TotalRecords;
-import ecu.se.stats.Stats;
 
 //TODO: Game over / Death screen
 public class Window_DeathScreen extends Window{
@@ -45,7 +43,7 @@ public class Window_DeathScreen extends Window{
 			@Override
 			public void mouseReleased(int mouseX, int mouseY) {
 				gui.getGame().newGame();
-				gui.setWindow(GUI.WINDOW_HUD);
+				GUI.setWindow(GUI.WINDOW_HUD);
 			}
 		};		
 		

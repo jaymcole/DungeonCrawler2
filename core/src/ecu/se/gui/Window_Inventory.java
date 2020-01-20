@@ -2,16 +2,13 @@ package ecu.se.gui;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import ecu.se.Logger;
-import ecu.se.ObjectManager;
 import ecu.se.assetManager.AssetManager;
 import ecu.se.objects.ItemObject;
-import ecu.se.stats.Stats;
 
 public class Window_Inventory extends Window {
 
@@ -31,8 +28,6 @@ public class Window_Inventory extends Window {
 		int backgroundY = (int)(halfwayY * 0.5f);
 		int bufferX = 50;
 		
-
-		
 		ArrayList<Widget> widgetList = new ArrayList<Widget>();
 		
 		Widget_Image img_background = new Widget_Image(backgroundX, backgroundY, halfwayX, halfwayY, this, "texture/misc/paper.jpg");
@@ -40,14 +35,6 @@ public class Window_Inventory extends Window {
 		widgetList.add(img_background);
 		Widget_Label lbl_title = new Widget_Label(backgroundX + bufferX, backgroundY + halfwayY - 25, 0, 0, parent, this.windowName, 50, Color.CLEAR, Color.BLACK);
 		widgetList.add(lbl_title);
-		
-		int fontSize = 35;
-		float labelYChange = fontSize * 0.5f;
-		float startLabelX = halfwayX - halfwayX * 0.5f, startLabelY = halfwayY - labelYChange + backgroundY;
-		float currentY = 40;
-		float currentX = 10;
-		
-		
 		
 		Texture buttonTexture = AssetManager.getTexture("texture/gui/hotkey.png").getTexture();
 		TextureRegion buttonDefault;

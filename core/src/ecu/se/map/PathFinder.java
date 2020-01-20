@@ -9,13 +9,6 @@ import ecu.se.Globals;
 import ecu.se.Logger;
 
 /**
- * UNUSED
- */
-
-
-
-
-/**
  * The AStarSearch class, along with the AStarNode class, implements a generic
  * A* search algorithm. The AStarNode class should be subclassed to provide
  * searching capability.
@@ -27,8 +20,15 @@ public class PathFinder {
 	 * are ordered by their priority, determined by the object's Comparable
 	 * interface. The highest priority item is first in the list.
 	 */
+	@SuppressWarnings("rawtypes")
 	public static class PriorityList extends LinkedList {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 7876549211879081651L;
+
+		@SuppressWarnings("unchecked")
 		public void add(Comparable object) {
 			for (int i = 0; i < size(); i++) {
 				if (object.compareTo(get(i)) <= 0) {
@@ -65,6 +65,7 @@ public class PathFinder {
 	 * Find the path from the start node to the end node. A list of AStarNodes
 	 * is returned, or null if the path is not found.
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public LinkedList<Vector2> findPath(PathNode startNode, PathNode goalNode) {
 		for (int i = 0; i < Map.getCurrentFloor().getMapWidth(); i++) {
 			for (int j = 0; j < Map.getCurrentFloor().getMapHeight(); j++) {
@@ -140,44 +141,4 @@ public class PathFinder {
 		// no path found
 		return null;
 	}
-
 }
-
-/*
- * Logger.Debug("NA", "NA","Find Path"); PriorityList openList = new PriorityList();
- * LinkedList closedList = new LinkedList();
- * 
- * startNode.costFromStart = 0; startNode.estimatedCostToGoal =
- * startNode.getEstimatedCost(goalNode); startNode.pathParent = null;
- * openList.add(startNode); Logger.Debug("NA", "NA","Start Loop"); counter = 0; while
- * (!openList.isEmpty()) { Logger.Debug("NA", "NA","Loop iteration " + counter);
- * counter++;
- * 
- * 
- * PathNode node = (PathNode) openList.removeFirst();
- * 
- * // if (node.x > 1000) // break;
- * 
- * // if (node == goalNode) { if (node.equals(goalNode)) { // construct the path
- * from start to goal return constructPath(goalNode); }
- * 
- * Logger.Debug("NA", "NA",node.toString()); List neighbors = node.getNeighbors();
- * for (int i = 0; i < neighbors.size(); i++) { PathNode neighborNode =
- * (PathNode) neighbors.get(i); // boolean isOpen =
- * openList.contains(neighborNode); boolean isOpen = contains(neighborNode,
- * openList); // boolean isClosed = closedList.contains(neighborNode); boolean
- * isClosed = contains(neighborNode, closedList); float costFromStart =
- * node.costFromStart + node.getCost(neighborNode); // check if the neighbor
- * node has not been // traversed or if a shorter path to this // neighbor node
- * is found. Logger.Debug("NA", "NA","\n" + node.toString()); if ((!isOpen &&
- * !isClosed) || costFromStart < neighborNode.costFromStart) {
- * neighborNode.pathParent = node; neighborNode.costFromStart = costFromStart;
- * neighborNode.estimatedCostToGoal = neighborNode.getEstimatedCost(goalNode);
- * if (isClosed) { // closedList.remove(neighborNode); remove(neighborNode,
- * closedList); } if (!isOpen) { // openList.add(neighborNode); //
- * remove(neighborNode, openList); openList.add(neighborNode); } } }
- * closedList.add(node); }
- * 
- * // no path found return null; }
- * 
- */

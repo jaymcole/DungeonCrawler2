@@ -2,7 +2,6 @@ package ecu.se.objects;
 
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -14,7 +13,6 @@ import ecu.se.Utils;
 import ecu.se.actors.Actor;
 import ecu.se.actors.Team;
 import ecu.se.assetManager.Animation;
-import ecu.se.assetManager.AssetManager;
 import ecu.se.assetManager.SoundManager;
 import ecu.se.assetManager.SoundManagerTask;
 import ecu.se.assetManager.SoundTask;

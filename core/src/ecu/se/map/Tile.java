@@ -1,7 +1,5 @@
 package ecu.se.map;
 
-import java.awt.Polygon;
-import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 
 import com.badlogic.gdx.graphics.Color;
@@ -9,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 
 import ecu.se.GameObject;

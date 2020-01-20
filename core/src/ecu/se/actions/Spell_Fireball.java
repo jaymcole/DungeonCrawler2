@@ -1,12 +1,8 @@
 package ecu.se.actions;
 
-import java.util.Random;
-
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import ecu.se.Lighting;
 import ecu.se.ObjectManager;
 import ecu.se.actors.Actor;
 import ecu.se.assetManager.AssetManager;
