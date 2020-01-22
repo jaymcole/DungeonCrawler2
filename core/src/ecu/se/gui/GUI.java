@@ -46,6 +46,7 @@ public class GUI {
 	public static final int WINDOW_GAME_OVER = 6;
 	public static final int WINDOW_GAME_STATS = 7;
 	public static final int WINDOW_COMPONENT_TEST = 8;
+	public static final int WINDOW_DEBUG_SETTINGS = 9;
 	public static int currentWindow;
 
 	/**
@@ -83,7 +84,8 @@ public class GUI {
 				Windows.CreatePlayerStats(this), 
 				Windows.CreateGameOver(this), 
 				Windows.CreateGameStats(this),
-				Windows.CreateComponentTest(this)
+				Windows.CreateComponentTest(this),
+				Windows.CreateDebugSettings(this) // TODO
 		};
 		
 		setWindow(WINDOW_MAIN_MENU);
@@ -131,7 +133,7 @@ public class GUI {
 		inputUsed = false;
 		consumer = null;
 
-		consumer = windows[currentWindow].update(consumer, deltaTime, mouseX, mouseY);
+		consumer = windows[currentWindow].update(null, deltaTime, mouseX, mouseY);
 		if (consumer != null) {
 			inputUsed = true;
 			processInput(consumer, mouseX, mouseY);
@@ -139,7 +141,7 @@ public class GUI {
 		}
 		
 		if (RenderToolTip) {
-			tooltipContainer.pack(mouseX, mouseY);
+			tooltipContainer.setPosition((tooltipContainer.getMarginsBounds().width * 0.5f) + mouseX, mouseY);
 		}			
 	}
 	
@@ -191,7 +193,7 @@ public class GUI {
 		renderer.setColor(Color.GOLDENROD);
 		renderer.setProjectionMatrix(hudCamera.projection);
 		if (windows[currentWindow] != null) {
-			windows[currentWindow].debugRender(renderer);
+			windows[currentWindow].renderDebug(renderer);
 		}
 
 //		if (Game.currentState == Game.GAME_STATE_PAUSED)
@@ -204,7 +206,7 @@ public class GUI {
 //		renderer.circle(0, 0, 50);
 //		renderer.line(0, 0, test.getChildX(), test.getChildY());
 		if (RenderToolTip)
-			tooltipContainer.debugRender(renderer);
+			tooltipContainer.renderDebug(renderer);
 //		}
 		
 		

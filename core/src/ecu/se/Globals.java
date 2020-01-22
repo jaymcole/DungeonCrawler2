@@ -12,7 +12,12 @@ import ecu.se.gui.GUI;
 public class Globals {
     public static final String VERSION = " MISSING";
     
+    // Debug Settings
     public static boolean DEBUG = false;
+    public static boolean GUI_DEBUG_RENDER_FILL = false;
+    
+    
+    
     
     // Render Levels.
     public static final float Z_LEVEL_FLOOR =    0.0f;
@@ -50,8 +55,8 @@ public class Globals {
     
     
     //LIGHTING
-    public static int MAX_LIGHTS = 200; //Must also be changed in the shader
-    public static float DEFAULT_LIGHT_INTENSITY = 900;
+    public static int LIGHT_SPAWN_RATE = 15; // The chance (out of 100) that any given tile will spawn with a light.
+    public static float DEFAULT_LIGHT_INTENSITY = 900; //Unused
     
     // DEBUG Settings
     // All of these will probably have to be cleaned up (removed along with whatever functions use them) later.

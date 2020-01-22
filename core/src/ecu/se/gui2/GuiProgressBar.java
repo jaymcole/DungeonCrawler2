@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 
+import ecu.se.Logger;
 import ecu.se.Utils;
 import ecu.se.assetManager.AssetManager;
 
@@ -69,10 +71,10 @@ public class GuiProgressBar extends Component{
 
 		batch.setColor(ProgressBarColor);
 		batch.draw(progressBarTexture, 
-				getChildX(), getChildY(), 
-				contentWidth() * progressPercentage, contentHeight(), 
+				getContentBounds().x, getContentBounds().y, 
+				getContentBounds().width * progressPercentage, getContentBounds().height, 
 				-xTextureOffset,0,
-				(((contentWidth() * progressPercentage) / progressBarTexture.getWidth()) - xTextureOffset), -contentHeight() / progressBarTexture.getHeight()
+				(((getContentBounds().width * progressPercentage) / progressBarTexture.getWidth()) - xTextureOffset), -getContentBounds().height / progressBarTexture.getHeight()
 				);
 		
 		batch.setColor(foregroundColor);	
@@ -80,7 +82,7 @@ public class GuiProgressBar extends Component{
 		if (renderText) {
 			font.setColor(textColor);
 			setTextJustify(justify);
-			font.draw(batch, text, getChildX() + xTextOffset, getChildY() + yTextOffset);
+			font.draw(batch, text, getContentBounds().x + xTextOffset, getContentBounds().y + yTextOffset);
 
 		}
 	}
@@ -88,16 +90,16 @@ public class GuiProgressBar extends Component{
 	@Override
 	public void setTextJustify(GuiUtils.Justify mode) {
 		justify = mode;
-		yTextOffset = (contentHeight() * 0.5f) + (textHeight * 0.5f);
+		yTextOffset = (getContentBounds().height * 0.5f) + (textHeight * 0.5f);
 		switch (mode) {
 		case Center:
-			xTextOffset = (contentWidth() * 0.5f) - (textWidth * 0.5f);
+			xTextOffset = (getContentBounds().width * 0.5f) - (textWidth * 0.5f);
 			break;
 		case Left:
 			xTextOffset = 0;
 			break;
 		case Right:
-			xTextOffset = contentWidth() - textWidth;
+			xTextOffset = getContentBounds().width - textWidth;
 			break;
 		}
 	}
@@ -151,26 +153,20 @@ public class GuiProgressBar extends Component{
 	}
 
 	@Override
-	protected void calculateMinComponentDimensions() {
-		minimumWidth = textWidth;
-		minimumHeight = textHeight;
-		
-	}
+	protected void renderDebugComponent(ShapeRenderer renderer) {}
 
 	@Override
-	protected void debugRenderComponent(ShapeRenderer shapeRenderer) {
-	}
+	protected boolean packComponent() {return true;}
 
 	@Override
-	protected void disposeComponent() {
-		// TODO Auto-generated method stub
-		
-	}
+	protected void setPositionComponent(float x, float y) {}
 
 	@Override
-	public void mouseReleased(int mouseX, int mouseY) {
-		// TODO Auto-generated method stub
-		
+	protected Rectangle calculateMinContentBoundsComponent() {		
+		glyphLayout.setText(font, getMaxValue() + "");
+		float tempTextWidth = glyphLayout.width;
+		float tempTextHeight = glyphLayout.height;
+		return new Rectangle(0,0,tempTextWidth, tempTextHeight);
 	}
 
 }

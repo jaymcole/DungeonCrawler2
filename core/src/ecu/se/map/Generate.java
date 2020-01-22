@@ -537,17 +537,17 @@ public class Generate {
 				switch (temp) {
 				case FLOOR:
 				case ROOM:
-					if (random.nextInt(100) > 99) {
-						createLight((int) (i * tileWidth + (tileWidth * 0.5f)),
-								(int) (j * tileHeight + (tileHeight * 0.5f)));
+					if (random.nextInt(100) < Globals.LIGHT_SPAWN_RATE) {
+						createLight((int) (i * tileWidth + (tileWidth * random.nextFloat())),
+								(int) (j * tileHeight + (tileHeight * random.nextFloat())));
 						totalLights++;
 					}
 					makeTileWalkable(i, j);
 					break;
 				case SPAWN:
 					makeTileWalkable(i, j);
-					createLight((int) (i * tileWidth + (tileWidth * 0.5f)),
-							(int) (j * tileHeight + (tileHeight * 0.5f)));
+					createLight((int) (i * tileWidth + (tileWidth * random.nextFloat())),
+							(int) (j * tileHeight + (tileHeight * random.nextFloat())));
 					totalLights++;
 					up.setPosition(((int)(i * tileWidth + tileWidth * 0.5f)), ((int)(j * tileHeight + tileHeight * 0.5f)));
 

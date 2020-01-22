@@ -1,12 +1,10 @@
 package ecu.se.gui2;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 
 import ecu.se.Logger;
+import ecu.se.Utils;
 
 public class GuiButton extends GuiLabel{
 
@@ -19,11 +17,12 @@ public class GuiButton extends GuiLabel{
 	
 	@Override
 	public Component updateComponent(Component consumer, float deltaTime, int mouseX, int mouseY) {
-		if (hasHotkey && Gdx.input.isKeyJustPressed(hotkey)) {
-			onHotkey(mouseX, mouseY);
-			onHotKeyReleased(mouseX, mouseY);
-		}
-		specialActions(deltaTime, mouseX, mouseY);
+//		Logger.Debug(getClass(), "updateComponent", "Updating: " + getClass().getSimpleName());
+//		if (hasHotkey && Gdx.input.isKeyJustPressed(hotkey)) {
+//			onHotkey(mouseX, mouseY);
+//			onHotKeyReleased(mouseX, mouseY);
+//		}
+//		specialActions(deltaTime, mouseX, mouseY);
 		return consumer;
 	}
 
@@ -33,21 +32,16 @@ public class GuiButton extends GuiLabel{
 			Logger.Error(getClass(), "render", "Font is null"); 
 			return;
 		}
-		// Center Text
-		font.setColor(textColor);
+		if (Utils.NullOrEmpty(text))
+			return;
 		setTextJustify(justify);
-		font.draw(batch, text, getChildX() + xOffset, getChildY()  + yOffset);
+		font.setColor(textColor);
+		font.draw(batch, text, getContentBounds().x + xOffset, getContentBounds().y  + yOffset);
 	}
 	
 		
 	@Override
-	protected void debugRenderComponent(ShapeRenderer shapeRenderer) {
-		if (isHovering)
-			shapeRenderer.setColor(Color.RED);
-		else
-			shapeRenderer.setColor(Color.GREEN);
-		Rectangle rect = getBounds();
-		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+	protected void renderDebugComponent(ShapeRenderer shapeRenderer) {
 	}
 	
 	public void specialActions(float deltaTime, int mouseX, int mouseY) {}
@@ -63,9 +57,4 @@ public class GuiButton extends GuiLabel{
 	public void onHotKeyReleased(int mouseX, int mouseY) {
 		mouseReleased(mouseX, mouseY);
 	};
-	
-	@Override
-	protected void disposeComponent() {
-		// TODO Auto-generated method stub
-	}
 }

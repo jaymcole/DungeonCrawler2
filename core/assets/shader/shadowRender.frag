@@ -12,8 +12,9 @@ varying LOWP vec4 vColor;
 uniform sampler2D u_texture;
 uniform vec2 resolution;
 
-uniform float intensity;
 uniform float softShadows;
+uniform float intensity;
+uniform float distance;
 
 //sample from the distance map
 float sample(vec2 coord, float r) {
@@ -54,9 +55,9 @@ void main(void) {
 	sum += sample(vec2(tc.x + 4.0*blur, tc.y), r) * 0.05;
 	
 	//1.0 -> in light, 0.0 -> in shadow
- 	float lit = mix(center, sum, softShadows) * intensity ;
+ 	float lit = mix(center, sum * intensity, softShadows);
  	
  	//multiply the summed amount by our distance, which gives us a radial falloff
  	//then multiply by vertex (light) color  
- 	gl_FragColor = vColor * vec4(vec3(1.0), lit * smoothstep(1.0, 0.0, r));
+ 	gl_FragColor = vColor * vec4(vec3(1.0), lit * smoothstep(1.0, 0.0, r * (1.0/distance)));
 }

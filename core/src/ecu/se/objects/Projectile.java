@@ -38,40 +38,12 @@ public class Projectile extends GameObject {
 	private Sound endSound;
 	private long endSoundID;
 	
+	private Vector3 LastAccessiblePosition; //Last position on walkable tile.
 	
 	private GameObject ItemToSpawnOnDeath;
 	private Light LightToSpawnOnDeath;
 	
 	//TODO: Check collision using a line from current position to next.
-	
-//	public Projectile(float x, float y, double angleRAD, Actor parent, float damage, float speed, String file, Light light) {
-//		super(x, y);
-//		this.x = x;
-//		this.y = y;
-//		this.parent = parent;
-//		this.team = parent.team;
-//		angle = angleRAD;
-//		bounds = Utils.getRectangleBounds(x, y, 10, 10, Utils.ALIGN_CENTERED);
-//		this.damage = damage;
-//		animation = new Animation(0, 0, 0, AssetManager.getSpriteSheet(file));
-//		animation.setRow(0);
-//		animation.setIdle(false);
-//		animation.setRotation((float)Math.toDegrees(angle));
-//		timeAlive = 0;
-//		
-//		
-//		this.light = light;
-//		Lighting.addLight(light);
-//		
-////		light = new Light(this.getPosition());
-////		light.setColor(Color.ORANGE);
-////		
-////		light.setIntensity(500);
-////		light.setParent(this);
-////		light.type = 2;
-////		Lighting.addLight(light);
-//		setSpeed(speed);
-//	}
 	
 	public Projectile(float x, float y, double angleRAD, Actor parent, float damage, float speed, SpriteAsset spritesheet, Sound startSound, Sound movingSound, Sound endSound, Light light, GameObject objectToSpawnOnDeath, Light LightToSpawnOnDeath) {
 		super(x, y);
@@ -101,7 +73,6 @@ public class Projectile extends GameObject {
 		movingSoundID = movingSound.loop();
 		this.endSound = endSound;
 		
-		
 		this.ItemToSpawnOnDeath = objectToSpawnOnDeath;
 		this.LightToSpawnOnDeath = LightToSpawnOnDeath;
 		
@@ -128,6 +99,8 @@ public class Projectile extends GameObject {
 				
 		if(Map.getTile((int)x, (int)y) == null || Map.getTile((int)x, (int)y).isWall) {
 			kill();
+		} else {
+			LastAccessiblePosition = new Vector3(x, y, 0);
 		}
 		
 		timeAlive += deltaTime;
@@ -143,14 +116,18 @@ public class Projectile extends GameObject {
 	
 	@Override
 	protected void die() {
+		if (LastAccessiblePosition == null) {
+			LastAccessiblePosition = new Vector3(this.x, this.y, 0);
+		}
+		
+		
 		if (ItemToSpawnOnDeath != null) {
-			ItemToSpawnOnDeath.setPosition(new Vector2(x, y));
-			ItemToSpawnOnDeath.setPosition((int)x, (int)y);
+			ItemToSpawnOnDeath.setPosition(new Vector2(LastAccessiblePosition.x, LastAccessiblePosition.y));
 			ObjectManager.add(ItemToSpawnOnDeath);
 		}
 		
 		if (LightToSpawnOnDeath != null) {
-			LightToSpawnOnDeath.setPosition(new Vector3(this.x, this.y, 0));
+			LightToSpawnOnDeath.setPosition(LastAccessiblePosition);
 			Lighting.addLight(LightToSpawnOnDeath);
 			
 		}

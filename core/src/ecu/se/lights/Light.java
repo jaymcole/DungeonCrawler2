@@ -44,23 +44,24 @@ public class Light implements Comparable<Light> {
 	public boolean on;
 	public boolean delete = false;
 	public float intensity;
+	protected float baseIntensity;
+	protected float distance = 0.2f;
 	public int type;
 
 	protected boolean hasParent;
 	protected GameObject parent;
 	protected float[] flickerTest = { m, m, n, m, m, o, m, m, o, m, m, n, o, n, m, m, o, n, q, n, m, m, o };
+	protected float[] flickerStyle;
 	protected Color color;
 	protected float offsetX, offsetY;
-	
 
 	private Vector3 position;
-	protected float baseIntensity;
 	protected float time;
-	protected float distance;
-	protected static Random rand = new Random();
-	protected int intensityPosition = rand.nextInt(flickerTest.length);
+	protected Random rand = new Random();
+	protected int intensityPosition;
 	
 	public LinkedList<Vector3> positions = new LinkedList<Vector3>();
+	
 	
 	
 	public Light(Vector3 position) {
@@ -71,6 +72,7 @@ public class Light implements Comparable<Light> {
 		this.intensity = Globals.DEFAULT_LIGHT_INTENSITY;
 		this.type = 1;
 		on = true;
+		init();
 	}
 
 	public Light(GameObject parent) {
@@ -79,6 +81,7 @@ public class Light implements Comparable<Light> {
 		this.setPosition(parent.getPosition());
 		this.type = 1;
 		on = true;
+		init();
 	}
 	
 	public Light (GameObject parent, Color color, float intensity) {
@@ -89,6 +92,7 @@ public class Light implements Comparable<Light> {
 		this.setPosition(parent.getPosition());
 		this.type = 1;
 		on = true;
+		init();
 	}
 	
 	public Light (GameObject parent, Color color, float intensity, int type) {
@@ -99,17 +103,23 @@ public class Light implements Comparable<Light> {
 		this.setPosition(parent.getPosition());
 		this.type = type;
 		on = true;
+		init();
+	}
+	
+	private void init() {
+		flickerStyle = flickerTest;
+		intensityPosition = rand.nextInt(flickerStyle.length);
 	}
 
 	public void update(float deltaTime, Vector2 targetVector) {
 		time += deltaTime;
-//		if (time > 0.1f) {
-//			time = 0;
-//			intensityPosition++;
-//			intensityPosition %= flickerTest.length;
-//		}
-//		intensity = baseIntensity * (flickerTest[intensityPosition] * 0.5f);
-		intensity = flickerTest[intensityPosition];
+		if (time > 0.1f) {
+			time = 0;
+			intensityPosition++;
+			intensityPosition %= flickerStyle.length;
+		}
+//		intensity = baseIntensity * (flickerStyle[intensityPosition] * 0.5f);
+		intensity = flickerStyle[intensityPosition];
 //		color = new Color(color.r, color.g, color.b, intensity);
 		if (hasParent) {
 			if (parent == null)
@@ -165,6 +175,10 @@ public class Light implements Comparable<Light> {
 		getPosition().y = y;
 	}
 
+	public void setDistance(float distance) {
+		this.distance = distance;
+	}
+	
 	public float getDistance() {
 		return distance;
 	}

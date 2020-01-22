@@ -17,9 +17,6 @@ import ecu.se.stats.Stats;
  * A spell that creates a fireball.
  */
 public class Spell_Fireball extends Spell{
-
-	
-	
 	public Spell_Fireball(Actor caster) {
 		super(caster);
 		
@@ -32,19 +29,17 @@ public class Spell_Fireball extends Spell{
 		sound_loop = AssetManager.getSound("sounds/effects/fire/fire_burning_01.mp3").getSound();
 		sound_end = AssetManager.getSound("sounds/effects/explosion/explosion_01.mp3").getSound();
 		spritesheet = AssetManager.getSpriteSheet("texture/spritesheet/fireball_spritesheet.png");
-		
-			
 	}
-
 	
 	@Override
 	protected void cast(float deltaTime) {
 		double angleInRadians = Math.atan2(targetY - caster.getY(), targetX - caster.getX()) - Math.atan2(0, 0);
 
-		Light light = new Light(new Vector3(targetX, targetY, 0));
+		Light light = new Light(new Vector3(caster.getX(), caster.getY(), 0));
 		light.setColor(Color.ORANGE);
 		
-		light.setIntensity(500);
+		light.setIntensity(1);
+		light.setDistance(.03f);
 		light.setParent(caster);
 		light.type = 2;
 		
@@ -62,7 +57,7 @@ public class Spell_Fireball extends Spell{
 						sound_end, 
 						light,
 						new Explosion(0, 0, caster.getStat(Stats.KNOCKBACK) * 100, 100, caster),
-						new LightFading(Vector3.Zero, Color.ORANGE, light.intensity * 40, 0.85f, 2)
+						new LightFading(Vector3.Zero, Color.ORANGE, light.intensity, 0.8f, 2)
 						)
 				);
 		currentStage++;

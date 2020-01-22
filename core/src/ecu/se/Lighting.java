@@ -21,6 +21,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import ecu.se.lights.Light;
+import ecu.se.lights.LightFading;
+import ecu.se.lights.LightTimed;
 import ecu.se.map.Floor;
 import ecu.se.map.Map;
 import ecu.se.map.Tile;
@@ -41,7 +43,7 @@ public class Lighting {
 		return prog;
 	}
 	
-private int lightSize = 512;
+private int lightSize = 1024;
 	
 	private float upScale = 1f; //for example; try lightSize=128, upScale=1.5f
 		
@@ -227,6 +229,7 @@ private int lightSize = 512;
 		
 		// clamping this is guaranteed to cause debuggin problems later
 		shadowRenderShader.setUniformf("intensity", Utils.clamp(0,1, l.intensity));
+		shadowRenderShader.setUniformf("distance", Utils.clamp(0,1, l.getDistance()));
 		//set color to light
 		batch.setColor(l.getColor());
 		
@@ -243,28 +246,45 @@ private int lightSize = 512;
 	}
 
 	
+	
+	private Color LightTimedColor = Color.CYAN;
+	private Color LightFadingColor = Color.MAGENTA;
+	private Color LightColor = Color.GREEN;
+	
 	public void debugRender(ShapeRenderer batch) {
-		batch.setColor(Color.WHITE);
-		batch.line(new Vector2(cam.position.x, cam.position.y), new Vector2(Game.player.x, Game.player.y));
-		batch.setColor(Color.CYAN);
-		batch.line(new Vector2(cam.position.x, cam.position.y), new Vector2(0,0));
-		batch.setColor(Color.RED);
-		batch.rect(cam.position.x+5, cam.position.y+5, cam.viewportWidth-10, cam.viewportHeight-10);
+		
+		for (Light light : lights) {
+			if (light instanceof LightTimed) {
+				batch.setColor(LightTimedColor);
+			} else if (light instanceof LightFading) {
+				batch.setColor(LightFadingColor);
+			} else if (light instanceof Light) {
+				batch.setColor(LightColor);
+			}
+			renderX(batch, light);
+		}
+		
+		
+		
+		
+//		batch.setColor(Color.WHITE);
+//		batch.line(new Vector2(cam.position.x, cam.position.y), new Vector2(Game.player.x, Game.player.y));
+//		batch.setColor(Color.CYAN);
+//		batch.line(new Vector2(cam.position.x, cam.position.y), new Vector2(0,0));
+//		batch.setColor(Color.RED);
+//		batch.rect(cam.position.x+5, cam.position.y+5, cam.viewportWidth-10, cam.viewportHeight-10);
 	}
 	
-
-	
-	
+	private float xSize = 5;
+	private void renderX(ShapeRenderer batch, Light light) {
+		batch.line(light.getPosition().x-xSize, light.getPosition().y-xSize, light.getPosition().x+xSize, light.getPosition().y+xSize);
+		batch.line(light.getPosition().x-xSize, light.getPosition().y+xSize, light.getPosition().x+xSize, light.getPosition().y-xSize);
+	}
 	
 	
 	private static LinkedList<Light> lights;
 	private static LinkedList<Light> waitlist;
 	private static Iterator<Light> updater;
-	
-	
-	
-	
-	
 	
 	
 	/**

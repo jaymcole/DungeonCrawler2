@@ -2,231 +2,279 @@ package ecu.se.gui2;
 
 import java.util.LinkedList;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 
 import ecu.se.Logger;
 import ecu.se.assetManager.AssetManager;
 
 public class Container extends Component{
 	protected LinkedList<Component> children;
-	protected GuiUtils.Layout layout;
+	protected Layout layout;
 	
 	public Container() {
 		super();
 		setBackgroundTexture(AssetManager.getTexture("texture/misc/white.png").getTexture());
-		layout = GuiUtils.Layout.Horizontal;
+		layout = Layout.Vertical;
+		setLayout(Layout.Vertical);
 		children = new LinkedList<Component>();
 		canConsumeUI = true;
-	}
+		setBackgroundColor(Color.CYAN);
 		
-	@Override
-	protected Component updateComponent(Component consumer, float deltaTime, int mouseX, int mouseY) {
-		for (Component child : children) {
-			consumer = child.update(consumer, deltaTime, mouseX, mouseY);
-		}	
-		return consumer;
 	}
 	
 	public void addChild(Component child) {
 		if (!children.contains(child)) {
-			children.add(child);
+			children.addFirst(child);
 			child.parent = this;
 			invalidate();
 		} else
 			Logger.Error(getClass(), "addChild", "Failed to add child of type:" + child.getClass().getSimpleName() + " to " + getClass().getSimpleName());
 	}
-	
-	public void setLayout(GuiUtils.Layout layout) {
-		if(layout != this.layout)
-			invalidate();
-		this.layout = layout;
-	}
 
 	@Override
-	public boolean validate() {
-		boolean valid = true;
+	protected Component updateComponent(Component consumer, float deltaTime, int mouseX, int mouseY) {
 		for (Component child : children) {
-			child.validate();
-			if (!child.isValidLayout)
-				resize();
+			consumer = child.update(consumer, deltaTime, mouseX, mouseY);
 		}
-		return valid;
-	}
-	
-	public void pack(float x, float y) {
-		calculateMinDimensions();
-		this.setOriginX(x);
-		this.setOriginY(y);
-		resize();
+		return consumer;
 	}
 
-	public void resize() {	
-		if (parent != null) {
-			if (minimumWidth > parent.getChildAvailableWidth())
-				Logger.Warning(getClass(), "resize", "Minimum Width is greater than parent's available space");
-			if (minimumHeight > parent.getChildAvailableHeight())
-				Logger.Warning(getClass(), "resize", "Minimum Height is greater than parent's available space");			
-		}
-		
-		calculateMinComponentDimensions();
-						
-		switch (layout) {
-		case Horizontal:
-			resizeHorizontal(children);
-			break;
-		case Vertical:
-			resizeVertical(children);
-			break;
-		default:
-			Logger.Error(getClass(), "Resize", "Missing case for \"" + layout.toString() + "\". Defaulting to " + GuiUtils.Layout.Horizontal );
-		}
-	}	
-	
-	public void resizeHorizontal(LinkedList<Component> children) {
-		float previousX = getChildX();
-		float previousY = getChildY();
-		
-		float availableHorizontalSpace = getChildAvailableWidth();
-		int autoExpandingChildren = 0;
-		for(Component child : children) {
-			if (child.expandSettings == GuiUtils.Expand.UseMinimumSize) {
-				availableHorizontalSpace -= child.getMinimumWidth();
-			} else {
-				autoExpandingChildren++;
-			}
-		}
-		calculateMinDimensions();
-		for (Component child : children) {			
-			if (child.expandSettings == GuiUtils.Expand.UseMinimumSize) {
-				child.setOriginY(previousY + (contentHeight() * 0.5f) - (child.getHeight() * 0.5f));
-				child.setOriginX(previousX);
-				
-				child.setMaxWidth(child.minimumWidth);
-				child.setMaxHeight(getChildAvailableHeight());
-			}else {
-				child.setOriginY(previousY);
-				child.setOriginX(previousX);
-				child.setMaxWidth(availableHorizontalSpace / autoExpandingChildren);
-				child.setMaxHeight(getChildAvailableHeight());
-			}
-			previousX += child.getWidth();
-			
-			if (child instanceof Container)
-				((Container)child).resize();
-		}
-	}
-	
-	public void resizeVertical(LinkedList<Component> children) {
-		float previousX = getChildX();
-		float previousY = getChildY();
-		
-		
-		float availableVerticalSpace = getChildAvailableHeight();
-		int autoExpandingChildren = 0;
-		for(Component child : children) {
-			if (child.expandSettings == GuiUtils.Expand.UseMinimumSize) {
-				availableVerticalSpace -= child.getMinimumHeight();
-			} else {
-				autoExpandingChildren++;
-			}
-		}
-		
-		for (Component child : children) {
-			if (child.expandSettings == GuiUtils.Expand.UseMinimumSize) {
-				child.setOriginX(previousX + (contentWidth() * 0.5f) - (child.getWidth() * 0.5f));
-				child.setOriginY(previousY);
-				
-				child.setMaxHeight(child.minimumHeight);
-				child.setMaxWidth(getChildAvailableWidth());
-			}else {
-				child.setOriginX(previousX);
-				child.setOriginY(previousY);
-				child.setMaxHeight(availableVerticalSpace / autoExpandingChildren);
-				child.setMaxWidth(getChildAvailableWidth());
-			}
-			previousY += child.getHeight();
-			
-			if (child instanceof Container)
-				((Container)child).resize();
-		}		
-	}
-	
-	
-	
 	@Override
 	protected void renderComponent(SpriteBatch batch) {
 		for (Component child : children) {
 			child.render(batch);
-		}		
+		}
 	}
 
 	@Override
-	protected void debugRenderComponent(ShapeRenderer shapeRenderer) {
+	protected void renderDebugComponent(ShapeRenderer renderer) {
 		for (Component child : children) {
-			child.debugRenderComponent(shapeRenderer);
-		}	
-		
+			child.renderDebug(renderer);
+		}
 	}
 
 	@Override
-	protected void disposeComponent() {
-		// TODO Auto-generated method stub
-		
+	protected boolean packComponent() {
+		if (layout == Layout.Vertical) 
+			return packComponentVertical();
+		return packComponentHorizontal();
 	}
-
 	
-	
+	private boolean packComponentHorizontal() {
+		validLayout = true;		
+		float availableWidth=getContentBounds().width, availableHeight=getContentBounds().height;
+		int NumberOfExpandingChildren = 0;
+		int NumberOfAutoChildren = 0;
+		int totalHeightUsed = 0;
+		int totalWidthUsed = 0;
+		for (Component child : children) {
+			// All child are now using minimum bounds (this is important in the next loop)
+			Rectangle childBounds = child.getPreferredSize();
+			if (child.expand == Expand.Auto) {
+				availableWidth -= childBounds.width;
+				NumberOfAutoChildren++;
+			}else if (child.expand == Expand.DoNotExpand) {
+				availableWidth -= childBounds.width;		
+			} else {
+				NumberOfExpandingChildren++;
+			}
+		}
 
-	@Override
-	public void calculateMinComponentDimensions() {
-		minimumWidth = 5;
-		minimumHeight = 5;
-		if (children == null)
-			return;
+
+		float currentY = getContentBounds().y;
+		float currentX = getContentBounds().x;
 		
 		for (Component child : children) {
-			child.calculateMinDimensions();
-			switch (layout) {
-			case Horizontal:		
-				if (child.getMinimumHeight() > minimumHeight)
-					minimumHeight = child.getMinimumHeight();
-				minimumWidth += child.getMinimumWidth();
-				break;
-			case Vertical:
-				if (child.getMinimumWidth() > minimumWidth)
-					minimumWidth = child.getMinimumWidth();
-				minimumHeight += child.getMinimumHeight();
-				break;
-//				case Horizontal:		
-//					if (child.getHeight() > minimumHeight)
-//						minimumHeight = child.getHeight();
-//					minimumWidth += child.getWidth();
-//					break;
-//				case Vertical:
-//					if (child.getWidth() > minimumWidth)
-//						minimumWidth = child.getWidth();
-//					minimumHeight += child.getHeight();
-//					break;
-				default:
-					Logger.Error(getClass(), "calculateMinDimensions", "Missing case for \"" + layout.toString() + "\". Setting minimum dimensions to 0." );
+			Rectangle childBounds = new Rectangle();
+			if (child.expand == Expand.DoNotExpand) {
+				childBounds = child.getPreferredSize();
+				// TODO: Looks like width isn't being calculated correctly - at least not for buttons.
+				Logger.Debug(getClass(), "packComponents", "DoNotExpand");
+			} else if(child.expand == Expand.Auto) {
+				childBounds = child.getPreferredSize();
+				
+				// Temporary Hack to get width - width should be determined by 
+				childBounds.height = getContentBounds().height;
+				Logger.Debug(getClass(), "packComponents", "Auto");
+			} else if (child.expand == Expand.ExpandAll) {
+				Logger.Debug(getClass(), "packComponents", "ExpandAll");
+				childBounds.x = currentX;
+				childBounds.y = currentY;
+				childBounds.width = availableWidth / NumberOfExpandingChildren;
+				childBounds.height = availableHeight;
+			}
+			
+			childBounds.x = currentX;
+			childBounds.y = currentY;
+			if (!child.pack(childBounds)) 
+				validLayout = false;
+			totalWidthUsed += child.getMarginsBounds().width;
+			totalHeightUsed += child.getMarginsBounds().height;
+
+			currentX += childBounds.width;
+		}
+		
+		
+		float spaceToShareAmongAutoElements = 0;
+		if (layout == Layout.Vertical && NumberOfAutoChildren > 0) {
+			if (totalHeightUsed < getContentBounds().height) {
+				spaceToShareAmongAutoElements = (getContentBounds().height - totalHeightUsed) / NumberOfAutoChildren;
+			}
+			
+		} else if (layout == Layout.Horizontal && NumberOfAutoChildren > 0) {
+			if (totalWidthUsed < getContentBounds().width) {
+				spaceToShareAmongAutoElements = (getContentBounds().width - totalWidthUsed) / NumberOfAutoChildren;
 			}
 		}
 		
-		minimumWidth += getSurroundingWidth();
-		minimumHeight += getSurroundingHeight();
+		Rectangle previousBounds = null;
+		for (Component child : children) { 
+			if (child.expand == Expand.Auto) {				
+				if (layout == Layout.Vertical) {
+					child.getMarginsBounds().height += spaceToShareAmongAutoElements;
+					if (previousBounds != null) {
+						child.getMarginsBounds().y = previousBounds.y + previousBounds.height;
+					}
+				} else if (layout == Layout.Horizontal) {
+					child.getMarginsBounds().width += spaceToShareAmongAutoElements;
+					if (previousBounds != null) {
+						child.getMarginsBounds().x = previousBounds.x + previousBounds.width;
+					}
+				}
+				child.pack(child.getMarginsBounds());
+				previousBounds = child.getMarginsBounds();
+			}
+			
+		}
+
+		return validLayout;
+	}
+	
+	private boolean packComponentVertical() {
+		validLayout = true;		
+		float availableWidth=getContentBounds().width, availableHeight=getContentBounds().height;
+		int NumberOfExpandingChildren = 0;
+		int NumberOfAutoChildren = 0;
+		int totalHeightUsed = 0;
+		int totalWidthUsed = 0;
+		for (Component child : children) {
+			// All child are now using minimum bounds (this is important in the next loop)
+			Rectangle childBounds = child.getPreferredSize();
+			if (child.expand == Expand.Auto) {
+				availableHeight -= childBounds.height;
+				NumberOfAutoChildren++;
+			}else if (child.expand == Expand.DoNotExpand) {
+				availableHeight -= childBounds.height;		
+			} else {
+				NumberOfExpandingChildren++;
+			}
+		}
+
+
+		float currentY = getContentBounds().y;
+		float currentX = getContentBounds().x;
 		
+		for (Component child : children) {
+			Rectangle childBounds = new Rectangle();
+			if (child.expand == Expand.DoNotExpand) {
+				childBounds = child.getPreferredSize();
+				// TODO: Looks like width isn't being calculated correctly - at least not for buttons.
+				Logger.Debug(getClass(), "packComponents", "DoNotExpand");
+			} else if(child.expand == Expand.Auto) {
+				childBounds = child.getPreferredSize();
+				
+				// Temporary Hack to get width - width should be determined by 
+				childBounds.width = getContentBounds().width;
+				Logger.Debug(getClass(), "packComponents", "Auto");
+			} else if (child.expand == Expand.ExpandAll) {
+				Logger.Debug(getClass(), "packComponents", "ExpandAll");
+				childBounds.x = currentX;
+				childBounds.y = currentY;
+				childBounds.width = availableWidth;
+				childBounds.height = availableHeight / NumberOfExpandingChildren;
+			}
+			
+			childBounds.x = currentX;
+			childBounds.y = currentY;
+			if (!child.pack(childBounds)) 
+				validLayout = false;
+			totalWidthUsed += child.getMarginsBounds().width;
+			totalHeightUsed += child.getMarginsBounds().height;
+
+			currentY += childBounds.height;
+		}
+		
+		
+		float spaceToShareAmongAutoElements = 0;
+		if (layout == Layout.Vertical && NumberOfAutoChildren > 0) {
+			if (totalHeightUsed < getContentBounds().height) {
+				spaceToShareAmongAutoElements = (getContentBounds().height - totalHeightUsed) / NumberOfAutoChildren;
+			}
+			
+		} else if (layout == Layout.Horizontal && NumberOfAutoChildren > 0) {
+			if (totalWidthUsed < getContentBounds().width) {
+				spaceToShareAmongAutoElements = (getContentBounds().width - totalWidthUsed) / NumberOfAutoChildren;
+			}
+		}
+		
+		Rectangle previousBounds = null;
+		for (Component child : children) { 
+			if (child.expand == Expand.Auto) {				
+				if (layout == Layout.Vertical) {
+					child.getMarginsBounds().height += spaceToShareAmongAutoElements;
+					if (previousBounds != null) {
+						child.getMarginsBounds().y = previousBounds.y + previousBounds.height;
+					}
+				} else if (layout == Layout.Horizontal) {
+					child.getMarginsBounds().width += spaceToShareAmongAutoElements;
+					if (previousBounds != null) {
+						child.getMarginsBounds().x = previousBounds.x + previousBounds.width;
+					}
+				}
+				child.pack(child.getMarginsBounds());
+				previousBounds = child.getMarginsBounds();
+			}
+			
+		}
+
+		return validLayout;
 	}
 
-	public LinkedList<Component> getChildren() {
-		return children;
+
+	@Override
+	protected void setPositionComponent(float x, float y) {
+		for (Component child : children) {
+			child.setPosition(x, y);
+		}
 	}
 
 	@Override
-	public void mouseReleased(int mouseX, int mouseY) {
-		// TODO Auto-generated method stub
+	protected Rectangle calculateMinContentBoundsComponent() {
+		float width = 0, height = 0;
+		Rectangle childBounds;
+		for (Component child : children) {
+			childBounds = child.calculateMinContentBoundsComponent();
+			width += childBounds.width;
+			height += childBounds.height;
+		}
+		return new Rectangle(0,0,width, height);
 	}
-
-
+		
+	// ---------------------------------------------------------------------------------------------------------------------
+	// -------------------------------------------------Getters / Setters --------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------
+	
+	public void setLayout(Layout layout) {
+		if(layout != this.layout)
+			invalidate();
+		this.layout = layout;
+	}	
+	
+	public LinkedList<Component> getChildren() {
+		return children;
+	}
 
 }

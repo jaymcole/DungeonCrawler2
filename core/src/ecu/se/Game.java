@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -38,6 +40,7 @@ import ecu.se.objects.ActiveItem;
  */
 public class Game extends ApplicationAdapter {
 	private SpriteBatch batch;
+	private ShapeRenderer shapeRenderer;
 
 	// TODO: Make a fizzle object to push loot around (needs to remove objects
 	// from tile when switching tiles)
@@ -117,6 +120,9 @@ public class Game extends ApplicationAdapter {
 		Archiver.set(TimeRecords.TIME_IN_MENU, false);
 		Archiver.set(TimeRecords.TIME_IDLE, false);
 		batch = new SpriteBatch();
+		shapeRenderer = new ShapeRenderer();
+		shapeRenderer.setAutoShapeType(true);
+		
 		deltaTime = TimeUtils.millis();
 		screenHeight = Gdx.graphics.getHeight();
 		screenWidth = Gdx.graphics.getWidth();
@@ -274,9 +280,35 @@ public class Game extends ApplicationAdapter {
 		hud.render(batch);
 		batch.end();
 		
-//		shapeRenderer.begin(ShapeType.Line);
-//		lighting.debugRender(shapeRenderer);		
-//		shapeRenderer.end();
+		
+		
+		
+		if (Globals.DEBUG) {
+			shapeRenderer.begin(ShapeType.Line);
+			renderDebug(shapeRenderer, (int)camera.position.x, (int)camera.position.y);
+			lighting.debugRender(shapeRenderer);		
+			shapeRenderer.end();
+		}
+	}
+	
+	private boolean debugGui = true;
+	private boolean debugLighting = true;
+	private boolean debugMap = false;
+	private boolean debugObjects = false;
+	
+	private void renderDebug(ShapeRenderer renderer, int cameraX, int cameraY) {
+		if (debugMap)
+			Map.debugRender(renderer, cameraX, cameraY);
+		
+		if(debugObjects) 
+			ObjectManager.debugRender(renderer);
+		
+		if (debugLighting)
+			lighting.debugRender(renderer);
+
+		if (debugGui)
+			hud.debugRender(renderer);
+		renderer.setProjectionMatrix(camera.combined);
 	}
 	
 	private int srcPointer = 0;

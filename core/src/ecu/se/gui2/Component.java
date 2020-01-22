@@ -1,15 +1,17 @@
 package ecu.se.gui2;
 
-import java.util.Random;
-
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 
+import ecu.se.Globals;
 import ecu.se.Logger;
 import ecu.se.Utils;
 import ecu.se.archive.Archiver;
@@ -18,93 +20,74 @@ import ecu.se.assetManager.AssetManager;
 import ecu.se.gui.GUI;
 
 public abstract class Component {
-	public float preferredWidth, preferredHeight;
-
-	protected float originX, originY;
-	private float paddingT, paddingR, paddingB, paddingL;
-	private float marginT, marginR, marginB, marginL;
-	private float borderThickness;
-	protected float maxWidth;
-	protected float maxHeight;
 	
-	private Color backgroundTint = Color.WHITE;
-	private static Color debugMarginBorderColor = Color.BLUE;
-	private static Color debugPaddingBorderColor = Color.RED;
-	private static Color debugBorderColor = Color.WHITE;
-	
-	
-	private Texture background;
-	private float backgroundOpacity = 0.5f;
-	private boolean renderBackground = true;
-		
 	public Component parent;
+	protected boolean canConsumeUI;
+	public boolean showToolTip;
 	
-	protected boolean isVisible = true;
-	protected float minimumWidth;
-	protected float minimumHeight;
+	public String name;
+	private Texture background;
+	private float backgroundOpacity = 1.0f;
+	private boolean renderBackground = true;	
 	
-	protected boolean isValidLayout;
+	protected boolean isVisible = true;	
 	
 	public static float toolTipDelayTime = 0.01f;
 	protected String tooltipText = null;
-	protected ContextMenu contextMenu;
 	
 	protected float mouseOffsetX;
 	protected float mouseOffsetY;
 	protected boolean mouseHovering = false;
 	protected float timeSpentHovering = 0;
+		
+	protected Color 	bgColor = Color.WHITE;
+	protected Color 	activeColor = Color.GREEN;
+	protected boolean 	isActive = false;
+	protected Color 	highlightColor = Color.CYAN;
+	protected boolean 	highlight = false;
+	protected Color 	defaultColor = Color.WHITE;	
 	
-	protected GuiUtils.Expand expandSettings = GuiUtils.Expand.ExpandAndFill;
-	
-	protected Color activeColor = Color.GREEN;
-	protected boolean isActive = false;
-	protected Color highlightColor = Color.CYAN;
-	protected boolean highlight = false;
-	protected Color defaultColor = Color.WHITE;
-	
-	// Optional parameters - may not be used by all gui elements
-	protected GuiUtils.Justify justify = GuiUtils.Justify.Left;
-	protected String text;
-	protected BitmapFont font;
-	protected Color textColor;
-	protected float textWidth;
-	protected float textHeight;
-	protected GlyphLayout layout;
-	protected boolean renderText = false;
-	private int fontSize;
-	private String fontStyle = "font/OpenSansRegular.ttf";
-	
-	public String name;
+	protected Expand expand;
 	
 	public Component () {
-		Random random = new Random();
-		setBackgroundColor(new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255),1));
-		borderThickness = 0;
+		MarginBounds = new Rectangle();
+		PaddingBounds = new Rectangle();
+		ContentBounds = new Rectangle();
+		setBackgroundColor(Color.GRAY);
 		isVisible = true;
-		layout = new GlyphLayout();
+		glyphLayout = new GlyphLayout();
 		setFontSize(15);
+		setExpand(Expand.ExpandAll);
 		tooltipText = toString();
 		textColor = Color.RED;
+		canConsumeUI = true;
+		
+		showToolTip = true;
 	}
 	
-	
-	
-	/**
-	 * 
-	 * @param deltaTime
-	 * @param mouseX
-	 * @param mouseY
-	 * @return
-	 */
-	public Component update(Component consumer, float deltaTime, int mouseX, int mouseY) {		
-		if (getBounds().contains(mouseX, mouseY)) {
+	private int mX, mY;
+	public Component update(Component consumer, float deltaTime, int mouseX, int mouseY) {	
+		// Temp debug code
+		if (ContentBounds.contains(mouseX, mouseY)) {
+			debugMouseBounds = getContentBounds();
+		} else if (PaddingBounds.contains(mouseX, mouseY)) {
+			debugMouseBounds = getPaddingBounds();
+		} else if (MarginBounds.contains(mouseX, mouseY)) {
+			debugMouseBounds = getMarginsBounds();
+		} else
+			debugMouseBounds = null;
+		
+		mX = mouseX;
+		mY = mouseY;
+		
+		if (PaddingBounds.contains(mouseX, mouseY)) {
 			mouseHovering = true;
 			timeSpentHovering += deltaTime;
-			backgroundTint = highlightColor;
+			bgColor = highlightColor;
 		} else {
 			mouseHovering = false;
 			timeSpentHovering = 0;
-			backgroundTint = defaultColor;
+			bgColor = defaultColor;
 		}
 
 		if (showToolTip && timeSpentHovering > toolTipDelayTime && !Utils.NullOrEmpty(tooltipText)) {
@@ -115,36 +98,100 @@ public abstract class Component {
 		
 		return consumeInput(consumer, mouseX, mouseY);
 	}
-	
-	protected abstract Component updateComponent(Component consumer, float deltaTime, int mouseX, int mouseY);
-	
-	protected boolean canConsumeUI = true;
-	protected boolean showToolTip = true;
 	private Component consumeInput(Component consumer, int mouseX, int mouseY) {
-		if (this.getBounds().contains(mouseX, mouseY) && canConsumeUI && consumer == null) {
+		if (getPaddingBounds().contains(mouseX, mouseY) && canConsumeUI && consumer == null) {
 			consumer = this;
 		}
 		return consumer;
 	}
+	protected abstract Component updateComponent(Component consumer, float deltaTime, int mouseX, int mouseY);
+
+	
+	public void render(SpriteBatch batch) {
+		if (!isVisible)
+			return;
+		if (renderBackground && background != null) {
+			Rectangle rect = PaddingBounds;
+			
+			if(mouseHovering)
+				batch.setColor(highlightColor);
+			else if (isActive)
+				batch.setColor(activeColor);
+			else
+				batch.setColor(bgColor);
+			
+			batch.draw(background, rect.x, rect.y, rect.width, rect.height);
+		}
+		
+		renderComponent(batch);
+	}
+	
+	public void act() {};
+	
+	protected abstract void renderComponent(SpriteBatch batch);
+	
+	
+	// ---------------------------------------------------------------------------------------------------------------------
+	// ------------------------------------------------------ Debug --------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------
+	
+	private float DebugAlpha = 0.1f;
+	private Color MarginColor = new Color(	Color.GREEN.r,	Color.GREEN.g, 	Color.GREEN.b, 	DebugAlpha);
+	private Color PaddingColor = new Color(	Color.BLUE.r,	Color.BLUE.g, 	Color.BLUE.b, 	DebugAlpha);
+	private Color ContentColor = new Color(	Color.RED.r,	Color.RED.g, 	Color.RED.b, 	DebugAlpha);
+	private Color DebugHighlightColor = Color.WHITE;
+	protected Rectangle debugMouseBounds;
+	public void renderDebug(ShapeRenderer renderer) {
+		renderer.setAutoShapeType(true);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+		if (Globals.GUI_DEBUG_RENDER_FILL)
+			renderer.set(ShapeType.Filled);
+		
+		renderer.setColor(MarginColor);
+//		renderer.line(0, 0, getMarginsBounds().x, getMarginsBounds().y);
+		renderer.rect(getMarginsBounds().x, getMarginsBounds().y, getMarginsBounds().width, getMarginsBounds().height);
+		
+		
+		renderer.setColor(PaddingColor);
+//		renderer.line(0, 0, getPaddingBounds().x, getPaddingBounds().y);
+		renderer.rect(getPaddingBounds().x, getPaddingBounds().y, getPaddingBounds().width, getPaddingBounds().height);
+		
+		
+		renderer.setColor(ContentColor);
+//		renderer.line(0, 0, getContentBounds().x, getContentBounds().y);
+		renderer.rect(getContentBounds().x, getContentBounds().y, getContentBounds().width, getContentBounds().height);
+		renderer.set(ShapeType.Line);
+		
+		if (debugMouseBounds != null) {
+			renderer.setColor(DebugHighlightColor);
+			renderer.rect(debugMouseBounds.x, debugMouseBounds.y, debugMouseBounds.width, debugMouseBounds.height);
+		}
+		renderDebugComponent(renderer);
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+
+	}
+	protected abstract void renderDebugComponent(ShapeRenderer renderer);
 	
 	protected String debugTooltipText() {
 		String text = "";
 		if (!Utils.NullOrEmpty(name)) {
 			text = name + " : " + getClass().getSimpleName() + "\n";
 		}
-		text += "Screen Coordinates: " + originX + ", " + originY + "\n";
-		text += "MinimumWidth: " + minimumWidth + " MinimumHeight: " + minimumHeight + "\n";
-		text += "maxWidth: " + maxWidth + " maxHeight: " + maxHeight + "\n";
-		text += "width: " + getWidth() + " height: " + getHeight() + "\n";
+		text += "Mouse Coordiantes: (" + mX + ", " + mY + ")\n";
+		text += "Content Bounds: " + ContentBounds.x + ", " + ContentBounds.y + ", " + ContentBounds.width + ", " + ContentBounds.height + "\n";
+		text += "Padding Bounds: " + PaddingBounds.x + ", " + PaddingBounds.y + ", " + PaddingBounds.width + ", " + PaddingBounds.height + "\n";
+		text += " Margin Bounds: " + MarginBounds.x + ", " + MarginBounds.y + ", " + MarginBounds.width + ", " + MarginBounds.height + "\n";
+
 		return text + debugTooltipTextComponent();
 	}
-
 	protected String debugTooltipTextComponent() {return "*" + getClass().getSimpleName() + " missing debug tooltip*";}
+
 	
-	public void act() {
-		
-	}
-	
+	// ---------------------------------------------------------------------------------------------------------------------
+	// ---------------------------------------------------- User Input -----------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------
 	/**
 	 * The action this button performs WHEN the left mouse button is pressed AND over this button.
 	 */
@@ -167,313 +214,6 @@ public abstract class Component {
 	public void mouseReleased(int mouseX, int mouseY) {
 		Logger.Debug(getClass(), "mouseReleased", "mouseDown unimplemented");
 	}
-
-	
-	
-	public void render(SpriteBatch batch) {
-		if (!isVisible)
-			return;
-		if (renderBackground && background != null) {
-			Rectangle rect = getPaddedBounds();
-			
-			if(mouseHovering)
-				batch.setColor(highlightColor);
-			else if (isActive)
-				batch.setColor(activeColor);
-			else
-				batch.setColor(backgroundTint);
-			
-			batch.draw(background, rect.x, rect.y, rect.width, rect.height);
-		}
-		
-		renderComponent(batch);
-	}	
-	
-	protected abstract void renderComponent(SpriteBatch batch);
-	
-	
-	public void calculateMinDimensions() {
-		calculateMinComponentDimensions();
-	}
-	
-	protected abstract void calculateMinComponentDimensions();
-	
-	void invalidate() {
-		isValidLayout = false;
-	}
-	
-	public boolean validate() {
-		return isValidLayout;
-	}
-	
-	public void setTextColor(Color c) {
-		textColor = c;
-	}
-	
-	public void setText(String text) {
-		if (Utils.NullOrEmpty(text))
-			text = "*Error: Missing tooltip.*";
-		
-		this.text = text;
-		layout.setText(font, text);
-		textWidth = layout.width;
-		textHeight = layout.height;
-		setTextJustify(justify);
-	}
-	
-	public void debugRender(ShapeRenderer shapeRenderer) {
-		Rectangle rect;
-		shapeRenderer.setColor(debugBorderColor);
-		rect = getBounds();
-		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
-		
-		shapeRenderer.setColor(debugMarginBorderColor);
-		shapeRenderer.rect(originX, originY, getMarginWidth(), getMarginHeight());
-		rect = getMarginBounds();
-		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
-		
-		shapeRenderer.setColor(debugPaddingBorderColor);
-		shapeRenderer.rect(getChildX() - getPaddingL(), getChildY() - getPaddingT(), getPaddedWidth(), getPaddedHeight());
-		rect = getPaddedBounds();
-		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
-		
-		debugRenderComponent(shapeRenderer);
-	}
-	
-	protected abstract void debugRenderComponent(ShapeRenderer shapeRenderer);
-	
-	public void dispose() {
-		disposeComponent();
-	}
-	
-	protected abstract void disposeComponent();
-	
-	
-	public void setIsVisible(boolean visible) {
-		isVisible = visible;
-	}
-	
-	
-	public void setBackgroundOpacity(float opacity) {
-		this.backgroundTint = new Color(backgroundTint.r, backgroundTint.g, backgroundTint.b, opacity);
-
-	}
-	public void setBackgroundColor(Color backgroundTint) {
-		this.backgroundTint = new Color(backgroundTint.r, backgroundTint.g, backgroundTint.b, backgroundOpacity);
-	}
-	public void setBackgroundTexture(Texture background) {
-		if (background != null) {
-			this.background = background;
-		} else {
-			Logger.Error(getClass(), "setBackgroundTexture", "Failed to set background texture. Given texture was null.");
-			renderBackground = false;
-		}
-	}	
-	/**
-	 * Note: disables background rendering if background texture is null.
-	 * @param renderBackground
-	 */
-	public void setRenderBackground(boolean renderBackground) {
-		if (renderBackground) {
-			this.renderBackground = (background != null);
-			if (!this.renderBackground)
-				Logger.Error(getClass(), "setRenderBackground", "Failed to enable background. Background texture is null.");
-		} else {
-			this.renderBackground = renderBackground;
-		}
-	}	
-	
-	public Rectangle getBounds() {
-		return new Rectangle(getChildX(), getChildY(), contentWidth(), contentHeight());
-	}
-	public Rectangle getMarginBounds() {
-		return new Rectangle(originX, originY, getMarginWidth(), getMarginHeight());
-	}	
-	public Rectangle getPaddedBounds() {
-		return new Rectangle(getChildX(), getChildY(), getPaddedWidth(), getPaddedHeight());
-	}
-	
-	public float getChildX() {
-		return originX + marginL + paddingL + borderThickness;
-		
-	}
-	public float getChildY() {
-		return originY + marginT + paddingT + borderThickness;
-		
-	}
-	public void setOriginX(float x) {
-		originX = x;
-	}
-	public void setOriginY(float y) {
-		originY = y;
-	}
-
-	protected float contentWidth() {
-		if (expandSettings == GuiUtils.Expand.ExpandAndFill)
-			return maxWidth - getSurroundingWidth();
-		else 
-			return minimumWidth;
-	}
-	protected float contentHeight() {
-		if (expandSettings == GuiUtils.Expand.ExpandAndFill)
-			return maxHeight - getSurroundingHeight();
-		else 
-			return minimumHeight;
-	}
-	public float getChildAvailableWidth() {
-		return getPaddedWidth();
-	}
-	public float getChildAvailableHeight() {
-		return getPaddedHeight();
-	}
-	public float getWidth() {
-		return getSurroundingWidth() + contentWidth() ;
-	}
-	protected float getSurroundingWidth() {
-		return marginR + marginL + paddingR + paddingL + (borderThickness * 2);
-	}
-	public float getHeight() {
-		return getSurroundingHeight() + contentHeight();
-	}
-	protected float getSurroundingHeight() {
-		return marginT + marginB + paddingT + paddingB + (borderThickness * 2);
-	}
-	public float getMinimumWidth() {
-		return minimumWidth;
-	}
-	public float getMinimumHeight() {
-		return minimumHeight;
-	}
-	public void setMaxHeight(float max) {
-		maxHeight = max;
-	}	
-	public void setMaxWidth(float max) {
-		maxWidth = max;
-	}
-
-	
-
-	// THICCNESS
-	public void setBorderThickness (float thicc) {
-		borderThickness = thicc;
-	}
-	public float getBorderThickness() {
-		return borderThickness;
-	}
-	
-	/// PADDING
-	private float getPaddingT() {
-		return paddingT;
-	}
-	private float getPaddingR() {
-		return paddingR;
-	}
-	private float getPaddingB() {
-		return paddingB;
-	}
-	private float getPaddingL() {
-		return paddingL;
-	}
-	private float getPaddedWidth() {
-		return getWidth() - getSurroundingWidth();
-	}
-	private float getPaddedHeight() {
-		return getHeight() - getSurroundingWidth();
-	}
-	public void setPadding(float padding) {
-		setPaddingH(padding);
-		setPaddingV(padding);
-	}
-	public void setPaddingH(float padding) {
-		setPaddingL(padding);
-		setPaddingR(padding);
-	}
-	public void setPaddingV(float padding) {
-		setPaddingT(padding);
-		setPaddingB(padding);
-	}
-	public void setPaddingT(float paddingT) {
-		this.paddingT = GUI.convertY(paddingT);
-	}
-	public void setPaddingR(float paddingR) {
-		this.paddingR = GUI.convertY(paddingR);
-	}
-	public void setPaddingB(float paddingB) {
-		this.paddingB = GUI.convertY(paddingB);
-	}
-	public void setPaddingL(float paddingL) {
-		this.paddingL = GUI.convertY(paddingL);
-	}
-
-	/// MARGIN
-	private float getMarginT() {
-		return marginT;
-	}
-	private float getMarginR() {
-		return marginR;
-	}
-	private float getMarginB() {
-		return marginB;
-	}
-	private float getMarginL() {
-		return marginL;
-	}
-	private float getMarginWidth() {
-		return getWidth();
-	}
-	private float getMarginHeight() {
-		return getHeight();
-	}
-	public void setMargin(float margin) {
-		setMarginH(margin);
-		setMarginV(margin);
-	}
-	public void setMarginH(float margin) {
-		setMarginL(margin);
-		setMarginR(margin);
-	}
-	public void setMarginV(float margin) {
-		setMarginT(margin);
-		setMarginB(margin);
-	}
-	public void setMarginT(float marginT) {
-		this.marginT = GUI.convertY(marginT);
-	}
-	public void setMarginR(float marginR) {
-		this.marginR = GUI.convertX(marginR);
-	}
-	public void setMarginB(float marginB) {
-		this.marginB = GUI.convertY(marginB);
-	}
-	public void setMarginL(float marginL) {
-		this.marginL = GUI.convertX(marginL);
-	}
-
-	
-	public void LogComponentData() {
-		Logger.Debug(getClass(), "resize", "Component Info");
-		Logger.Debug(getClass(), "resize", "\t X: " + getChildX());
-		Logger.Debug(getClass(), "resize", "\t Y: " + getChildY());
-		Logger.Debug(getClass(), "resize", "\t originX: " + originX);
-		Logger.Debug(getClass(), "resize", "\t originY: " + originY);
-		Logger.Debug(getClass(), "resize", "\t Width: " + getWidth());
-		Logger.Debug(getClass(), "resize", "\t Height: " + getHeight());
-		Logger.Debug(getClass(), "resize", "\t Min Width: " + getMinimumWidth());
-		Logger.Debug(getClass(), "resize", "\t Min Height: " + getMinimumHeight());
-		Logger.Debug(getClass(), "resize", "\t AvailableChildWidth: " + getChildAvailableWidth());
-		Logger.Debug(getClass(), "resize", "\t AvailableChildHeight: " + getChildAvailableHeight());
-		Logger.Debug(getClass(), "resize", "\t Margins: T" + getMarginT() + ", R" + getMarginR()+", B" + getMarginB()+", L" + getMarginL());
-		Logger.Debug(getClass(), "resize", "\t Padding: T" + getPaddingT() + ", R" + getPaddingR()+", B" + getPaddingB()+", L" + getPaddingL());
-	}
-	
-	public void setClickable(boolean value) {
-		canConsumeUI = value;
-	}
-	
-	
-	public void setExpandSettings(GuiUtils.Expand expandSettings) {
-		this.expandSettings = expandSettings;
-	}
 	
 	/**
 	 * The action this window should perform when it loses focus.
@@ -491,39 +231,276 @@ public abstract class Component {
 		Archiver.set(TimeRecords.TIME_IN_MENU, false);
 	}
 	
-	@Override
-	public String toString() {
-		return getClass().getName();
+	// ---------------------------------------------------------------------------------------------------------------------
+	// ------------------------------------------------------- Text --------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------
+	protected GuiUtils.Justify justify = GuiUtils.Justify.Left;
+	protected String text;
+	protected BitmapFont font;
+	protected Color textColor;
+	protected float textWidth;
+	protected float textHeight;
+	protected GlyphLayout glyphLayout;
+	protected boolean renderText = false;
+	private int fontSize;
+	private String fontStyle = "font/OpenSansRegular.ttf";
+	
+	public void setText(String text) {
+		if (text == null) {
+			Logger.Error(getClass(), "setText", "Will not set text to null value.");
+			return;
+		}
+		
+		this.text = text;
+		glyphLayout.setText(font, text);
+		textWidth = glyphLayout.width;
+		textHeight = glyphLayout.height;
+		setTextJustify(justify);
 	}
 	
-	/**
-	 * Sets activeColor to c
-	 * @param c
-	 */
-	public void setActiveColor(Color c) {
-		activeColor= c;
-	}
-
-	/**
-	 * Sets highlightColor to c
-	 * @param c
-	 */
-	public void setHighlightColor(Color c) {
-		highlightColor = c;
+	public void setFontSize(int fontSize) {
+		Logger.Debug(getClass(), "setFontSize", "Setting font size to: " + fontSize);
+		this.fontSize = fontSize;
+		font = AssetManager.getFont(fontStyle, fontSize).getFont();
+		setTextJustify(justify);
+		invalidate();
 	}
 	
 	public void setTextJustify(GuiUtils.Justify mode) {
 		justify = mode;
 	}
 	
+	public void setTextColor(Color c) {
+		textColor = c;
+	}
+	
+	
+	// ---------------------------------------------------------------------------------------------------------------------
+	// ----------------------------------------------Bounding Box Calculations----------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------
+	protected boolean validLayout = false;
+	
+	private float marginTop, marginRight, marginBottom, marginLeft;
+	private float paddingTop, paddingRight, paddingBottom, paddingLeft;
+	
+	protected float minimumWidth, minimumHeight;
+	
+	private Rectangle MarginBounds;
+	private Rectangle PaddingBounds;
+	private Rectangle ContentBounds;
+	
+	public void invalidate() {
+		validLayout = false;
+		Logger.Debug(getClass(), "invalidate", "Invalidating " + getClass().getName());
+	}
+	
+	public boolean pack(Rectangle AbsoluteBounds) {
+		calculateBoundsMargin(AbsoluteBounds);
+		calculateBoundsPadding();
+		calulcateBoundsContent();
+		validLayout = packComponent();
+		return validLayout;
+	}
+	protected abstract boolean packComponent();
+	
+	
+	public void setPosition(float x, float y) {
+//		float translationX = x;
+//		float translationY = y;
+//		
+//		MarginBounds.x += translationX;
+//		MarginBounds.y += translationY;
+//		
+//		PaddingBounds.x += translationX;
+//		PaddingBounds.y += translationY;
+//		
+//		ContentBounds.x += translationX;
+//		ContentBounds.y += translationY;
+//		
+//		setPositionComponent(x, y);
+		
+		getMarginsBounds().x = x;
+		getMarginsBounds().y = y;
+		pack(getMarginsBounds());
+		
+	}
+	protected abstract void setPositionComponent(float x, float y);
+	
+	
+	public Rectangle getPreferredContentSize() {
+		return calculateMinContentBounds();
+	}
+	public Rectangle getPreferredSize() {
+		calculateMinContentBounds();
+		calculateBoundsPaddingReverse();
+		return calculateBoundsMarginReverse();
+	}
+	
+	private Rectangle calculateBoundsMargin(Rectangle AbsoluteBounds) {
+		MarginBounds.x = AbsoluteBounds.x;
+		MarginBounds.y = AbsoluteBounds.y;
+		MarginBounds.width = AbsoluteBounds.width;
+		MarginBounds.height = AbsoluteBounds.height;
+		return MarginBounds;
+	}
+	
+	private Rectangle calculateBoundsMarginReverse() {
+		MarginBounds.x = PaddingBounds.x - marginLeft;
+		MarginBounds.y = PaddingBounds.y - marginBottom;
+		MarginBounds.width = PaddingBounds.width + marginLeft + marginRight;
+		MarginBounds.height = PaddingBounds.height + marginTop + marginBottom;
+		return MarginBounds;
+	}
+	
+	private Rectangle calculateBoundsPadding() {
+		PaddingBounds.x = MarginBounds.x + marginLeft;
+		PaddingBounds.y = MarginBounds.y + marginBottom;
+		PaddingBounds.width = MarginBounds.width - marginLeft - marginRight;
+		PaddingBounds.height = MarginBounds.height - marginTop - marginBottom;
+		return PaddingBounds;
+	}
+	private Rectangle calculateBoundsPaddingReverse() {
+		PaddingBounds.x = ContentBounds.x - paddingLeft;
+		PaddingBounds.y = ContentBounds.y - paddingBottom;
+		PaddingBounds.width = ContentBounds.width + paddingLeft + paddingRight;
+		PaddingBounds.height = ContentBounds.height + paddingTop + paddingBottom;
+		return PaddingBounds;
+
+	}
+	
+	private Rectangle calulcateBoundsContent() {
+		ContentBounds.x = PaddingBounds.x + marginLeft;
+		ContentBounds.y = PaddingBounds.y + marginBottom;
+		ContentBounds.width = PaddingBounds.width - marginLeft - marginRight;
+		ContentBounds.height = PaddingBounds.height - marginTop - marginBottom;
+		return ContentBounds;
+	}
+	
+	private Rectangle calculateMinContentBounds() {
+		ContentBounds = calculateMinContentBoundsComponent();
+		return ContentBounds;
+	}
+	protected abstract Rectangle calculateMinContentBoundsComponent();
+	
+	
+	public Rectangle getMarginsBounds() {
+		return MarginBounds;
+	}
+	public Rectangle getPaddingBounds() {
+		return PaddingBounds;
+	}
+	public Rectangle getContentBounds() {
+		return ContentBounds;
+	}
+		
+	
+	
+	
+	
+	// ---------------------------------------------------------------------------------------------------------------------
+	// -------------------------------------------------Getters / Setters --------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------
+	public Expand getExpand() {
+		return expand;
+	}
+	public void setExpand(Expand ex) {
+		if (ex != getExpand())
+			invalidate();
+		expand = ex;
+	}
+	
+	
+
+	public void setDefaultColor(Color c) {
+		defaultColor = c;
+	}
+	public void setActiveColor(Color c) {
+		activeColor = c;
+	}
+	public void setHighlightColor (Color c) {
+		highlightColor = c;
+	}
+	
+	
+	public void setBackgroundOpacity(float opacity) {
+		backgroundOpacity = opacity;
+		setBackgroundColor(bgColor);
+	}
+	
+	public void setBackgroundColor(Color backgroundTint) {
+		this.bgColor = new Color(backgroundTint.r, backgroundTint.g, backgroundTint.b, backgroundOpacity);
+	}
+	public void setBackgroundTexture(Texture background) {
+		if (background != null) {
+			this.background = background;
+		} else {
+			Logger.Error(getClass(), "setBackgroundTexture", "Failed to set background texture. Given texture was null.");
+			renderBackground = false;
+		}
+	}	
+	
 	public int getFontSize() {
 		return fontSize;
 	}
 	
-	public void setFontSize(int fontSize) {
-		this.fontSize = fontSize;
-		font = AssetManager.getFont(fontStyle, fontSize).getFont();
-		setTextJustify(justify);
-		this.calculateMinDimensions();
+	
+	/// PADDING
+	public void setPadding(float padding) {
+		setPaddingHorizontal(padding);
+		setPaddingVertical(padding);
+	}
+	public void setPaddingHorizontal(float padding) {
+		setPaddingL(padding);
+		setPaddingR(padding);
+	}
+	public void setPaddingVertical(float padding) {
+		setPaddingT(padding);
+		setPaddingB(padding);
+	}
+	public void setPaddingT(float paddingT) {
+		this.paddingTop = GUI.convertY(paddingT);
+		invalidate();
+	}
+	public void setPaddingR(float paddingR) {
+		this.paddingRight = GUI.convertY(paddingR);
+		invalidate();
+	}
+	public void setPaddingB(float paddingB) {
+		this.paddingBottom = GUI.convertY(paddingB);
+		invalidate();
+	}
+	public void setPaddingL(float paddingL) {
+		this.paddingLeft = GUI.convertY(paddingL);
+		invalidate();
+	}
+
+	/// MARGIN
+	public void setMargin(float margin) {
+		setMarginHorizontal(margin);
+		setMarginVertical(margin);
+	}
+	public void setMarginHorizontal(float margin) {
+		setMarginL(margin);
+		setMarginR(margin);
+	}
+	public void setMarginVertical(float margin) {
+		setMarginT(margin);
+		setMarginB(margin);
+	}
+	public void setMarginT(float marginT) {
+		this.marginTop = GUI.convertY(marginT);
+		invalidate();
+	}
+	public void setMarginR(float marginR) {
+		this.marginRight = GUI.convertX(marginR);
+		invalidate();
+	}
+	public void setMarginB(float marginB) {
+		this.marginBottom = GUI.convertY(marginB);
+		invalidate();
+	}
+	public void setMarginL(float marginL) {
+		this.marginLeft = GUI.convertX(marginL);
+		invalidate();
 	}
 }
