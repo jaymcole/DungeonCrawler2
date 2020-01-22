@@ -3,6 +3,8 @@
 2D Java Rogue-like rpg dungeon crawler game. 
 (Screenshots below)
 
+I implemented many features that LibGDX already supports out of curiosity.educational purposes. I would not recommend doing this in a final product.
+
 ## Features
 
 1. Procedurally generated levels
@@ -34,7 +36,39 @@ These instructions will get you a copy of the project up and running on your loc
 
 1. Clone DungeonCrawler2 repo
 2. Import DungeonCrawler2 into Eclipse as a Gradle project
-   - Note: There are currently incompatibility issues with Gradle and Java 10.
+   - Import
+      - Gradle
+         - Existing Gradle Project
+   - Welcome Window
+      - No actions, hit next
+   - Import Gradle Project
+      - Selected the project root directory
+        - ex. C:\Users\<user>\Documents\GitHub\DungeonCrawler2
+      - Hit next
+   - Import Options Window
+      - No actions, hit next
+   - Import Preview
+      - If the preview loaded correctly, finish and move on.
+      - else:
+         - Error #1
+            - Gradle user home directory: Unknown
+            - Gradle distribution:        Gradle wrapper from target build
+            - Gradle version:             Unknown
+            - Java home directory:        Unknown
+
+            - Error: Could not fetch model of type 'BuildEnvironment' using Gradle distribution '/htts://services.gradle.org/distributions/gradle-6.1-rc-1-bin.zip'
+            - Caused by: java.lang.IllegalArgumentException: Value 'C:\Program Files\Java\jdk-12.0.1' given for org.gradle.java.home Gradle property is invalid (Java home supplied is invalid)
+            
+            - Solution:
+               - Navigate to .../DungeonCrawler2/gradle.properties
+               - change org.gradle.java.home to your java jdk home/version
+                  - Ex: "org.gradle.java.home=C:\\Program Files\\Java\\jdk-12.0.1
+               - Run gradlew.bat (not sure this is necessary)
+               - Delete the project from eclipse
+                  - NOTE: Do NOT delete project from disk, only from eclipse.
+               - Reimport the project 
+                  - There's probably an easier way to refresh the gradle project but I don't know what it is.
+   
 3. Set DungeonCrawler2 to use the assets folder
    - Right-click "DungeonCrawler2-desktop" (in Eclipse project explorer)
    - Run As
