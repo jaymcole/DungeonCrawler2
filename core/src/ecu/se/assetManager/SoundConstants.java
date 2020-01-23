@@ -16,7 +16,7 @@ public class SoundConstants {
 	};
 	
 	private static String[] laugh = new String[] {
-			"sounds/voice/laughing/evil_01.mp3",
+			"sounds/CSounds/laugh1.mp3",
 			"sounds/voice/laughing/male_01.mp3",
 			"sounds/voice/laughing/male_02.mp3",
 			"sounds/voice/laughing/hyena_01.mp3"			
