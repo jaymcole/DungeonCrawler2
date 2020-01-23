@@ -21,8 +21,5 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration.disableAudio=false;
 		config.title = "Dungeon Crawler 2017";
 		new LwjglApplication(new Game(), config);
-//		new LwjglApplication(new GpuShadows(), config);
-		
-		
 	}
 }

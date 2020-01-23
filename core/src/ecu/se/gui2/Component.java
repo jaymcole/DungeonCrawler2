@@ -29,6 +29,10 @@ public abstract class Component {
 	private Texture background;
 	private float backgroundOpacity = 1.0f;
 	private boolean renderBackground = true;	
+
+	private Texture cornerTexture;
+	private Color cornerColor;
+	private boolean renderCorners;
 	
 	protected boolean isVisible = true;	
 	
@@ -63,6 +67,10 @@ public abstract class Component {
 		canConsumeUI = true;
 		
 		showToolTip = true;
+		
+		cornerColor = Color.RED;
+		setRenderCorners(true);
+		setCornerTexture("texture/gui/corner_tl.png");
 	}
 	
 	private int mX, mY;
@@ -119,16 +127,36 @@ public abstract class Component {
 				batch.setColor(activeColor);
 			else
 				batch.setColor(bgColor);
-			
 			batch.draw(background, rect.x, rect.y, rect.width, rect.height);
 		}
-		
+
+		renderCorners(batch);
 		renderComponent(batch);
 	}
 	
+	private float cornerSize = 15;
+	private void renderCorners(SpriteBatch batch) {
+		if (!renderCorners || cornerTexture == null)
+			return;
+		
+		batch.setColor(cornerColor);
+		//Bottom Left
+		batch.draw(cornerTexture, getPaddingBounds().x, getPaddingBounds().y, cornerSize, cornerSize, 0, 0, 1, 1);
+		
+		//Bottom Right
+		batch.draw(cornerTexture, getPaddingBounds().x + getPaddingBounds().width - cornerSize, getPaddingBounds().y, cornerSize, cornerSize, 1, 0, 0, 1);
+		
+		//Top Right
+		batch.draw(cornerTexture, getPaddingBounds().x + getPaddingBounds().width - cornerSize, getPaddingBounds().y + getPaddingBounds().height - cornerSize, cornerSize, cornerSize, 1, 1, 0, 0);
+
+		//Top Left
+		batch.draw(cornerTexture, getPaddingBounds().x, getPaddingBounds().y + getPaddingBounds().height - cornerSize, cornerSize, cornerSize, 0, 1, 1, 0);
+	}
+
 	public void act() {};
 	
 	protected abstract void renderComponent(SpriteBatch batch);
+	
 	
 	
 	// ---------------------------------------------------------------------------------------------------------------------
@@ -291,7 +319,6 @@ public abstract class Component {
 	
 	public void invalidate() {
 		validLayout = false;
-		Logger.Debug(getClass(), "invalidate", "Invalidating " + getClass().getName());
 	}
 	
 	public boolean pack(Rectangle AbsoluteBounds) {
@@ -305,20 +332,6 @@ public abstract class Component {
 	
 	
 	public void setPosition(float x, float y) {
-//		float translationX = x;
-//		float translationY = y;
-//		
-//		MarginBounds.x += translationX;
-//		MarginBounds.y += translationY;
-//		
-//		PaddingBounds.x += translationX;
-//		PaddingBounds.y += translationY;
-//		
-//		ContentBounds.x += translationX;
-//		ContentBounds.y += translationY;
-//		
-//		setPositionComponent(x, y);
-		
 		getMarginsBounds().x = x;
 		getMarginsBounds().y = y;
 		pack(getMarginsBounds());
@@ -438,6 +451,20 @@ public abstract class Component {
 			renderBackground = false;
 		}
 	}	
+	
+	
+	public void setCornerTexture(String texturePath) {
+		Texture texture = AssetManager.getTexture(texturePath).getTexture();
+		if (texture != null)
+			setCornerTexture(texture);
+	}
+	public void setCornerTexture(Texture corner) {
+		cornerTexture = corner;
+	}
+	public void setRenderCorners(boolean render) {
+		renderCorners = render;
+	}
+	
 	
 	public int getFontSize() {
 		return fontSize;

@@ -93,7 +93,6 @@ public class Windows {
 		btn_play.setExpand(Expand.ExpandAll);
 		btn_exit.setExpand(Expand.ExpandAll);
 		
-	
 		MainContainer.setPadding(2);
 		MainContainer.setMargin(2);
 		MainContainer.setLayout(Layout.Vertical);

@@ -22,7 +22,9 @@ public class Container extends Component{
 		children = new LinkedList<Component>();
 		canConsumeUI = true;
 		setBackgroundColor(Color.CYAN);
-		
+		setBackgroundOpacity(0.1f);
+		setRenderCorners(false);
+
 	}
 	
 	public void addChild(Component child) {
@@ -92,15 +94,12 @@ public class Container extends Component{
 			if (child.expand == Expand.DoNotExpand) {
 				childBounds = child.getPreferredSize();
 				// TODO: Looks like width isn't being calculated correctly - at least not for buttons.
-				Logger.Debug(getClass(), "packComponents", "DoNotExpand");
 			} else if(child.expand == Expand.Auto) {
 				childBounds = child.getPreferredSize();
 				
 				// Temporary Hack to get width - width should be determined by 
 				childBounds.height = getContentBounds().height;
-				Logger.Debug(getClass(), "packComponents", "Auto");
 			} else if (child.expand == Expand.ExpandAll) {
-				Logger.Debug(getClass(), "packComponents", "ExpandAll");
 				childBounds.x = currentX;
 				childBounds.y = currentY;
 				childBounds.width = availableWidth / NumberOfExpandingChildren;
@@ -182,15 +181,12 @@ public class Container extends Component{
 			if (child.expand == Expand.DoNotExpand) {
 				childBounds = child.getPreferredSize();
 				// TODO: Looks like width isn't being calculated correctly - at least not for buttons.
-				Logger.Debug(getClass(), "packComponents", "DoNotExpand");
 			} else if(child.expand == Expand.Auto) {
 				childBounds = child.getPreferredSize();
 				
 				// Temporary Hack to get width - width should be determined by 
 				childBounds.width = getContentBounds().width;
-				Logger.Debug(getClass(), "packComponents", "Auto");
 			} else if (child.expand == Expand.ExpandAll) {
-				Logger.Debug(getClass(), "packComponents", "ExpandAll");
 				childBounds.x = currentX;
 				childBounds.y = currentY;
 				childBounds.width = availableWidth;

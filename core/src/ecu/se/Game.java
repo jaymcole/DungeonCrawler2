@@ -3,6 +3,7 @@ package ecu.se;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Version;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -171,6 +172,20 @@ public class Game extends ApplicationAdapter {
 		Music music = AssetManager.getMusic("sounds/ambient/ambient_cave_01.mp3").getMusic();
 		music.setLooping(true);
 		music.play();
+		
+		
+		
+		Logger.Debug(getClass(), "Game", "Version: " + Version.VERSION);
+		Logger.Debug(getClass(), "Game", "Version: " + Version.VERSION);
+		Logger.Debug(getClass(), "Game", "Version: " + Version.VERSION);
+		Logger.Debug(getClass(), "Game", "Version: " + Version.VERSION);
+		Logger.Debug(getClass(), "Game", "Version: " + Version.VERSION);
+		Logger.Debug(getClass(), "Game", "Version: " + Version.VERSION);
+		Logger.Debug(getClass(), "Game", "Version: " + Version.VERSION);
+		Logger.Debug(getClass(), "Game", "Version: " + Version.VERSION);
+		Logger.Debug(getClass(), "Game", "Version: " + Version.VERSION);
+		Logger.Debug(getClass(), "Game", "Version: " + Version.VERSION);
+		Logger.Debug(getClass(), "Game", "Version: " + Version.VERSION);
 	}
 
 	/**
