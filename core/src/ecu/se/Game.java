@@ -169,9 +169,9 @@ public class Game extends ApplicationAdapter {
 		
 		Gdx.audio.newAudioDevice(44100, false);
 		
-		Music music = AssetManager.getMusic("sounds/ambient/ambient_cave_01.mp3").getMusic();
-		music.setLooping(true);
-		music.play();
+//		Music music = AssetManager.getMusic("sounds/ambient/ambient_cave_01.mp3").getMusic();
+//		music.setLooping(true);
+//		music.play();
 		
 		
 		

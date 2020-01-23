@@ -67,7 +67,7 @@ public class Projectile extends GameObject {
 		
 		setSpeed(speed);		
 		this.startSound = startSound;
-		startSoundID = startSound.play();
+//		startSoundID = startSound.play();
 		SoundManager.addTask(new SoundManagerTask(startSound, startSoundID, 1.5f, 0.0f, SoundTask.LEAVE));
 		this.movingSound = movingSound;
 		movingSoundID = movingSound.loop();
@@ -133,7 +133,7 @@ public class Projectile extends GameObject {
 		}
 		
 		if (endSound != null) {			
-			endSoundID = endSound.play();
+//			endSoundID = endSound.play();
 			SoundManager.addTask(new SoundManagerTask(endSound, endSoundID, 0.5f, 1.0f, SoundTask.STOP));
 		}
 	}

@@ -9,9 +9,9 @@ public class SoundConstants {
 	private static Random random = new Random();
 	
 	private static String[] screams = new String[] {
-			"sounds/voice/scream_female_human_01.mp3",
-			"sounds/voice/screaming_male_human_02.mp3",
-			"sounds/voice/screaming_01.mp3",
+			"sounds/CSounds/scream2cut.mp3",
+			"sounds/CSounds/growl1.mp3",
+			"sounds/CSounds/scream1cut.mp3",
 			
 	};
 	
