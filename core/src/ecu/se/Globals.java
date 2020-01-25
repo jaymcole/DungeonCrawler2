@@ -33,17 +33,17 @@ public class Globals {
     
     
     // Map Gen Settings (probably as a percent)
-    public static final int TURN_CHANCE = 5;
-    public static final int SPLIT_CHANCE = 30;
-    public static final int CONTINUE_CHANCE = 95;
-    public static final int CONTINUE_AFTER_OVERLAP_CHANCE = 45;
+    public static int TURN_CHANCE = 5;
+    public static int SPLIT_CHANCE = 30;
+    public static int CONTINUE_CHANCE = 95;
+    public static int CONTINUE_AFTER_OVERLAP_CHANCE = 45;
     
-    public static final float MIN_PATH_DENSITY = 0.3f;
+    public static float MIN_PATH_DENSITY = 0.3f;
     
-    public static final int MAP_TILE_WIDTH = 1000;
-    public static final int MAP_TILE_HEIGHT = 1000;
-    public static final int TILE_PIXEL_WIDTH = 128;//128;
-    public static final int TILE_PIXEL_HEIGHT= 128;//128;
+    public static int MAP_TILE_WIDTH = 1000;
+    public static int MAP_TILE_HEIGHT = 1000;
+    public static int TILE_PIXEL_WIDTH = 128;//128;
+    public static int TILE_PIXEL_HEIGHT= 128;//128;
     
     public static final String SPRITE_INFORMATION_EXTENSION = "spriteInfo";
 
@@ -57,6 +57,9 @@ public class Globals {
     //LIGHTING
     public static int LIGHT_SPAWN_RATE = 15; // The chance (out of 100) that any given tile will spawn with a light.
     public static float DEFAULT_LIGHT_INTENSITY = 900; //Unused
+    public static int srcPointer = 0;
+    public static int dstPointer = 10;
+    public static int LIGHT_DISTANCE = 1024;
     
     // DEBUG Settings
     // All of these will probably have to be cleaned up (removed along with whatever functions use them) later.

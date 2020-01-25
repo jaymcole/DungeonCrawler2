@@ -141,6 +141,7 @@ public class Logger {
 					throw new IOException();
 			}
 			fileWriter.append(message);
+			fileWriter.flush();
 		} catch (IOException e) {
 			System.err.println("Failed to initiate logger.");
 			e.printStackTrace();

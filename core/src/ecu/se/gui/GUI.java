@@ -134,10 +134,13 @@ public class GUI {
 		consumer = null;
 
 		consumer = windows[currentWindow].update(null, deltaTime, mouseX, mouseY);
+		
+		if (currentWindow != WINDOW_HUD)
+			windows[WINDOW_HUD].update(consumer, deltaTime, mouseX, mouseY);
+		
 		if (consumer != null) {
 			inputUsed = true;
 			processInput(consumer, mouseX, mouseY);
-
 		}
 		
 		if (RenderToolTip) {
@@ -155,9 +158,6 @@ public class GUI {
 		}
 	}
 	
-	
-	
-
 	/**
 	 * Renders the appropriate window(s). May render more than one at a time.
 	 * Example: The HUD should render behind the Player's inventory.
@@ -169,7 +169,7 @@ public class GUI {
 //		if (Game.currentState == Game.GAME_STATE_PAUSED)
 //			windows[WINDOW_PAUSED].render(batch);
 
-//		windows[WINDOW_HUD].render(batch);
+		windows[WINDOW_HUD].render(batch);
 //
 		if (currentWindow != WINDOW_HUD)
 			windows[currentWindow].render(batch);

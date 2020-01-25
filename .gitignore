@@ -123,3 +123,5 @@ Thumbs.db
 core/assets/Log.txt
 core/src/ecu/se/gui2/Component_old.java
 gradle.properties
+core/assets/Log.pref
+core/assets/settings.config

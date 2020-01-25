@@ -16,19 +16,15 @@ public class Container extends Component{
 	
 	public Container() {
 		super();
-		setBackgroundTexture(AssetManager.getTexture("texture/misc/white.png").getTexture());
 		layout = Layout.Vertical;
 		setLayout(Layout.Vertical);
 		children = new LinkedList<Component>();
-		canConsumeUI = true;
-		setBackgroundColor(Color.CYAN);
-		setBackgroundOpacity(0.1f);
-		setRenderCorners(false);
-
 	}
 	
 	public void addChild(Component child) {
-		if (!children.contains(child)) {
+		if (child == this) {
+			Logger.Error(getClass(), "addChild", "You can't add a container to itself. That doesn't make any kind of sense.");
+		} else if (!children.contains(child)) {
 			children.addFirst(child);
 			child.parent = this;
 			invalidate();
@@ -65,6 +61,7 @@ public class Container extends Component{
 		return packComponentHorizontal();
 	}
 	
+	// TODO: These two (packComponentHorizontal, packComponentVertical) methods need cleaning up.
 	private boolean packComponentHorizontal() {
 		validLayout = true;		
 		float availableWidth=getContentBounds().width, availableHeight=getContentBounds().height;
@@ -73,47 +70,50 @@ public class Container extends Component{
 		int totalHeightUsed = 0;
 		int totalWidthUsed = 0;
 		for (Component child : children) {
-			// All child are now using minimum bounds (this is important in the next loop)
-			Rectangle childBounds = child.getPreferredSize();
-			if (child.expand == Expand.Auto) {
-				availableWidth -= childBounds.width;
-				NumberOfAutoChildren++;
-			}else if (child.expand == Expand.DoNotExpand) {
-				availableWidth -= childBounds.width;		
-			} else {
-				NumberOfExpandingChildren++;
+			if (!child.AbsolutePositioning) {
+				// All children are now using minimum bounds (this is important in the next loop)
+				Rectangle childBounds = child.getPreferredSize();
+				if (child.expand == Expand.Auto) {
+					availableWidth -= childBounds.width;
+					NumberOfAutoChildren++;
+				}else if (child.expand == Expand.DoNotExpand) {
+					availableWidth -= childBounds.width;		
+				} else {
+					NumberOfExpandingChildren++;
+				}
 			}
 		}
-
 
 		float currentY = getContentBounds().y;
 		float currentX = getContentBounds().x;
 		
 		for (Component child : children) {
-			Rectangle childBounds = new Rectangle();
-			if (child.expand == Expand.DoNotExpand) {
-				childBounds = child.getPreferredSize();
-				// TODO: Looks like width isn't being calculated correctly - at least not for buttons.
-			} else if(child.expand == Expand.Auto) {
-				childBounds = child.getPreferredSize();
+			if (!child.AbsolutePositioning) {
+				Rectangle childBounds = new Rectangle();
+				if (child.expand == Expand.DoNotExpand) {
+					childBounds = child.getPreferredSize();
+					// TODO: Looks like width isn't being calculated correctly - at least not for buttons.
+				} else if(child.expand == Expand.Auto) {
+					childBounds = child.getPreferredSize();
+					
+					// Temporary Hack to get width - width should be determined by 
+					childBounds.height = getContentBounds().height;
+				} else if (child.expand == Expand.ExpandAll) {
+					childBounds.x = currentX;
+					childBounds.y = currentY;
+					childBounds.width = availableWidth / NumberOfExpandingChildren;
+					childBounds.height = availableHeight;
+				}
 				
-				// Temporary Hack to get width - width should be determined by 
-				childBounds.height = getContentBounds().height;
-			} else if (child.expand == Expand.ExpandAll) {
 				childBounds.x = currentX;
 				childBounds.y = currentY;
-				childBounds.width = availableWidth / NumberOfExpandingChildren;
-				childBounds.height = availableHeight;
+				if (!child.pack(childBounds)) 
+					validLayout = false;
+				totalWidthUsed += child.getMarginsBounds().width;
+				totalHeightUsed += child.getMarginsBounds().height;
+	
+				currentX += childBounds.width;
 			}
-			
-			childBounds.x = currentX;
-			childBounds.y = currentY;
-			if (!child.pack(childBounds)) 
-				validLayout = false;
-			totalWidthUsed += child.getMarginsBounds().width;
-			totalHeightUsed += child.getMarginsBounds().height;
-
-			currentX += childBounds.width;
 		}
 		
 		
@@ -131,22 +131,23 @@ public class Container extends Component{
 		
 		Rectangle previousBounds = null;
 		for (Component child : children) { 
-			if (child.expand == Expand.Auto) {				
-				if (layout == Layout.Vertical) {
-					child.getMarginsBounds().height += spaceToShareAmongAutoElements;
-					if (previousBounds != null) {
-						child.getMarginsBounds().y = previousBounds.y + previousBounds.height;
+			if (!child.AbsolutePositioning) {
+				if (child.expand == Expand.Auto) {				
+					if (layout == Layout.Vertical) {
+						child.getMarginsBounds().height += spaceToShareAmongAutoElements;
+						if (previousBounds != null) {
+							child.getMarginsBounds().y = previousBounds.y + previousBounds.height;
+						}
+					} else if (layout == Layout.Horizontal) {
+						child.getMarginsBounds().width += spaceToShareAmongAutoElements;
+						if (previousBounds != null) {
+							child.getMarginsBounds().x = previousBounds.x + previousBounds.width;
+						}
 					}
-				} else if (layout == Layout.Horizontal) {
-					child.getMarginsBounds().width += spaceToShareAmongAutoElements;
-					if (previousBounds != null) {
-						child.getMarginsBounds().x = previousBounds.x + previousBounds.width;
-					}
+					child.pack(child.getMarginsBounds());
+					previousBounds = child.getMarginsBounds();
 				}
-				child.pack(child.getMarginsBounds());
-				previousBounds = child.getMarginsBounds();
 			}
-			
 		}
 
 		return validLayout;
@@ -160,15 +161,17 @@ public class Container extends Component{
 		int totalHeightUsed = 0;
 		int totalWidthUsed = 0;
 		for (Component child : children) {
-			// All child are now using minimum bounds (this is important in the next loop)
-			Rectangle childBounds = child.getPreferredSize();
-			if (child.expand == Expand.Auto) {
-				availableHeight -= childBounds.height;
-				NumberOfAutoChildren++;
-			}else if (child.expand == Expand.DoNotExpand) {
-				availableHeight -= childBounds.height;		
-			} else {
-				NumberOfExpandingChildren++;
+			if (!child.AbsolutePositioning) {
+				// All child are now using minimum bounds (this is important in the next loop)
+				Rectangle childBounds = child.getPreferredSize();
+				if (child.expand == Expand.Auto) {
+					availableHeight -= childBounds.height;
+					NumberOfAutoChildren++;
+				}else if (child.expand == Expand.DoNotExpand) {
+					availableHeight -= childBounds.height;		
+				} else {
+					NumberOfExpandingChildren++;
+				}
 			}
 		}
 
@@ -177,30 +180,33 @@ public class Container extends Component{
 		float currentX = getContentBounds().x;
 		
 		for (Component child : children) {
-			Rectangle childBounds = new Rectangle();
-			if (child.expand == Expand.DoNotExpand) {
-				childBounds = child.getPreferredSize();
-				// TODO: Looks like width isn't being calculated correctly - at least not for buttons.
-			} else if(child.expand == Expand.Auto) {
-				childBounds = child.getPreferredSize();
+			if (!child.AbsolutePositioning) {
+
+				Rectangle childBounds = new Rectangle();
+				if (child.expand == Expand.DoNotExpand) {
+					childBounds = child.getPreferredSize();
+					// TODO: Looks like width isn't being calculated correctly - at least not for buttons.
+				} else if(child.expand == Expand.Auto) {
+					childBounds = child.getPreferredSize();
+					
+					// Temporary Hack to get width - width should be determined by 
+					childBounds.width = getContentBounds().width;
+				} else if (child.expand == Expand.ExpandAll) {
+					childBounds.x = currentX;
+					childBounds.y = currentY;
+					childBounds.width = availableWidth;
+					childBounds.height = availableHeight / NumberOfExpandingChildren;
+				}
 				
-				// Temporary Hack to get width - width should be determined by 
-				childBounds.width = getContentBounds().width;
-			} else if (child.expand == Expand.ExpandAll) {
 				childBounds.x = currentX;
 				childBounds.y = currentY;
-				childBounds.width = availableWidth;
-				childBounds.height = availableHeight / NumberOfExpandingChildren;
+				if (!child.pack(childBounds)) 
+					validLayout = false;
+				totalWidthUsed += child.getMarginsBounds().width;
+				totalHeightUsed += child.getMarginsBounds().height;
+	
+				currentY += childBounds.height;
 			}
-			
-			childBounds.x = currentX;
-			childBounds.y = currentY;
-			if (!child.pack(childBounds)) 
-				validLayout = false;
-			totalWidthUsed += child.getMarginsBounds().width;
-			totalHeightUsed += child.getMarginsBounds().height;
-
-			currentY += childBounds.height;
 		}
 		
 		
@@ -218,20 +224,22 @@ public class Container extends Component{
 		
 		Rectangle previousBounds = null;
 		for (Component child : children) { 
-			if (child.expand == Expand.Auto) {				
-				if (layout == Layout.Vertical) {
-					child.getMarginsBounds().height += spaceToShareAmongAutoElements;
-					if (previousBounds != null) {
-						child.getMarginsBounds().y = previousBounds.y + previousBounds.height;
+			if (!child.AbsolutePositioning) {
+				if (child.expand == Expand.Auto) {				
+					if (layout == Layout.Vertical) {
+						child.getMarginsBounds().height += spaceToShareAmongAutoElements;
+						if (previousBounds != null) {
+							child.getMarginsBounds().y = previousBounds.y + previousBounds.height;
+						}
+					} else if (layout == Layout.Horizontal) {
+						child.getMarginsBounds().width += spaceToShareAmongAutoElements;
+						if (previousBounds != null) {
+							child.getMarginsBounds().x = previousBounds.x + previousBounds.width;
+						}
 					}
-				} else if (layout == Layout.Horizontal) {
-					child.getMarginsBounds().width += spaceToShareAmongAutoElements;
-					if (previousBounds != null) {
-						child.getMarginsBounds().x = previousBounds.x + previousBounds.width;
-					}
+					child.pack(child.getMarginsBounds());
+					previousBounds = child.getMarginsBounds();
 				}
-				child.pack(child.getMarginsBounds());
-				previousBounds = child.getMarginsBounds();
 			}
 			
 		}

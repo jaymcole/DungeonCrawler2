@@ -6,14 +6,90 @@ import com.badlogic.gdx.math.Rectangle;
 
 import ecu.se.Game;
 import ecu.se.Logger;
+import ecu.se.actors.Player;
 import ecu.se.archive.Archiver;
 import ecu.se.archive.TotalRecords;
 import ecu.se.assetManager.AssetManager;
 import ecu.se.gui.GUI;
 import ecu.se.gui2.GuiUtils.Justify;
 import ecu.se.objects.ActiveItem;
+import ecu.se.stats.Stats;
 
 public class Windows {
+	
+	private static Color CornerColor = Color.DARK_GRAY;
+	private static float CornerOpacity = 0.75f;
+	
+	private static Color BackgroundColor = Color.BLACK;
+	private static float BackgroundOpacity= 0.5f;
+	
+	private static Color HightlightColor = Color.CYAN;
+	private static float HighlighOpacity = 0.5f;
+			
+	private static Color ActiveColor = Color.GREEN;
+	private static float ActiveOpacity = 0.5f;
+	
+	
+	
+	private static void applyDefaultSettings(Component comp, boolean applyToContainer) {
+		if (comp instanceof Container) {
+			for(Component widget : ((Container)comp).getChildren()) {
+				applyDefaultSettings(widget, false);
+			}
+			if (applyToContainer)
+				applyDefaultSettingsToContainer(comp);
+		} else {
+			applyDefaultSettingsToComponent(comp);	
+		}
+	}
+	
+	private static void applyDefaultSettingsToComponent(Component comp) {
+		comp.setBackgroundTexture(AssetManager.getTexture("texture/misc/white.png").getTexture());
+		comp.setBackgroundColor(BackgroundColor);
+		comp.setBackgroundOpacity(BackgroundOpacity);
+		
+		comp.setCornerTexture("texture/gui/corner_tl.png");
+		comp.setRenderCorners(true);
+		comp.setCornerColor(CornerColor);
+		comp.setCornerOpacity(CornerOpacity);
+		
+		comp.setActiveColor(ActiveColor);
+		comp.setActiveOpacity(ActiveOpacity);
+		comp.setActiveEnabled(true);
+		
+		comp.setHighlightColor(HightlightColor);
+		comp.setHighlighOpacity(HighlighOpacity);
+		comp.setHighlightEnabled(true);
+
+		
+		comp.showToolTip = true;
+		comp.canConsumeUI = true;
+		comp.setExpand(Expand.ExpandAll);
+		comp.setFontSize(15);
+		comp.setTextJustify(Justify.Center);
+		comp.isVisible = true;
+		comp.setPadding(5);
+		comp.setMargin(5);	
+	}
+	
+	private static void applyDefaultSettingsToContainer(Component comp) {
+		comp.setBackgroundTexture(AssetManager.getTexture("texture/misc/white.png").getTexture());
+		comp.setBackgroundColor(BackgroundColor);
+		comp.setBackgroundOpacity(BackgroundOpacity);
+		
+		comp.setRenderCorners(false);
+		comp.setActiveEnabled(false);
+		comp.setHighlightEnabled(false);
+		
+		comp.showToolTip = false;
+		comp.canConsumeUI = true;
+		comp.setExpand(Expand.ExpandAll);
+		comp.setFontSize(15);
+		comp.isVisible = true;
+	}
+	
+	
+	
 	/**
 	 * Convenience class for creating gui windows/elements
 	 */
@@ -21,7 +97,6 @@ public class Windows {
 	public static Container CreateMainMenu (final GUI gui) {
 		Container MainContainer = new Container();
 		MainContainer.name = "Main Menu Container";
-//		MainContainer.canConsumeUI = false;
 
 		GuiButton btn_play = new GuiButton("Play") {
 			@Override
@@ -80,19 +155,9 @@ public class Windows {
 		MainContainer.addChild(btn_guiShowcase);
 		MainContainer.addChild(btn_stats);		
 		MainContainer.addChild(btn_exit);
+
 		
-		for(Component widget : MainContainer.getChildren()) {
-			widget.setTextJustify(GuiUtils.Justify.Center);
-			widget.setPadding(5);
-			widget.setMargin(5);
-			widget.setExpand(Expand.Auto);
-			widget.setBackgroundColor(Color.GRAY);
-			widget.setHighlightColor(Color.GREEN);
-		}
-		
-		btn_play.setExpand(Expand.ExpandAll);
-		btn_exit.setExpand(Expand.ExpandAll);
-		
+		applyDefaultSettings(MainContainer, true);
 		MainContainer.setPadding(2);
 		MainContainer.setMargin(2);
 		MainContainer.setLayout(Layout.Vertical);
@@ -105,19 +170,16 @@ public class Windows {
 		Container MainContainer = new Container();
 		MainContainer.name = "Game Stats Container";
 
+		applyDefaultSettingsToContainer(MainContainer);
 
 		Container stats = stats(gui);
 		stats.setPadding(5);
 		MainContainer.addChild(stats);
 		
-		for(Component widget : MainContainer.getChildren()) {
-			widget.setTextJustify(GuiUtils.Justify.Center);
-			widget.setFontSize(30);
-		}		
-	
+		MainContainer.setRenderBackground(false);
 		MainContainer.setLayout(Layout.Vertical);
-		MainContainer.setPadding(GUI.convertX(45));
-		MainContainer.setMargin(GUI.convertY(15));	
+//		MainContainer.setPadding(GUI.convertX(45));
+//		MainContainer.setMargin(GUI.convertY(15));	
 		MainContainer.pack(new Rectangle(0,0,GUI.convertX(800), GUI.convertY(500)));
 		MainContainer.setPosition(-MainContainer.getMarginsBounds().width * .5f, -MainContainer.getMarginsBounds().height * .5f);
 		return MainContainer;
@@ -133,26 +195,61 @@ public class Windows {
 		row.addChild(new GuiLabel("All Time"));
 		row.addChild(new GuiLabel("Current"));
 		row.addChild(new GuiLabel("Stats"));
+		for (Component child : row.getChildren()) {
+			child.setTextJustify(Justify.Center);
+		}
+		
 		MainContainer.addChild(row);
+		applyDefaultSettingsToComponent(MainContainer);
+		MainContainer.setActiveEnabled(false);
+		MainContainer.setHighlightEnabled(false);
+		
+
 		for (int i = 0; i < TotalRecords.values().length; i++) {
 			row = new Container();
 			row.setLayout(Layout.Horizontal);
-			TotalRecords stat = TotalRecords.values()[i];
-			row.addChild(new GuiLabel(	"" + Archiver.getRecord(stat, true)));
-			row.addChild(new GuiLabel("" + Archiver.getRecord(stat, false)));
-			row.addChild(new GuiLabel(stat.name()));
+			final TotalRecords rowStat = TotalRecords.values()[i];
 			
-			row.name = stat.name();
+			
+			GuiLabel totalStats = new GuiLabel("" + Archiver.getRecord(rowStat, true)) {
+				private TotalRecords stat = rowStat;
+				protected Component updateComponent(Component consumer, float deltaTime, int mouseX, int mouseY) {
+					if (!text.equalsIgnoreCase(Archiver.getRecord(stat, true) + ""))
+						setText(Archiver.getRecord(stat, true) + "");
+					return consumer;
+				}
 
-			for(Component widget : row.getChildren()) {
-				widget.setMargin(2);
-				widget.setBackgroundOpacity(0.1f);
-				widget.showToolTip = false;
+			};
+			row.addChild(totalStats);
+			
+			
+			GuiLabel currentStats = new GuiLabel("" + Archiver.getRecord(rowStat, false)) {
+				private TotalRecords stat = rowStat;
+				protected Component updateComponent(Component consumer, float deltaTime, int mouseX, int mouseY) {
+					if (!text.equalsIgnoreCase(Archiver.getRecord(stat, false) + ""))
+						setText(Archiver.getRecord(stat, false) + "");
+					return consumer;
+				}
+
+			};
+			row.addChild(currentStats);
+			row.addChild(new GuiLabel(rowStat.name()));
+			row.name = rowStat.name();
+			row.setRenderCorners(false);
+			for (Component child : row.getChildren()) {
+				child.setTextJustify(Justify.Center);
 			}
+			
+			
+			applyDefaultSettingsToComponent(row);
+
+			row.setPadding(0);
+			row.setMargin(0);
+			row.setMarginVertical(2);
 			MainContainer.addChild(row);
 		}		
 		MainContainer.addChild(row);
-
+		
 		MainContainer.setLayout(Layout.Vertical);
 		MainContainer.pack(new Rectangle(0,0,GUI.convertX(800), GUI.convertY(500)));
 		MainContainer.setPosition(-MainContainer.getMarginsBounds().width * .5f, -MainContainer.getMarginsBounds().height * .5f);
@@ -190,15 +287,13 @@ public class Windows {
 		stats.addChild(buttonsBottom);
 		MainContainer.addChild(stats);
 
-		for(Component widget : MainContainer.getChildren()) {
-			widget.setTextJustify(GuiUtils.Justify.Center);
-			widget.setFontSize(25);
-		}		
-		
-	
+		applyDefaultSettingsToComponent(btn_exit);
+		applyDefaultSettingsToComponent(btn_newGame);
+		applyDefaultSettingsToContainer(MainContainer);
+
 		MainContainer.setLayout(Layout.Vertical);
-		MainContainer.setPadding(GUI.convertX(45));
-		MainContainer.setMargin(GUI.convertY(15));	
+		MainContainer.setPadding(GUI.convertX(3));
+//		MainContainer.setMargin(GUI.convertY(15));	
 		MainContainer.pack(new Rectangle(0,0,GUI.convertX(800), GUI.convertY(500)));
 		MainContainer.setPosition(-MainContainer.getMarginsBounds().width * .5f, -MainContainer.getMarginsBounds().height * .5f);		
 		return MainContainer;
@@ -217,6 +312,9 @@ public class Windows {
 		
 		MainContainer.addChild(btn_newGame);
 		
+		
+		applyDefaultSettings(MainContainer, true);
+
 		MainContainer.setLayout(Layout.Vertical);
 		MainContainer.setPadding(GUI.convertX(45));
 		MainContainer.setMargin(GUI.convertY(15));	
@@ -230,9 +328,16 @@ public class Windows {
 		MainContainer.name = "HUD Container";
 		MainContainer.canConsumeUI = false;
 		MainContainer.showToolTip = false;
+		MainContainer.AbsolutePositioning = true;
+		MainContainer.setBackgroundOpacity(0.0f);
+		MainContainer.setRenderBackground(false);
 		
-		
+		Container actionContainer = new Container();
 		GUI.primaryItemSlot = new GuiItemSlot("Primary") {
+			@Override
+			public void mouseReleased(int mouseX, int mouseY) {
+				Game.player.primaryAction(mouseX, mouseY);
+			}
 			@Override
 			public void onRemoveItem() {
 				Game.player.setPrimaryAction(null);
@@ -251,6 +356,11 @@ public class Windows {
 		
 		GUI.secondaryItemSlot = new GuiItemSlot("Scondary") {
 			@Override
+			public void mouseReleased(int mouseX, int mouseY) {
+				Game.player.secondaryAction(mouseX, mouseY);
+			}
+			
+			@Override
 			public void onRemoveItem() {
 				Game.player.setSecondaryAction(null);
 			}
@@ -266,30 +376,131 @@ public class Windows {
 		GUI.secondaryItemSlot.canConsumeUI = false;
 		GUI.secondaryItemSlot.showToolTip = false;
 		
-		MainContainer.addChild(GUI.primaryItemSlot);
-		MainContainer.addChild(GUI.secondaryItemSlot);
+		actionContainer.AbsolutePositioning=true;
+		actionContainer.setLayout(Layout.Vertical);
+		actionContainer.setExpand(Expand.DoNotExpand);
+		
+		actionContainer.addChild(GUI.primaryItemSlot);
+		actionContainer.addChild(GUI.secondaryItemSlot);
+		actionContainer.pack(new Rectangle(350,350,50,100));
+		MainContainer.addChild(actionContainer);
+		
+		
+		
+		
+		
+		
+		Player player = Game.player;
+		GuiProgressBar healthBar = new GuiProgressBar(0, player.getStat(Stats.HEALTH), player.getHealth()) {
+			@Override
+			public void updateBar() {
+				setAllValues(0, Game.player.getHealth(), Game.player.getStat(Stats.HEALTH));
+			}
+		};
+		healthBar.setPadding(15);
+		healthBar.ProgressBarColor = Color.RED;
+		healthBar.name = "Health Bar";
+		healthBar.pack(new Rectangle(-1200, -600, 575, 25));
+		healthBar.expand = Expand.DoNotExpand;
+		healthBar.AbsolutePositioning = true;
+		healthBar.setTextJustify(Justify.Right);
+		healthBar.setTextColor(Color.BLUE);
+		MainContainer.addChild(healthBar);
+		
+		GuiProgressBar manaBar = new GuiProgressBar(0, player.getStat(Stats.HEALTH), player.getHealth()) {
+			@Override
+			public void updateBar() {
+				setAllValues(0, Game.player.getMana(), Game.player.getStat(Stats.MANA));
+			}
+		};
+		manaBar.setPadding(15);
+		manaBar.ProgressBarColor = Color.BLUE;
+		manaBar.name = "Mana Bar";
+		manaBar.expand = Expand.DoNotExpand;
+		manaBar.pack(new Rectangle(-1200, -635, 600, 25));
+		manaBar.AbsolutePositioning = true;
+		manaBar.setTextJustify(Justify.Right);
+		MainContainer.addChild(manaBar);
+
+		GuiProgressBar experienceBar = new GuiProgressBar(0, player.getXPNeeded(), player.getXP()) {
+			@Override
+			public void updateBar() {
+				setAllValues(0, Game.player.getXP(), Game.player.getXPNeeded());
+			}
+		};
+		experienceBar.setPadding(15);
+		experienceBar.ProgressBarColor = Color.ORANGE;
+		experienceBar.name = "Experience Bar";
+		experienceBar.expand = Expand.DoNotExpand;
+		experienceBar.pack(new Rectangle(-1200, -670, 625, 25));
+		experienceBar.AbsolutePositioning = true;
+		experienceBar.setBackgroundColor(Color.CORAL);
+		experienceBar.setTextJustify(Justify.Right);
+		MainContainer.addChild(experienceBar);
+
+		
+		float startX = 500, startY = 500;
+		
+		GuiButton PlayerMenu = new GuiButton("Player") {
+			@Override
+			public void mouseReleased(int mouseX, int mouseY) {
+				GUI.setWindow(GUI.WINDOW_PLAYER_STATS);
+				Logger.Debug(getClass(), "mouseReleased", "HELLO");
+			}
+		};
+		PlayerMenu.AbsolutePositioning = true;
+		PlayerMenu.pack(new Rectangle(startX, startY, 100, 50));
+		
+		GuiButton InventoryMenu = new GuiButton("Inventory"){
+			@Override
+			public void mouseReleased(int mouseX, int mouseY) {
+				GUI.setWindow(GUI.WINDOW_INVENTORY);
+				Logger.Debug(getClass(), "mouseReleased", "HELLO");
+
+			}
+		};
+		InventoryMenu.AbsolutePositioning = true;
+		startX += 105;
+		InventoryMenu.pack(new Rectangle(startX, startY, 100, 50));
+
+		GuiButton MainMenu = new GuiButton("Main Menu"){
+			@Override
+			public void mouseReleased(int mouseX, int mouseY) {
+				GUI.setWindow(GUI.WINDOW_MAIN_MENU);
+				Logger.Debug(getClass(), "mouseReleased", "HELLO");
+
+			}
+		};		
+		MainMenu.AbsolutePositioning = true;
+		startX += 105;
+		MainMenu.pack(new Rectangle(startX, startY, 100, 50));
+
+		
+		MainContainer.addChild(PlayerMenu);
+		MainContainer.addChild(InventoryMenu);
+		MainContainer.addChild(MainMenu);
+		
+		
+		applyDefaultSettings(MainContainer, false);
 		
 		MainContainer.setLayout(Layout.Vertical);
-		MainContainer.setPadding(GUI.convertX(45));
-		MainContainer.setMargin(GUI.convertY(15));	
-//		MainContainer.pack(new Rectangle(
-//				-Gdx.graphics.getWidth() * 0.5f,
-//				-Gdx.graphics.getHeight() * 0.5f,
-//				Gdx.graphics.getWidth(),
-//				Gdx.graphics.getHeight()
-//				));
-		MainContainer.setPosition(-MainContainer.getMarginsBounds().width * .5f, -MainContainer.getMarginsBounds().height * .5f);
-
+		MainContainer.setPadding(GUI.convertX(1));
+		MainContainer.setMargin(GUI.convertY(2));	
 		MainContainer.pack(new Rectangle(
-				0,0,0,0));
-		MainContainer.setPosition(-10000,-10000);
+				-Gdx.graphics.getWidth() * 0.5f,
+				-Gdx.graphics.getHeight() * 0.5f,
+				Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight()
+				));
 		return MainContainer;
 	}
 	
 	public static Container CreateSettings(GUI gui) {
 		Container MainContainer = new Container();
 
-		
+		for(Component widget : MainContainer.getChildren()) {
+			applyDefaultSettings(widget, true);
+		}	
 		MainContainer.setLayout(Layout.Vertical);
 		MainContainer.setPadding(GUI.convertX(45));
 		MainContainer.setMargin(GUI.convertY(15));	
@@ -301,10 +512,9 @@ public class Windows {
 	public static Container CreateInventory(GUI gui) {
 		Container MainContainer = new Container();
 
-		
-		MainContainer.setLayout(Layout.Vertical);
-		MainContainer.setPadding(GUI.convertX(45));
-		MainContainer.setMargin(GUI.convertY(15));	
+		applyDefaultSettings(MainContainer, true);
+
+		MainContainer.setLayout(Layout.Vertical);	
 		MainContainer.pack(new Rectangle(0,0,GUI.convertX(800), GUI.convertY(500)));
 		MainContainer.setPosition(-MainContainer.getMarginsBounds().width * .5f, -MainContainer.getMarginsBounds().height * .5f);
 		return MainContainer;	
@@ -313,10 +523,9 @@ public class Windows {
 	public static Container CreatePlayerStats(GUI gui) {
 		Container MainContainer = new Container();
 
-		
+		applyDefaultSettings(MainContainer, true);
+	
 		MainContainer.setLayout(Layout.Vertical);
-		MainContainer.setPadding(GUI.convertX(45));
-		MainContainer.setMargin(GUI.convertY(15));	
 		MainContainer.pack(new Rectangle(0,0,GUI.convertX(800), GUI.convertY(500)));
 		MainContainer.setPosition(-MainContainer.getMarginsBounds().width * .5f, -MainContainer.getMarginsBounds().height * .5f);
 		return MainContainer;	
@@ -325,10 +534,9 @@ public class Windows {
 	public static  Container CreatePauseWindow(GUI gui) {
 		Container MainContainer = new Container();
 
-		
+		applyDefaultSettings(MainContainer, true);
+	
 		MainContainer.setLayout(Layout.Vertical);
-		MainContainer.setPadding(GUI.convertX(45));
-		MainContainer.setMargin(GUI.convertY(15));	
 		MainContainer.pack(new Rectangle(0,0,GUI.convertX(800), GUI.convertY(500)));
 		MainContainer.setPosition(-MainContainer.getMarginsBounds().width * .5f, -MainContainer.getMarginsBounds().height * .5f);
 		return MainContainer;	
@@ -401,15 +609,8 @@ public class Windows {
 		MainContainer.addChild(label);
 		MainContainer.addChild(btn_backToMainMenu);
 		
-		
-		for(Component widget : MainContainer.getChildren()) {
-			widget.setTextJustify(GuiUtils.Justify.Center);
-			widget.setPadding(5);
-			widget.setMargin(5);
-			widget.setBackgroundColor(Color.LIGHT_GRAY);
-			
-		}
-		
+		applyDefaultSettings(MainContainer, true);
+
 		MainContainer.setLayout(Layout.Vertical);
 		MainContainer.setPadding(GUI.convertX(45));
 		MainContainer.setMargin(GUI.convertY(15));	
@@ -426,12 +627,12 @@ public class Windows {
 		GUI.tooltipContainer = new Container();
 
 		GUI.tooltip = new GuiLabel("*Your tooltip here!*");
+		applyDefaultSettingsToComponent(GUI.tooltip);
 		GUI.tooltip.setTextColor(Color.GOLD);
 		GUI.tooltip.setTextJustify(GuiUtils.Justify.Center);
 		GUI.tooltip.setBackgroundTexture(AssetManager.getTexture("texture/misc/white.png").getTexture());
 		GUI.tooltip.setBackgroundOpacity(0.9f);
-		GUI.tooltip.setBackgroundColor(Color.CORAL);
-		GUI.tooltip.setPadding(5);		
+		GUI.tooltip.setPadding(10);		
 
 		GUI.tooltip.setExpand(Expand.DoNotExpand);
 		GUI.tooltipContainer.setExpand(Expand.DoNotExpand);
@@ -441,6 +642,7 @@ public class Windows {
 		GUI.tooltipContainer.setBackgroundOpacity(5.0f);
 		GUI.tooltipContainer.setLayout(Layout.Vertical);	
 		GUI.tooltipContainer.pack(new Rectangle(0,0,GUI.convertX(0), GUI.convertY(0)));
+		
 		
 	}
 

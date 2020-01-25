@@ -114,6 +114,7 @@ public class Game extends ApplicationAdapter {
 	public void create() {
 		// RECORDS
 		GAME_OVER = false;
+		SettingsManager.Load();
 		currentState = GAME_STATE_RUNNING;
 		Archiver.startArchiver();
 		Archiver.set(TimeRecords.TOTAL_TIME_PLAYED, false);
@@ -280,7 +281,7 @@ public class Game extends ApplicationAdapter {
 		batch.begin();
 		batch.enableBlending();
 //		batch.setBlendFunction(GL20.GL_ONE_MINUS_SRC_ALPHA, GL20.GL_DST_COLOR);
-		batch.setBlendFunction(options[srcPointer], options[dstPointer]);
+		batch.setBlendFunction(options[Globals.srcPointer], options[Globals.dstPointer]);
 		batch.draw(frameBufferRegion, camera.position.x - halfWidth, camera.position.y - halfHeight,
 				Gdx.graphics.getWidth(), (int) (Gdx.graphics.getHeight()));
 		batch.end();	
@@ -325,10 +326,7 @@ public class Game extends ApplicationAdapter {
 			hud.debugRender(renderer);
 		renderer.setProjectionMatrix(camera.combined);
 	}
-	
-	private int srcPointer = 0;
-	private int dstPointer = 10;
-	
+
 	private static int[] options = new int[] {
 			GL20.GL_ZERO,					//0
 			GL20.GL_ONE,					//1
@@ -421,7 +419,7 @@ public class Game extends ApplicationAdapter {
 	}
 	
 	private void printBlendingStatus() {
-		Logger.Debug(this.getClass(), "BLENDING", "SRC: " + optionNames[srcPointer] + " / DST: " + optionNames[dstPointer]);
+		Logger.Debug(this.getClass(), "BLENDING", "SRC: " + optionNames[Globals.srcPointer] + " / DST: " + optionNames[Globals.dstPointer]);
 	}
 
 	/**
@@ -434,27 +432,27 @@ public class Game extends ApplicationAdapter {
 		
 		
 		if (Gdx.input.isButtonPressed(Input.Keys.SHIFT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.LEFT_BRACKET)) {
-			srcPointer--;
+			Globals.srcPointer--;
 		} else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT_BRACKET)) {
-			srcPointer++;
+			Globals.srcPointer++;
 		}
 		
 		
 		if (Gdx.input.isButtonPressed(Input.Keys.SHIFT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.RIGHT_BRACKET)) {
-			dstPointer--;
+			Globals.dstPointer--;
 		} if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT_BRACKET)) {
-			dstPointer++;
+			Globals.dstPointer++;
 		}	
 		
-		if (srcPointer >= options.length)
-			srcPointer -= options.length;
-		if (srcPointer < 0)
-			srcPointer += options.length;
+		if (Globals.srcPointer >= options.length)
+			Globals.srcPointer -= options.length;
+		if (Globals.srcPointer < 0)
+			Globals.srcPointer += options.length;
 		
-		if (dstPointer >= options.length)
-			dstPointer -= options.length;
-		if (dstPointer < 0)
-			dstPointer += options.length;
+		if (Globals.dstPointer >= options.length)
+			Globals.dstPointer -= options.length;
+		if (Globals.dstPointer < 0)
+			Globals.dstPointer += options.length;
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT_BRACKET) || Gdx.input.isKeyJustPressed(Input.Keys.RIGHT_BRACKET)) {
 			printBlendingStatus();
@@ -568,6 +566,7 @@ public class Game extends ApplicationAdapter {
 	 * Closes Dungeon Crawler
 	 */
 	public void close() {
+		SettingsManager.Dispose();
 		Logger.Debug(this.getClass(), "close","Disposing Archiver");
 		Archiver.dispose();
 		Logger.Debug(this.getClass(), "close","Disposing Objects");

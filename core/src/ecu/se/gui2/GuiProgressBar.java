@@ -63,8 +63,11 @@ public class GuiProgressBar extends Component{
 			tooltipText = "hello: " + xTextOffset + " / " + animateReset;
 		}
 		act();
+		updateBar();
 		return consumer;//consumeInput(consumer, mouseX, mouseY);
 	}
+	
+	protected void updateBar() {};
 
 	@Override
 	protected void renderComponent(SpriteBatch batch) {
@@ -137,6 +140,12 @@ public class GuiProgressBar extends Component{
 		currentValue = Utils.clamp(minValue, maxValue, val);
 		calculatePercentage();
 		updateText();
+	}
+	
+	public void setAllValues(float min, float value, float max) {
+		minValue = min;
+		maxValue = max;
+		setValue(value);
 	}
 	
 	public void updateText() {

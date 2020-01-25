@@ -33,6 +33,8 @@ public abstract class Component {
 	private Texture cornerTexture;
 	private Color cornerColor;
 	private boolean renderCorners;
+	private float cornerOpacity;
+
 	
 	protected boolean isVisible = true;	
 	
@@ -45,11 +47,20 @@ public abstract class Component {
 	protected float timeSpentHovering = 0;
 		
 	protected Color 	bgColor = Color.WHITE;
+	
 	protected Color 	activeColor = Color.GREEN;
+	private float 		ActiveOpacity;
+	private boolean		ActiveEnabled = false;
 	protected boolean 	isActive = false;
+	
 	protected Color 	highlightColor = Color.CYAN;
+	private float 		HighlightOpacity;
+	private boolean 	HighlightEnabled = false;
 	protected boolean 	highlight = false;
+	
 	protected Color 	defaultColor = Color.WHITE;	
+	
+	protected boolean AbsolutePositioning;
 	
 	protected Expand expand;
 	
@@ -58,19 +69,18 @@ public abstract class Component {
 		PaddingBounds = new Rectangle();
 		ContentBounds = new Rectangle();
 		setBackgroundColor(Color.GRAY);
-		isVisible = true;
+		isVisible = false;
 		glyphLayout = new GlyphLayout();
 		setFontSize(15);
 		setExpand(Expand.ExpandAll);
 		tooltipText = toString();
 		textColor = Color.RED;
-		canConsumeUI = true;
 		
-		showToolTip = true;
-		
+		canConsumeUI = false;
+		showToolTip = false;
+		AbsolutePositioning = false;
 		cornerColor = Color.RED;
-		setRenderCorners(true);
-		setCornerTexture("texture/gui/corner_tl.png");
+		setRenderCorners(false);
 	}
 	
 	private int mX, mY;
@@ -116,22 +126,20 @@ public abstract class Component {
 
 	
 	public void render(SpriteBatch batch) {
-		if (!isVisible)
-			return;
-		if (renderBackground && background != null) {
+		if (isVisible && renderBackground && background != null) {
 			Rectangle rect = PaddingBounds;
 			
-			if(mouseHovering)
+			if(mouseHovering && HighlightEnabled)
 				batch.setColor(highlightColor);
-			else if (isActive)
+			else if (isActive && ActiveEnabled)
 				batch.setColor(activeColor);
 			else
-				batch.setColor(bgColor);
+				batch.setColor(defaultColor);
 			batch.draw(background, rect.x, rect.y, rect.width, rect.height);
 		}
 
-		renderCorners(batch);
 		renderComponent(batch);
+		renderCorners(batch);
 	}
 	
 	private float cornerSize = 15;
@@ -420,29 +428,15 @@ public abstract class Component {
 		if (ex != getExpand())
 			invalidate();
 		expand = ex;
+	}	
+	
+	public void setHighlightEnabled(boolean enabled) {
+		HighlightEnabled = enabled;
+	}
+	public void setActiveEnabled(boolean enabled) {
+		ActiveEnabled = enabled;
 	}
 	
-	
-
-	public void setDefaultColor(Color c) {
-		defaultColor = c;
-	}
-	public void setActiveColor(Color c) {
-		activeColor = c;
-	}
-	public void setHighlightColor (Color c) {
-		highlightColor = c;
-	}
-	
-	
-	public void setBackgroundOpacity(float opacity) {
-		backgroundOpacity = opacity;
-		setBackgroundColor(bgColor);
-	}
-	
-	public void setBackgroundColor(Color backgroundTint) {
-		this.bgColor = new Color(backgroundTint.r, backgroundTint.g, backgroundTint.b, backgroundOpacity);
-	}
 	public void setBackgroundTexture(Texture background) {
 		if (background != null) {
 			this.background = background;
@@ -451,6 +445,9 @@ public abstract class Component {
 			renderBackground = false;
 		}
 	}	
+	public void setRenderBackground(boolean value) {
+		renderBackground = value;
+	}
 	
 	
 	public void setCornerTexture(String texturePath) {
@@ -462,9 +459,51 @@ public abstract class Component {
 		cornerTexture = corner;
 	}
 	public void setRenderCorners(boolean render) {
-		renderCorners = render;
+		if (render) {
+			if (cornerTexture != null)
+				renderCorners = render;
+			else
+				Logger.Error(getClass(), "SetRenderCorner", "Cannot enable rendering corner before setting corner texture.");			
+		} else {
+			renderCorners = false;
+		}
 	}
 	
+	
+	private Color createColor(Color c, float opacity) {
+		return new Color(c.r, c.g, c.b, opacity);
+	}
+	public void setBackgroundColor(Color backgroundTint) {
+		this.defaultColor = createColor(backgroundTint, backgroundOpacity);
+	}
+	public void setCornerColor(Color color) {
+		cornerColor = createColor(color, cornerOpacity);
+	}
+	public void setActiveColor(Color c) {
+		activeColor = createColor(c, ActiveOpacity);
+	}
+	public void setHighlightColor (Color c) {
+		highlightColor = createColor(c, HighlightOpacity);
+	}
+	
+	
+	
+	public void setBackgroundOpacity(float opacity) {
+		backgroundOpacity = opacity;
+		setBackgroundColor(defaultColor);
+	}
+	public void setCornerOpacity(float opacity) {
+		cornerOpacity = opacity;
+		setCornerColor(cornerColor);
+	}
+	public void setActiveOpacity(float opacity) {
+		ActiveOpacity = opacity;
+		setActiveColor(activeColor);
+	}
+	public void setHighlighOpacity(float opacity) {
+		HighlightOpacity = opacity;
+		setHighlightColor(highlightColor);
+	}
 	
 	public int getFontSize() {
 		return fontSize;

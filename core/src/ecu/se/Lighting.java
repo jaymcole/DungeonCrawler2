@@ -43,7 +43,7 @@ public class Lighting {
 		return prog;
 	}
 	
-private int lightSize = 1024;
+private int lightSize = 512;
 	
 	private float upScale = 1f; //for example; try lightSize=128, upScale=1.5f
 		
