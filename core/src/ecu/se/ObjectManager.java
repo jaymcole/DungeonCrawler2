@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Intersector;
 import ecu.se.actors.Actor;
 import ecu.se.map.Direction;
 import ecu.se.map.Map;
+import ecu.se.map.Tile;
 import ecu.se.objects.InteractableItem;
 
 /**
@@ -296,16 +297,17 @@ public class ObjectManager {
 				}
 			}
 		}
-
-		for (GameObject o : Map.getTile(mouseX, mouseY).getObjects()) {
-			if (o.bounds.contains(mouseX, mouseY)) {
-				if (o instanceof InteractableItem) {
-					((InteractableItem) o).onClick(Game.player);
-					return true;
+		
+		Tile tile = Map.getTile(mouseX, mouseY);
+		if (tile != null)
+			for (GameObject o : tile.getObjects()) {
+				if (o.bounds.contains(mouseX, mouseY)) {
+					if (o instanceof InteractableItem) {
+						((InteractableItem) o).onClick(Game.player);
+						return true;
+					}
 				}
 			}
-		}
-
 		return false;
 	}
 
